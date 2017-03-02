@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        System.out.print("ON ACTIVITY");
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -223,7 +223,13 @@ public class MainActivity extends AppCompatActivity implements
         //edit.clear();
         //edit.commit();
         AccessToken at =  AccessToken.getCurrentAccessToken();
-        authToken = at.getToken().toString();
+        try{
+            authToken = at.getToken().toString();
+        }catch (Exception e){
+            authToken = null;
+            System.out.print("NOT LOGGED!!");
+        }
+//        authToken = at.getToken().toString();
         System.out.println(authToken);
 
 

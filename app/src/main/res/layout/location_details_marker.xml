@@ -53,9 +53,9 @@
 
                 <ImageView
                     android:id="@+id/icon_infowindow"
-                    android:layout_width="30dp"
+                    android:layout_width="35dp"
                     android:layout_gravity="center"
-                    android:layout_height="30dp"
+                    android:layout_height="35dp"
                     android:src="@drawable/ikona_lokacije" />
             </LinearLayout>
             <!--<ViewSwitcher-->
@@ -73,8 +73,8 @@
                 android:id="@+id/imageHolder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="7dp"
-                android:layout_marginLeft="7dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/ikona_lokacije" />
             <!--</ViewSwitcher>-->
