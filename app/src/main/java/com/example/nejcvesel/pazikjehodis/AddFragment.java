@@ -1,5 +1,6 @@
 package com.example.nejcvesel.pazikjehodis;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,16 +8,10 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AddFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AddFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class AddFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -46,7 +41,28 @@ public class AddFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add, container, false);
+        View view = inflater.inflate(R.layout.fragment_add, container, false);
+
+        ImageView addLoc = (ImageView) view.findViewById(R.id.btn_new_loc);
+        ImageView addPath = (ImageView) view.findViewById(R.id.btn_new_path);
+        final FragmentManager fm = getFragmentManager();
+
+
+        addLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fm.beginTransaction().replace(R.id.content_frame, new LocationFormFragment(), "LocationFormFragment").addToBackStack("LocationFormFragment").commit();
+            }
+        });
+
+        addPath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fm.beginTransaction().replace(R.id.content_frame, new PathAddFragment(), "PathAddFragment").addToBackStack("PathAddFragment").commit();
+            }
+        });
+
+        return view;
     }
 
     public void onButtonPressed(Uri uri) {

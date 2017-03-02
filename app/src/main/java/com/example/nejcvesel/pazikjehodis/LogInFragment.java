@@ -42,7 +42,6 @@ public class LogInFragment extends Fragment implements GoogleApiClient.OnConnect
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("bla");
                 signIn();
             }
         });
