@@ -134,7 +134,7 @@ public class LocationInPathDetailFragment extends Fragment {
                 {
                     curr=curr-1;
                     Location loc = lokacije.get(curr);
-                    replace(name,title,text,loc.getName(),container,picture,loc.getTitle(),loc.getText(),loc.getPicture());
+                    replace(name,title,text,loc.getName(),loc.getAddress(),container,picture,loc.getTitle(),loc.getText(),loc.getPicture());
                     mParamId = String.valueOf(loc.getId());
                     navContents.setText(String.valueOf(curr+1) + "/" + String.valueOf(mNumOfLocations));
 
@@ -150,7 +150,7 @@ public class LocationInPathDetailFragment extends Fragment {
                     System.out.println(Arrays.toString(mpathLocations));
                     curr=curr+1;
                     Location loc = lokacije.get(curr);
-                    replace(name,title,text,loc.getName(),container,picture,loc.getTitle(),loc.getText(),loc.getPicture());
+                    replace(name,title,text,loc.getName(),loc.getAddress(),container,picture,loc.getTitle(),loc.getText(),loc.getPicture());
                     mParamId = String.valueOf(loc.getId());
                     navContents.setText(String.valueOf(curr+1) + "/" + String.valueOf(mNumOfLocations));
 
@@ -181,7 +181,7 @@ public class LocationInPathDetailFragment extends Fragment {
                 {
                     curr=curr-1;
                     Location loc = lokacije.get(curr);
-                    replace(name,title,text,loc.getName(),container,picture,loc.getTitle(),loc.getText(),loc.getPicture());
+                    replace(name,title,text,loc.getName(),loc.getAddress(),container,picture,loc.getTitle(),loc.getText(),loc.getPicture());
                     mParamId = String.valueOf(loc.getId());
                     navContents.setText(String.valueOf(curr+1) + "/" + String.valueOf(mNumOfLocations));
 
@@ -200,7 +200,7 @@ public class LocationInPathDetailFragment extends Fragment {
                     System.out.println(Arrays.toString(mpathLocations));
                     curr=curr+1;
                     Location loc = lokacije.get(curr);
-                    replace(name,title,text,loc.getName(),container,picture,loc.getTitle(),loc.getText(),loc.getPicture());
+                    replace(name,title,text,loc.getName(),loc.getAddress(),container,picture,loc.getTitle(),loc.getText(),loc.getPicture());
                     mParamId = String.valueOf(loc.getId());
                     navContents.setText(String.valueOf(curr+1) + "/" + String.valueOf(mNumOfLocations));
 
@@ -212,9 +212,9 @@ public class LocationInPathDetailFragment extends Fragment {
         int curr = getCurrentLoc(mParamId,mpathLocations);
         Location location = lokacije.get(curr);
 
-        text.setText(location.getText());
+        text.setText(location.getText() + "\n\n" + "- " + mParamName);
         title.setText(location.getTitle());
-        name.setText(location.getName());
+        name.setText(location.getAddress());
 
         navContents.setText(String.valueOf(getCurrentLoc(mParamId,mpathLocations)+1) + "/" + String.valueOf(mNumOfLocations));
 
@@ -260,12 +260,12 @@ public class LocationInPathDetailFragment extends Fragment {
     }
 
 
-    public void replace (TextView name, TextView title, TextView text, String sName, ViewGroup container,
+    public void replace (TextView name, TextView title, TextView text, String sName, String sAddress, ViewGroup container,
                          ImageView picture, String sTitle, String sText, String newImageURL )
     {
-        name.setText(sName);
+        name.setText(sAddress);
         title.setText(sTitle);
-        text.setText(sText);
+        text.setText(sText + "\n\n" + "- " + sName);
 
         WindowManager wm = (WindowManager) container.getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();

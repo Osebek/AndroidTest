@@ -35,6 +35,7 @@ public class LocationDetailFragment extends Fragment {
     private static final String ARG_PICTURE = "picture";
     private static final String ARG_ID = "id";
     private static final String ARG_ADDRESS = "address";
+    private static final String ARG_OWNER ="owner";
 
     private String mParamText;
     private String mParamTitle;
@@ -42,6 +43,7 @@ public class LocationDetailFragment extends Fragment {
     private String mParamPicture;
     private String mParamId;
     private String mParamAddress;
+    private String mParamOwner;
 
 
     private OnFragmentInteractionListener mListener;
@@ -66,6 +68,7 @@ public class LocationDetailFragment extends Fragment {
         args.putString(ARG_PICTURE,loc.getPicture());
         args.putString(ARG_ADDRESS,loc.getAddress());
         args.putString(ARG_ID,Integer.toString(loc.getId()));
+        args.putString(ARG_OWNER,loc.getOwner());
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,6 +83,7 @@ public class LocationDetailFragment extends Fragment {
             mParamPicture = getArguments().getString(ARG_PICTURE);
             mParamId = getArguments().getString(ARG_ID);
             mParamAddress = getArguments().getString(ARG_ADDRESS);
+            mParamOwner = getArguments().getString(ARG_OWNER);
 
         }
     }
@@ -106,7 +110,7 @@ public class LocationDetailFragment extends Fragment {
         });
 
 
-        text.setText(mParamText);
+        text.setText(mParamText + "\n\n" + "- " + mParamName);
         title.setText(mParamTitle);
         name.setText(mParamAddress);
 

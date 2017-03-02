@@ -70,6 +70,8 @@ public class MyLocationAdapter extends RecyclerView.Adapter<MyLocationAdapter.Vi
         viewHolder.title.setText(loc.getTitle());
         viewHolder.pictureURL.setText(loc.getPicture());
         viewHolder.locAddress.setText(loc.getAddress());
+        viewHolder.owner.setText(loc.getOwner());
+
         Context context = viewHolder.picture.getContext();
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -100,6 +102,8 @@ public class MyLocationAdapter extends RecyclerView.Adapter<MyLocationAdapter.Vi
         public TextView name;
         public TextView pictureURL;
         public TextView locAddress;
+        public TextView owner;
+
 
 
 
@@ -114,6 +118,8 @@ public class MyLocationAdapter extends RecyclerView.Adapter<MyLocationAdapter.Vi
             name = (TextView) itemView.findViewById(R.id.loc_detail_name);
             pictureURL = (TextView) itemView.findViewById(R.id.picture_url);
             locAddress = (TextView) itemView.findViewById(R.id.locAddress);
+            owner = (TextView) itemView.findViewById(R.id.loc_owner);
+
 
             ImageView icon = (ImageView) itemView.findViewById(R.id.location_icon);
             icon.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +144,7 @@ public class MyLocationAdapter extends RecyclerView.Adapter<MyLocationAdapter.Vi
                     loc.setPicture(pictureURL.getText().toString());
                     loc.setId(Integer.valueOf(locationID.getText().toString()));
                     loc.setAddress(locAddress.getText().toString());
+                    loc.setOwner(owner.getText().toString());
 
                     Fragment fragment = LocationDetailFragment.newInstance(loc);
                     FragmentManager fragmentManager = ((FragmentActivity)context).getFragmentManager();
