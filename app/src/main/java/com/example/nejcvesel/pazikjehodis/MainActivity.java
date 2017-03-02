@@ -56,7 +56,9 @@ import java.util.LinkedHashSet;
 /**
  * Created by brani on 12/18/2016.
  */
-
+/*TODO: add middleman - fragment for adding path and location
+   TODO: add loader durign api calls
+ */
 public class MainActivity extends AppCompatActivity implements
         LocationFragment.OnListFragmentInteractionListener,
         LocationDetailFragment.OnFragmentInteractionListener, PathLocationsFragment.OnListFragmentInteractionListener,
@@ -120,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 });
 
+        //TODO: login registration for fb and google!
        accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(
@@ -153,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements
                 }
         };
 
+        //TODO: fab buttons - set right images as well right colors for fab buttons
+        //TODO: fab buttons - on/off in different fragments
         this.profile = Profile.getCurrentProfile();
 
         fab = (FloatingActionButton)findViewById(R.id.fab);

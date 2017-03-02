@@ -31,9 +31,9 @@ public class LocationFragment extends Fragment {
     int positionIndex = -1;
     int topView;
 
-    // TODO: Customize parameter argument names
+
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
@@ -43,7 +43,7 @@ public class LocationFragment extends Fragment {
     }
 
 
-    // TODO: Customize parameter initialization
+
     @SuppressWarnings("unused")
     public static LocationFragment newInstance(int columnCount) {
         LocationFragment fragment = new LocationFragment();

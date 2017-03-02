@@ -357,3 +357,6 @@
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
+
+<!--TODO: adjuste working layout to all phones-->
+    <!--TODO: drawer set differently for logged in user-->

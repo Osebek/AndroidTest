@@ -28,7 +28,6 @@ import com.squareup.picasso.Picasso;
  * create an instance of this fragment.
  */
 public class LocationDetailFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_TEXT = "text";
     private static final String ARG_TITLE = "title";
@@ -37,7 +36,6 @@ public class LocationDetailFragment extends Fragment {
     private static final String ARG_ID = "id";
     private static final String ARG_ADDRESS = "address";
 
-    // TODO: Rename and change types of parameters
     private String mParamText;
     private String mParamTitle;
     private String mParamName;
@@ -59,7 +57,6 @@ public class LocationDetailFragment extends Fragment {
      * @param loc Parameter 1.
      * @return A new instance of fragment LocationDetail.
      */
-    // TODO: Rename and change types and number of parameters
     public static LocationDetailFragment newInstance(Location loc) {
         LocationDetailFragment fragment = new LocationDetailFragment();
         Bundle args = new Bundle();
@@ -131,7 +128,6 @@ public class LocationDetailFragment extends Fragment {
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -168,7 +164,6 @@ public class LocationDetailFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

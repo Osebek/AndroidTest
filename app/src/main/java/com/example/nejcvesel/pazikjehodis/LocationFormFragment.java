@@ -11,6 +11,9 @@ import android.widget.TextView;
 /**
  * Created by brani on 12/19/2016.
  */
+//TODO: add check when photo added
+//TODO: implement for different/lower apk versions file upload/ test as well
+//TODO: get address for pin location
 
 public class LocationFormFragment extends Fragment {
     @Nullable

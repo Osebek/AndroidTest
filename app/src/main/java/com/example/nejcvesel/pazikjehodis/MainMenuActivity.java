@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import com.example.nejcvesel.pazikjehodis.Walkthrough.WalkthroughActivity;
-
+/*
+TODO: splash screen
+TODO: loader when calling main activity
+ */
 public class MainMenuActivity extends AppCompatActivity {
 
     @Override

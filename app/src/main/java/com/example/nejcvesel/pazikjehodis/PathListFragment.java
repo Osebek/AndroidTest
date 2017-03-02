@@ -20,9 +20,8 @@ import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyPathAdapter;
 public class PathListFragment extends Fragment{
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+
     private int mColumnCount = 1;
     private LocationFragment.OnListFragmentInteractionListener mListener;
 
@@ -32,7 +31,6 @@ public class PathListFragment extends Fragment{
     }
 
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static PathListFragment newInstance(int columnCount) {
         PathListFragment fragment = new PathListFragment();

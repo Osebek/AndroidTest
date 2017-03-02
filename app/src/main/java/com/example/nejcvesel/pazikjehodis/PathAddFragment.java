@@ -30,6 +30,8 @@ import java.util.Collection;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
+//TODO: search bar to look nice
+//TODO: check if at least one path is selected
 public class PathAddFragment extends Fragment {
     Parcelable state;
     RecyclerView recView;
@@ -38,9 +40,8 @@ public class PathAddFragment extends Fragment {
     int positionIndex = -1;
     int topView;
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
@@ -50,7 +51,6 @@ public class PathAddFragment extends Fragment {
     }
 
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static PathAddFragment newInstance(int columnCount) {
         PathAddFragment fragment = new PathAddFragment();

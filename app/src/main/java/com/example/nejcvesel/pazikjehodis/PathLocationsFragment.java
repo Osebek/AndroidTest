@@ -39,14 +39,13 @@ public class PathLocationsFragment extends Fragment {
     MyPathLocationsAdapter specialAdapter;
 
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String ARG_LOCATIONS = "locations";
     private static final String ARG_OWNER = "owner";
     private static final String ARG_CITY = "city";
     private static final String ARG_DESCRIPTION = "description";
     private static final String ARG_NAME ="name";
-    // TODO: Customize parameters
+
     private int mColumnCount = 1;
     private String[] locIDs;
     private String owner;
