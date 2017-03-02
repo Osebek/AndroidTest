@@ -581,7 +581,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigationViewAddClick(View view){
         FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.content_frame, new PathAddFragment(), "PathAddFragment").addToBackStack("PathAddFragment").commit();
+        fm.beginTransaction().replace(R.id.content_frame, new AddFragment(), "AddFragment").addToBackStack("AddFragment").commit();
         closeDrawer();
     }
 
