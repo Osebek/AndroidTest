@@ -1,0 +1,45 @@
+<!-- fragment_screen_slide_page.xml -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Dummy content. -->
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+        android:id="@+id/kakoDelujeText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kako deluje? (1 od 3)"
+        android:textStyle="italic"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp"   />
+
+        <TextView  fontPath="fonts/Ubuntu-light.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kaj je ta aplikacija?"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="20dp"
+            android:layout_below="@id/kakoDelujeText"/>
+
+
+
+
+
+        <TextView style="?android:textAppearanceMedium"
+            fontPath="fonts/Ubuntu-light.ttf"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lorem_ipsum" />
+
+    </LinearLayout>
+
+</ScrollView>

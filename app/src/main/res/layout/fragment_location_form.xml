@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/map_bg"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"
+        android:layout_margin="3dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:orientation="vertical">
+
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingTop="3dp"
+            android:text="AVTOR_ICA"
+            android:textSize="12dp"
+            android:textColor="@color/lightGrey"
+            android:background="@color/white"
+            />
+
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+            android:id="@+id/inputName"
+            android:paddingLeft="6dp"
+            android:paddingTop="1dp"
+            android:textSize="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:textColor="@color/lightGrey"
+            android:paddingBottom="6dp"
+
+            />
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="23dp"
+        android:background="@color/white"
+        >
+
+
+
+        <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingRight="0dp"
+        android:orientation="vertical"
+        android:layout_weight="10"
+        >
+
+
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingTop="3dp"
+            android:text="NASLOV LOKACIJE"
+            android:textSize="12dp"
+            android:textColor="@color/lightGrey"
+            android:background="@color/white"
+
+            />
+
+        <EditText fontPath="fonts/Ubuntu-light.ttf"
+            android:id="@+id/inputAddress"
+            android:paddingLeft="6dp"
+            android:paddingTop="1dp"
+            android:textSize="13dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:textColor="@color/darkGrey"
+            android:paddingBottom="6dp"
+            android:maxLines="1"
+            android:maxLength="60"
+
+            />
+
+
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:paddingTop="6dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ikona_prikazi_na_zemljevidu_small"
+                android:layout_gravity="end"/>
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:layout_margin="3dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:orientation="vertical">
+
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingTop="3dp"
+            android:text="IME ZGODBE"
+            android:textSize="12dp"
+            android:textColor="@color/lightGrey"
+            android:background="@color/white"
+            />
+
+        <EditText fontPath="fonts/Ubuntu-light.ttf"
+            android:id="@+id/inputTitle"
+            android:paddingLeft="6dp"
+            android:paddingTop="1dp"
+            android:textSize="13dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:textColor="@color/darkGrey"
+            android:paddingBottom="6dp"
+            android:maxLines="1"
+            android:maxLength="60"
+
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:layout_margin="3dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:orientation="vertical"
+        android:paddingBottom="7dp">
+
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingTop="3dp"
+            android:text="ZGODBA (min. 120 znakov)"
+            android:textSize="12dp"
+            android:textColor="@color/lightGrey"
+            android:background="@color/white"
+            />
+
+
+
+
+    <EditText
+        android:id="@+id/inputDescription"
+        android:paddingLeft="6dp"
+        android:paddingTop="1dp"
+        android:textSize="13dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:textColor="@color/darkGrey"
+        android:lines="12"
+        android:gravity="top|left"
+
+
+        />
+        </LinearLayout>
+
+
+    <Button fontPath="fonts/Ubuntu-light.ttf"
+        android:id="@+id/form_picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:drawableRight="@drawable/camera_icon_small"
+        android:hint="@string/form_picture_text"
+        android:textColorHint="@color/lightGrey"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="150dp"
+        android:paddingRight="20dp"
+        android:padding="7dp"
+        android:onClick="AttachPic"
+        style="?android:attr/borderlessButtonStyle"
+        />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/imageURL"
+        android:visibility="invisible"/>
+    <Button
+        android:id="@+id/upload_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey"
+        android:text="Objavi"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="150dp"
+        android:paddingRight="20dp"
+        android:onClick="SaveForm"
+
+        />
+
+</LinearLayout>
