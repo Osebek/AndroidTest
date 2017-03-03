@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.nejcvesel.pazikjehodis.Walkthrough.WalkthroughActivity;
@@ -48,10 +49,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
+
+import bolts.Task;
 
 /**
  * Created by brani on 12/18/2016.
@@ -81,10 +86,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final String TAG = "SignInActivity";
     BackendAPICall api  = new BackendAPICall();
     public SharedPreferences sharedPref;
-
-
-
-
+    public UserProfile userProfile = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         System.out.print("ON ACTIVITY");
@@ -94,8 +96,26 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
+        userProfile = new UserProfile();
 
+        Map<?,?> bla = sharedPref.getAll();
+        for(Object key: bla.keySet()){
+            String tmpKey = key.toString();
+            if(tmpKey.contains("_token")){
+                Object currToken = bla.get(key);
+                userProfile.setBackendAccessToken(currToken.toString());
+            }
+            if(tmpKey.contains("_refresh")){
+                Object currToken = bla.get(key);
+                userProfile.setRefreshToken(currToken.toString());
+            }
+        }
 
+        BackendAPICall callProfile = new BackendAPICall();
+        callProfile.getUserProfile(authToken);
+//
+//        BackendAPICall.UserCallback userCallBack = (BackendAPICall.UserCallback) this;
+//        userCallBack
 
 //
 //        FacebookSdk.sdkInitialize(getApplicationContext());
@@ -105,10 +125,12 @@ public class MainActivity extends AppCompatActivity implements
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        Profile profile = Profile.getCurrentProfile();
+//                      Profile profile = Profile.getCurrentProfile();
                         authToken = loginResult.getAccessToken().getToken();
                         AccessToken.setCurrentAccessToken(loginResult.getAccessToken());
-                        api.refreshToken(authToken,sharedPref);
+                        api.refreshToken(authToken,sharedPref,userProfile);
+                        userProfile.setUserToken(authToken);
+                        userProfile.setLoginType("Facebook");
                     }
 
                     @Override
@@ -128,12 +150,12 @@ public class MainActivity extends AppCompatActivity implements
             protected void onCurrentAccessTokenChanged(
                     AccessToken oldAccessToken,
                     AccessToken currentAccessToken) {
-                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                View header=navigationView.getHeaderView(0);
-                TextView name = (TextView)header.findViewById(R.id.textView);
-
+//                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//                View header=navigationView.getHeaderView(0);
+//                TextView name = (TextView)header.findViewById(R.id.textView);
+                TextView userName = (TextView) findViewById(R.id.navHeaderText);
                 if (currentAccessToken == null){
-                    name.setText("Anonymous");
+                    userName.setText("Anonimen uporabnik");
                 }
             }
         };
@@ -145,12 +167,13 @@ public class MainActivity extends AppCompatActivity implements
                     Profile currentProfile) {
                 if (currentProfile != null)
                 {
-                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                    View header=navigationView.getHeaderView(0);
-                    TextView name = (TextView)header.findViewById(R.id.textView);
+//                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//                    View header=navigationView.getHeaderView(0);
+//                    TextView name = (TextView)header.findViewById(R.id.textView);
+                    TextView name = (TextView) findViewById(R.id.navHeaderText);
                     name.setText(currentProfile.getFirstName() + " " + currentProfile.getLastName());
-                    profile = currentProfile;
-
+                    userProfile.setFirstName(currentProfile.getFirstName());
+                    userProfile.setLastName(currentProfile.getLastName());
                 }
 
                 }
@@ -197,17 +220,13 @@ public class MainActivity extends AppCompatActivity implements
         /*NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header=navigationView.getHeaderView(0);
-        TextView name = (TextView)header.findViewById(R.id.textView);
-        if (AccessToken.getCurrentAccessToken() != null) {
-            name.setText(this.profile.getFirstName() + " " + this.profile.getLastName());
-            api.refreshToken(authToken,sharedPref);
+        TextView name = (TextView)header.findViewById(R.id.textView);*/
+        TextView profileName = (TextView)findViewById(R.id.navHeaderText);
+        if(userProfile.backendAccessToken != ""){
+            profileName.setText(userProfile.getFirstName() + " " + userProfile.getLastName());
+        }else{
+            profileName.setText("Anonimen uporabnik");
         }
-        else
-        {
-            name.setText("Anonymous");
-
-        }*/
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -227,7 +246,6 @@ public class MainActivity extends AppCompatActivity implements
             authToken = at.getToken().toString();
         }catch (Exception e){
             authToken = null;
-            System.out.print("NOT LOGGED!!");
         }
 //        authToken = at.getToken().toString();
         System.out.println(authToken);
@@ -607,4 +625,8 @@ public class MainActivity extends AppCompatActivity implements
         drawer.closeDrawer(GravityCompat.START);
 
     }
+
+//    public static initLoginType(UserProfile.loginType loginType){
+//        this.profile.setLoginType(loginType);
+//    }
 }

@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.MyPathLocationsAdapter;
+import com.example.nejcvesel.pazikjehodis.UserProfile;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.AuthorizationInterface;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
@@ -34,8 +36,13 @@ import retrofit2.Response;
  * Created by nejcvesel on 09/12/16.
  */
 
-public class BackendAPICall {
 
+public class BackendAPICall {
+    public interface UserCallback{
+        public void callBack(String accessToekn, String refreshToken);
+    }
+
+    UserCallback usrCall;
     public void getAllPaths(String authToken) {
 
         final MyLocationAdapter myLocationAdapter;
@@ -310,6 +317,26 @@ public class BackendAPICall {
         });
     }
 
+    public void getUserProfile(String authToken) {
+        UserInterface service =
+                ServiceGenerator.createAuthorizedService(UserInterface.class, authToken);
+
+        Call<User> call = service.getCurrentUser();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User user = response.body();
+                System.out.println(user.getId());
+                System.out.println(user.getUsername());
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                System.out.println("Fetching locations did not work");
+            }
+        });
+    }
+
     public static String repairURL(String pictureURL)
     {
         String[] rez = pictureURL.split("/static/");
@@ -336,7 +363,7 @@ public class BackendAPICall {
 
     }
 
-    public void refreshToken(final String authToken,final SharedPreferences pref)
+    public void refreshToken(final String authToken, final SharedPreferences pref, final UserProfile profile)
     {
         AuthorizationInterface service = ServiceGenerator.createUnauthorizedService(AuthorizationInterface.class);
         Call<BackendToken> call = service.refreshToken(
@@ -355,6 +382,9 @@ public class BackendAPICall {
                     editor.putString(authToken + "_token", newToken.getAccessToken());
                     editor.putString(authToken + "_refresh", newToken.getRefreshToken());
                     editor.commit();
+                    profile.setRefreshToken(newToken.getRefreshToken());
+                    profile.setBackendAccessToken(newToken.getAccessToken());
+                    usrCall.callBack(newToken.getAccessToken(),newToken.getRefreshToken());
                 }
             }
 

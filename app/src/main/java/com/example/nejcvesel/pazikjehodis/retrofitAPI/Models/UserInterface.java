@@ -16,4 +16,6 @@ public interface UserInterface {
     Call<User> getUserByID(@Path("id") String id);
     @GET("users/")
     Call<List<User>> getAllUsers();
+    @GET("getCurrentUser/")
+    Call<User> getCurrentUser();
 }
