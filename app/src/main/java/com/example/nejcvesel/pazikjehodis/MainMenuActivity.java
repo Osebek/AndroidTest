@@ -1,5 +1,6 @@
 package com.example.nejcvesel.pazikjehodis;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +28,11 @@ public class MainMenuActivity extends AppCompatActivity {
     }
     public void startMap(View v)
     {
+        final ProgressDialog progressDialog = new ProgressDialog(MainMenuActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Nalagam zemeljevid");
+        progressDialog.show();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }

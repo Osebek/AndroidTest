@@ -318,14 +318,19 @@ public class BackendAPICall {
     }
 
     public void getUserProfile(String authToken) {
+        authToken = "gB1OIviNZY7W8tIn1Ar8GCoiLH7gnW";
+
         UserInterface service =
                 ServiceGenerator.createAuthorizedService(UserInterface.class, authToken);
+
+        System.out.println("Auth token:" + authToken);
 
         Call<User> call = service.getCurrentUser();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
+
                 System.out.println(user.getId());
                 System.out.println(user.getUsername());
             }
@@ -412,6 +417,7 @@ public class BackendAPICall {
                 {
                     try {
                         String error = response.errorBody().string();
+                        System.out.println(error);
                         if (error.equals("{\"detail\":\"Invalid token header. No credentials provided.\"}"))
                         {
 

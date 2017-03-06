@@ -32,7 +32,6 @@ public class ServiceGenerator {
                 @Override
                 public Response intercept(Interceptor.Chain chain) throws IOException {
                     Request original = chain.request();
-                    System.out.println(token);
                     Request.Builder requestBuilder = original.newBuilder()
                             .header("Authorization",
                                     "Bearer" + " " +  token)

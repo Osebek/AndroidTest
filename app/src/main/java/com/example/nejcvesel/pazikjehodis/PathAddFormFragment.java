@@ -1,7 +1,9 @@
 package com.example.nejcvesel.pazikjehodis;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -90,7 +92,25 @@ public class PathAddFormFragment extends Fragment {
                 }
                 path.setPathLocations(lokacije);
 
-                main.uploadPath(path);
+                if (!path.getDescription().equals("") &&
+                    !path.getName().equals("") &&
+                    !path.getCity().equals("")) {
+                    main.uploadPath(path);
+                }
+                else
+                {
+                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                    alertDialog.setTitle("Napaka");
+                    alertDialog.setMessage("Vnesti morate vsa polja");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "V redu",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+
+                }
 
             }
         });

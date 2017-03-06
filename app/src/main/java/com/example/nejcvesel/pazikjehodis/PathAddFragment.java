@@ -1,9 +1,11 @@
 package com.example.nejcvesel.pazikjehodis;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
@@ -140,16 +142,34 @@ public class PathAddFragment extends Fragment {
             public void onClick(View v) {
                 MainActivity main = (MainActivity) getActivity();
                 Collection<String> paths = main.locationsToAddToPath.values();
-                String[] foos = paths.toArray(new String[paths.size()]);
+                if (paths.size()  > 1) {
+                    String[] foos = paths.toArray(new String[paths.size()]);
 
 
-                Fragment fragment = PathAddFormFragment.newInstance(foos);
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction =
-                        fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_frame,fragment,"PathAddFormFragment");
-                fragmentTransaction.addToBackStack("PathAddFormFragment");
-                fragmentTransaction.commit();
+                    Fragment fragment = PathAddFormFragment.newInstance(foos);
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction =
+                            fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.content_frame, fragment, "PathAddFormFragment");
+                    fragmentTransaction.addToBackStack("PathAddFormFragment");
+                    fragmentTransaction.commit();
+                }
+                else
+                {
+                    AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
+                    alert.setTitle("Napaka");
+                    alert.setMessage("Izbrati morate vsaj dve lokaciji");
+                    alert.setButton(android.app.AlertDialog.BUTTON_NEUTRAL, "V redu",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alert.show();
+
+
+                }
+
 
 
 
@@ -159,7 +179,6 @@ public class PathAddFragment extends Fragment {
 
 
         if (view instanceof RecyclerView) {
-            System.out.println("True");
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             this.recView = recyclerView;

@@ -2,8 +2,11 @@ package com.example.nejcvesel.pazikjehodis;
 
 //import android.app.FragmentManager;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -21,10 +24,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.nejcvesel.pazikjehodis.Utility.UtilityFunctions;
 import com.example.nejcvesel.pazikjehodis.Walkthrough.WalkthroughActivity;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.FileUpload;
@@ -61,9 +66,8 @@ import bolts.Task;
 /**
  * Created by brani on 12/18/2016.
  */
-/*TODO: add middleman - fragment for adding path and location
-   TODO: add loader durign api calls
- */
+//   TODO: add loader durign api calls
+
 public class MainActivity extends AppCompatActivity implements
         LocationFragment.OnListFragmentInteractionListener,
         LocationDetailFragment.OnFragmentInteractionListener, PathLocationsFragment.OnListFragmentInteractionListener,
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements
     public UserProfile userProfile = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         System.out.print("ON ACTIVITY");
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
@@ -111,8 +116,13 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-        BackendAPICall callProfile = new BackendAPICall();
-        callProfile.getUserProfile(authToken);
+        SharedPreferences.Editor edit = sharedPref.edit();
+        //edit.clear().commit();
+        //edit.clear();
+        //edit.commit();
+
+       // BackendAPICall callProfile = new BackendAPICall();
+         //callProfile.getUserProfile(userProfile.getBackendAccessToken());
 //
 //        BackendAPICall.UserCallback userCallBack = (BackendAPICall.UserCallback) this;
 //        userCallBack
@@ -238,7 +248,6 @@ public class MainActivity extends AppCompatActivity implements
 
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         LinkedHashSet<String> defaultVal = new LinkedHashSet<String>();
-        SharedPreferences.Editor edit = sharedPref.edit();
         //edit.clear();
         //edit.commit();
         AccessToken at =  AccessToken.getCurrentAccessToken();
@@ -268,8 +277,8 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-
         FragmentManager fm = getFragmentManager();
+
         fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(),"MapFragment").addToBackStack("MapFragment").commit();
     }
 
@@ -352,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements
     public void OpenFormFragment(){
         if(currentMarker != null) {
             FragmentManager fm = getFragmentManager();
-            fm.beginTransaction().replace(R.id.content_frame, new LocationFormFragment(),"FormFragment").addToBackStack("FormFragment").commit();
+            fm.beginTransaction().replace(R.id.content_frame, new LocationFormFragment(),"LocationFormFragment").addToBackStack("LocationFormFragment").commit();
         }
     }
 
@@ -363,36 +372,68 @@ public class MainActivity extends AppCompatActivity implements
     public void SaveForm (View view){
         AccessToken at =  AccessToken.getCurrentAccessToken();
         authToken = at.getToken().toString();
-        LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("FormFragment");
+        LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
         TextView name = (TextView) form.getView().findViewById(R.id.inputName);
         EditText address = (EditText) form.getView().findViewById(R.id.inputAddress);
         EditText title = (EditText) form.getView().findViewById(R.id.inputTitle);
         EditText description = (EditText) form.getView().findViewById(R.id.inputDescription);
         TextView imageUrl = (TextView) form.getView().findViewById(R.id.imageURL);
         Uri url = Uri.parse(imageUrl.getText().toString());
-        if(currentMarker != null) {
-            LatLng latlng = currentMarker.getPosition();
-            FileUpload sendRequest = new FileUpload();
 
-            String token = sharedPref.getString(authToken + "_token","noToken");
+        if (description.getText().length() < 120)
+        {
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Napaka");
+            alertDialog.setMessage("Opis mora vsebovati vsaj 120 znakov");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "V redu",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
 
-            if (token.equals("noToken"))
-            {
-                sendRequest.convertTokenAndUploadFile(url, ((float) latlng.latitude), ((float) latlng.longitude), name.getText().toString(),
-                        address.getText().toString(),title.getText().toString(), description.getText().toString(),
-                        authToken, this.getBaseContext(),sharedPref);
-            }
-            else {
-                sendRequest.uploadFile(url, ((float) latlng.latitude), ((float) latlng.longitude), name.getText().toString(),
-                        address.getText().toString(),title.getText().toString(), description.getText().toString(),
-                        token, this.getBaseContext());
-
-                //api.refreshToken(authToken,sharedPref);
-            }
         }
-        OpenMapsFragment();
-        //FragmentManager fm = getFragmentManager();
-        //fm.beginTransaction().replace(R.id.content_frame, new LocationFragment(), "LocationFragment").addToBackStack("LocationFragment").commit();
+
+        if (name.getText().equals("") || address.getText().equals("") || title.getText().equals("") ||
+        description.getText().equals("") || imageUrl.getText().equals(""))
+        {
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Napaka");
+            alertDialog.setMessage("Vnesti morate vsa polja in naložiti sliko");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "V redu",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+
+        }
+
+
+        else {
+
+            if (currentMarker != null) {
+                LatLng latlng = currentMarker.getPosition();
+                FileUpload sendRequest = new FileUpload();
+
+                String token = sharedPref.getString(authToken + "_token", "noToken");
+
+                if (token.equals("noToken")) {
+                    sendRequest.convertTokenAndUploadFile(url, ((float) latlng.latitude), ((float) latlng.longitude), name.getText().toString(),
+                            address.getText().toString(), title.getText().toString(), description.getText().toString(),
+                            authToken, this.getBaseContext(), sharedPref);
+                } else {
+                    sendRequest.uploadFile(url, ((float) latlng.latitude), ((float) latlng.longitude), name.getText().toString(),
+                            address.getText().toString(), title.getText().toString(), description.getText().toString(),
+                            token, this.getBaseContext());
+
+                    //api.refreshToken(authToken,sharedPref);
+                }
+            }
+            OpenMapsFragment();
+        }
 
 
 
@@ -441,9 +482,16 @@ public class MainActivity extends AppCompatActivity implements
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = imageReturnedIntent.getData();
                     url = selectedImage;
-                    LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("FormFragment");
+                    String realPath = UtilityFunctions.getRealPathFromURI(getBaseContext(),url);
+                    String[] splitUrl = realPath.split("/");
+                    LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
                     TextView picText = (TextView) form.getView().findViewById(R.id.imageURL);
                     picText.setText(selectedImage.toString());
+                    Button addImageButton = (Button) form.getView().findViewById(R.id.form_picture);
+                    addImageButton.setHint("Spremeni sliko");
+                    TextView currPicture = (TextView) form.getView().findViewById(R.id.currentPic);
+                    currPicture.setText("Trenutna slika: " + splitUrl[splitUrl.length-1]);
+
 
 
 
