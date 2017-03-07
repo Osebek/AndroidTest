@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyLocationAdapter;
-
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyUserLocationsAdapter;
 
 
 /**
@@ -23,11 +23,11 @@ import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyLocationAdapter;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class LocationFragment extends Fragment {
+public class MyLocationsFragment extends Fragment {
     Parcelable state;
     RecyclerView recView;
     LinearLayoutManager llm;
-    MyLocationAdapter locAdapter;
+    MyUserLocationsAdapter locAdapter;
     int positionIndex = -1;
     int topView;
 
@@ -37,7 +37,7 @@ public class LocationFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
-    public LocationFragment() {
+    public MyLocationsFragment() {
 
 
     }
@@ -45,8 +45,8 @@ public class LocationFragment extends Fragment {
 
 
     @SuppressWarnings("unused")
-    public static LocationFragment newInstance(int columnCount) {
-        LocationFragment fragment = new LocationFragment();
+    public static MyLocationsFragment newInstance(int columnCount) {
+        MyLocationsFragment fragment = new MyLocationsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -74,20 +74,18 @@ public class LocationFragment extends Fragment {
 //    }
 
 
-   @Override
-   public void onPause()
-   {
-       positionIndex= llm.findFirstVisibleItemPosition();
-       View startView = recView.getChildAt(0);
-       topView = (startView == null) ? 0 : (startView.getTop() - recView.getPaddingTop());
-       System.out.println("PAUSE");
-   super.onPause();
-   }
+    @Override
+    public void onPause()
+    {
+        positionIndex= llm.findFirstVisibleItemPosition();
+        View startView = recView.getChildAt(0);
+        topView = (startView == null) ? 0 : (startView.getTop() - recView.getPaddingTop());
+        super.onPause();
+    }
 
     @Override
     public void onResume()
     {
-        System.out.println("RESUME");
         super.onResume();
 
         if (positionIndex!= -1) {
@@ -108,7 +106,7 @@ public class LocationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_location_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_location_list, container, false);
 
 
 
@@ -130,13 +128,14 @@ public class LocationFragment extends Fragment {
             }
 
             if (positionIndex == -1) {
-                locAdapter = new MyLocationAdapter(getActivity());
+                locAdapter = new MyUserLocationsAdapter(getActivity());
                 BackendAPICall apiCall = new BackendAPICall();
-                apiCall.getAllLocationsToAdapter(((MainActivity) getActivity()).authToken, locAdapter);
+                apiCall.getUserLocationsToAdapter(((MainActivity) getActivity()).userProfile.getBackendAccessToken(), locAdapter);
 
             }
-                recyclerView.setAdapter(locAdapter);
+            recyclerView.setAdapter(locAdapter);
         }
+        System.out.println(positionIndex);
 
         if (positionIndex!= -1) {
             llm.scrollToPositionWithOffset(positionIndex, topView);
@@ -148,7 +147,7 @@ public class LocationFragment extends Fragment {
 
 
 
-        @Override
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {

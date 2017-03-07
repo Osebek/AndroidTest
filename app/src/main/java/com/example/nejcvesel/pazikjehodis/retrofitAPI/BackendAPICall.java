@@ -149,6 +149,40 @@ public class BackendAPICall {
         });
     }
 
+    public void getUserLocationsToAdapter(String authToken, final MyUserLocationsAdapter myLocationAdapter) {
+        LocationInterface service =
+                ServiceGenerator.createAuthorizedService(LocationInterface.class,"xVMLOqEL7xoA0Q6hduAEfZduVfADNo");
+        System.out.println("poklicu sem");
+        Call<List<Location>> call = service.getUserLocations();
+        call.enqueue(new Callback<List<Location>>() {
+            @Override
+            public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
+                List<Location> locations = response.body();
+
+                for (Location loc : locations)
+                {
+                    System.out.println(loc.getName());
+                    System.out.println(loc.getId());
+                    myLocationAdapter.addData(loc);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Location>> call, Throwable t) {
+                System.out.println("Fetching locations did not work");
+                Location loc = new Location();
+                loc.setLatitude("46.056946");
+                loc.setLongtitude("14.505751");
+                loc.setTitle("Nalaganje lokacij ni uspelo");
+                loc.setId(-1);
+                loc.setName("Preveri internetno povezavo");
+                loc.setText("Lokacije niso bile uspešno naložene");
+                loc.setPicture(ServiceGenerator.API_BASE_URL + "locationGetAll/files/locations/None/logo_red.png");
+                myLocationAdapter.addData(loc);
+            }
+        });
+    }
+
     public void getAllAddPathLocationsToAdapter(String authToken, final MyPathAddAdapter myLocationAdapter) {
 
         List<Location> locations = new ArrayList<Location>();
@@ -258,6 +292,8 @@ public class BackendAPICall {
             }
         });
     }
+
+
 
     public void getSpecificLocationToExtendedAdapter(String authToken, String locationID, final MyPathLocationsAdapter myLocationAdapter) {
         LocationInterface service =

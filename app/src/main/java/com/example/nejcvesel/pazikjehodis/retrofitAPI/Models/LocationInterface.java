@@ -16,6 +16,8 @@ public interface LocationInterface {
     Call<Location> getSpecificLocation(@Path("id") String id);
     @GET("locationGetAll/")
     Call<List<Location>> getAllLocations();
+    @GET("getUserLocations/")
+    Call<List<Location>> getUserLocations();
 
 
 }

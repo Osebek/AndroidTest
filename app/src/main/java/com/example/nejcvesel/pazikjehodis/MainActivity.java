@@ -622,8 +622,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void navigationViewMyLocationClick(View view){
-//        FragmentManager fm = getFragmentManager();
-//        fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_frame, new MyLocationsFragment(), "MyLocationsFragment").addToBackStack("MyLocationsFragment").commit();
         closeDrawer();
     }
 
