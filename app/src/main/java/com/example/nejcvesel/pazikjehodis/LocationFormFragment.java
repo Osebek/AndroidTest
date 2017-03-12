@@ -91,15 +91,25 @@ public class LocationFormFragment extends Fragment {
         TextView ownerName = (TextView) myInflatedView.findViewById(R.id.inputName);
         MainActivity main = (MainActivity) getActivity();
         ownerName.setText(main.profile.getFirstName() + main.profile.getLastName());
+        Button submit = ((Button)myInflatedView.findViewById(R.id.upload_location));
+
 
         if (mParamEditMode)
         {
             ((TextView)myInflatedView.findViewById(R.id.inputAddress)).setText(mParamAddress);
             ((TextView)myInflatedView.findViewById(R.id.inputDescription)).setText(mParamText);
             ((TextView)myInflatedView.findViewById(R.id.inputTitle)).setText(mParamTitle);
-            ((Button)myInflatedView.findViewById(R.id.upload_location)).setText("Posodobi");
-
+            submit.setText("Posodobi");
         }
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity main = (MainActivity)getActivity();
+            }
+        });
+
+
 
 
         return myInflatedView;

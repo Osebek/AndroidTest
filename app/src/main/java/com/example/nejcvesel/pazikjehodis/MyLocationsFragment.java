@@ -129,7 +129,7 @@ public class MyLocationsFragment extends Fragment {
 
             if (positionIndex == -1) {
                 locAdapter = new MyUserLocationsAdapter(getActivity());
-                BackendAPICall apiCall = new BackendAPICall();
+                BackendAPICall apiCall = new BackendAPICall(getActivity());
                 apiCall.getUserLocationsToAdapter(((MainActivity) getActivity()).userProfile.getBackendAccessToken(), locAdapter);
 
             }

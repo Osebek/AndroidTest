@@ -66,7 +66,6 @@ import bolts.Task;
 /**
  * Created by brani on 12/18/2016.
  */
-//   TODO: add loader durign api calls
 
 public class MainActivity extends AppCompatActivity implements
         LocationFragment.OnListFragmentInteractionListener,
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements
     public GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
-    BackendAPICall api  = new BackendAPICall();
+    BackendAPICall api  = new BackendAPICall(MainActivity.this);
     public SharedPreferences sharedPref;
     public UserProfile userProfile = null;
     @Override
@@ -576,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements
     {
         AccessToken at =  AccessToken.getCurrentAccessToken();
         authToken = at.getToken().toString();
-        BackendAPICall api = new BackendAPICall();
+        BackendAPICall api = new BackendAPICall(this);
 
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(authToken + "_token","noToken");

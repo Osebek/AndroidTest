@@ -3,6 +3,7 @@ package com.example.nejcvesel.pazikjehodis;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -154,6 +155,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
             }
 
         });
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(),R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Pridobivam lokacije");
+        progressDialog.show();
 
         MainActivity main = (MainActivity) getActivity();
         if (main.pathLocations.size() > 0)
@@ -173,18 +178,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
                                     .position(lok)
                                     .title(loc.getTitle()));
                             markerLocationMap.put(marker, loc);
+                        progressDialog.dismiss();
 
                     }
 
                     @Override
                     public void onFailure(Call<Location> call, Throwable t) {
                         System.out.println("Fetching locations did not work");
+                        progressDialog.dismiss();
+
                     }
                 });
 
             }
-
-
         }
 
         else {
@@ -206,16 +212,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
                         markerLocationMap.put(marker, loc);
 
                     }
+                    progressDialog.dismiss();
+
 
                 }
 
                 @Override
                 public void onFailure(Call<List<Location>> call, Throwable t) {
                     System.out.println("Fetching locations did not work");
+                    progressDialog.dismiss();
+
                 }
             });
 
         }
+
 
 
     }

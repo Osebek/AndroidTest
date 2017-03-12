@@ -91,7 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
     public void openGallery(View v) {
-        BackendAPICall kliciAPI = new BackendAPICall();
+        BackendAPICall kliciAPI = new BackendAPICall(this);
         System.out.println(authToken);
         kliciAPI.getAllLocations(authToken);
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,

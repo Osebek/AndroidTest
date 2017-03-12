@@ -1,5 +1,6 @@
 package com.example.nejcvesel.pazikjehodis.retrofitAPI;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -8,7 +9,9 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.example.nejcvesel.pazikjehodis.MainActivity;
+import com.example.nejcvesel.pazikjehodis.MainMenuActivity;
 import com.example.nejcvesel.pazikjehodis.MyPathLocationsAdapter;
+import com.example.nejcvesel.pazikjehodis.R;
 import com.example.nejcvesel.pazikjehodis.UserProfile;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.AuthorizationInterface;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
@@ -40,6 +43,14 @@ import retrofit2.Response;
 public class BackendAPICall {
     public interface UserCallback{
         public void callBack(String accessToekn, String refreshToken);
+    }
+    private Context context;
+
+
+    public BackendAPICall(Context context)
+    {
+        this.context = context;
+
     }
 
     UserCallback usrCall;
@@ -113,6 +124,15 @@ public class BackendAPICall {
     }
 
     public void getAllLocationsToAdapter(String authToken, final MyLocationAdapter myLocationAdapter) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(context,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Pridobivam lokacije");
+        progressDialog.show();
+
+
+
         final long startTime = System.currentTimeMillis();
         List<Location> locations = new ArrayList<Location>();
         LocationInterface service =
@@ -128,8 +148,7 @@ public class BackendAPICall {
                 {
                     myLocationAdapter.addData(loc);
                 }
-                long elapsedTime = System.currentTimeMillis() - startTime;
-                System.out.println("Total elapsed http request/response time in milliseconds: " + elapsedTime);
+                progressDialog.dismiss();
 
             }
 
@@ -145,11 +164,17 @@ public class BackendAPICall {
                 loc.setText("Lokacije niso bile uspešno naložene");
                 loc.setPicture(ServiceGenerator.API_BASE_URL + "locationGetAll/files/locations/None/logo_red.png");
                 myLocationAdapter.addData(loc);
+                progressDialog.dismiss();
             }
         });
     }
 
     public void getUserLocationsToAdapter(String authToken, final MyUserLocationsAdapter myLocationAdapter) {
+        final ProgressDialog progressDialog = new ProgressDialog(context,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Pridobivam lokacije");
+        progressDialog.show();
         LocationInterface service =
                 ServiceGenerator.createAuthorizedService(LocationInterface.class,"xVMLOqEL7xoA0Q6hduAEfZduVfADNo");
         System.out.println("poklicu sem");
@@ -165,6 +190,7 @@ public class BackendAPICall {
                     System.out.println(loc.getId());
                     myLocationAdapter.addData(loc);
                 }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -179,11 +205,17 @@ public class BackendAPICall {
                 loc.setText("Lokacije niso bile uspešno naložene");
                 loc.setPicture(ServiceGenerator.API_BASE_URL + "locationGetAll/files/locations/None/logo_red.png");
                 myLocationAdapter.addData(loc);
+                progressDialog.dismiss();
             }
         });
     }
 
     public void getAllAddPathLocationsToAdapter(String authToken, final MyPathAddAdapter myLocationAdapter) {
+        final ProgressDialog progressDialog = new ProgressDialog(context,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Pridobivam lokacije");
+        progressDialog.show();
 
         List<Location> locations = new ArrayList<Location>();
         LocationInterface service =
@@ -200,6 +232,7 @@ public class BackendAPICall {
                     myLocationAdapter.addData(loc);
                 }
                 myLocationAdapter.getFilter().filter("");
+                progressDialog.dismiss();
 
             }
 
@@ -215,6 +248,7 @@ public class BackendAPICall {
                 loc.setText("Lokacije niso bile uspešno naložene");
                 loc.setPicture(ServiceGenerator.API_BASE_URL + "locationGetAll/files/locations/None/logo_red.png");
                 myLocationAdapter.addData(loc);
+                progressDialog.dismiss();
             }
         });
 
@@ -222,6 +256,11 @@ public class BackendAPICall {
     }
 
     public void getAllPathsToAdapter(final String authToken, final MyPathAdapter myPathAdapter) {
+        final ProgressDialog progressDialog = new ProgressDialog(context,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Pridobivam poti");
+        progressDialog.show();
 
         PathInterface service =
                 ServiceGenerator.createUnauthorizedService(PathInterface.class);
@@ -236,6 +275,7 @@ public class BackendAPICall {
                 {
                     myPathAdapter.addData(pth);
                 }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -250,6 +290,7 @@ public class BackendAPICall {
                 path.setId(-1);
                 myPathAdapter.addData(path);
                 System.out.println("Fetching locations did not work");
+                progressDialog.dismiss();
             }
         });
     }
@@ -607,6 +648,62 @@ public class BackendAPICall {
                         MediaType.parse("multipart/form-data"), address);
 
         Call<ResponseBody> call = service.upload(latitude_body,longtitude_body,name_body,address_body,title_body,text_body,body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call,
+                                   Response<ResponseBody> response) {
+                Log.v("Upload", "success");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Upload error:", t.getMessage());
+            }
+        });
+
+
+    }
+
+    public void updateLocationWithPicture(Uri fileUri,Float latitude, Float longtitude, String name, String address, String title, String text,String authToken,String id,Context context)
+    {
+        System.out.println(authToken);
+        FileUploadService service =
+                ServiceGenerator.createAuthorizedService(FileUploadService.class, authToken);
+        String filePath = getRealPathFromURI(context,fileUri);
+
+        File file = new File(filePath);
+
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
+
+        String latitude_string = latitude.toString();
+        RequestBody latitude_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), latitude_string);
+
+        String longtitudeString = longtitude.toString();
+        RequestBody longtitude_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), longtitudeString);
+
+        RequestBody text_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), text);
+
+        RequestBody title_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), title);
+
+        RequestBody name_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), name);
+
+        RequestBody address_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), address);
+
+        Call<ResponseBody> call = service.updateLocation(id,latitude_body,longtitude_body,name_body,address_body,title_body,text_body,body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call,
