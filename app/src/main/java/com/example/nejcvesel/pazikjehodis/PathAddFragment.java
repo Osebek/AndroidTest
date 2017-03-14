@@ -192,7 +192,7 @@ public class PathAddFragment extends Fragment {
 
             if (positionIndex == -1) {
                 locAdapter = new MyPathAddAdapter(getActivity());
-                BackendAPICall apiCall = new BackendAPICall(getActivity());
+                BackendAPICall apiCall = new BackendAPICall();
                 apiCall.getAllAddPathLocationsToAdapter(((MainActivity) getActivity()).authToken, locAdapter);
 
             }

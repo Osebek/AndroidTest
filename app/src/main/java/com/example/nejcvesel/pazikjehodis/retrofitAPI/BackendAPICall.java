@@ -119,11 +119,11 @@ public class BackendAPICall {
 
     public void getAllLocationsToAdapter(String authToken, final MyLocationAdapter myLocationAdapter) {
 
-        final ProgressDialog progressDialog = new ProgressDialog(context,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Pridobivam lokacije");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(context,
+//                R.style.AppTheme_Dark_Dialog);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Pridobivam lokacije");
+//        progressDialog.show();
 
 
 
@@ -142,7 +142,7 @@ public class BackendAPICall {
                 {
                     myLocationAdapter.addData(loc);
                 }
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
 
             }
 
@@ -158,17 +158,17 @@ public class BackendAPICall {
                 loc.setText("Lokacije niso bile uspešno naložene");
                 loc.setPicture(ServiceGenerator.API_BASE_URL + "locationGetAll/files/locations/None/logo_red.png");
                 myLocationAdapter.addData(loc);
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
         });
     }
 
     public void getUserLocationsToAdapter(String authToken, final MyUserLocationsAdapter myLocationAdapter) {
-        final ProgressDialog progressDialog = new ProgressDialog(context,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Pridobivam lokacije");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(context,
+//                R.style.AppTheme_Dark_Dialog);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Pridobivam lokacije");
+//        progressDialog.show();
         LocationInterface service =
                 ServiceGenerator.createAuthorizedService(LocationInterface.class,"xVMLOqEL7xoA0Q6hduAEfZduVfADNo");
         System.out.println("poklicu sem");
@@ -184,7 +184,7 @@ public class BackendAPICall {
                     System.out.println(loc.getId());
                     myLocationAdapter.addData(loc);
                 }
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
 
             @Override
@@ -199,17 +199,17 @@ public class BackendAPICall {
                 loc.setText("Lokacije niso bile uspešno naložene");
                 loc.setPicture(ServiceGenerator.API_BASE_URL + "locationGetAll/files/locations/None/logo_red.png");
                 myLocationAdapter.addData(loc);
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
         });
     }
 
     public void getAllAddPathLocationsToAdapter(String authToken, final MyPathAddAdapter myLocationAdapter) {
-        final ProgressDialog progressDialog = new ProgressDialog(context,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Pridobivam lokacije");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(context,
+//                R.style.AppTheme_Dark_Dialog);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Pridobivam lokacije");
+//        progressDialog.show();
 
         List<Location> locations = new ArrayList<Location>();
         LocationInterface service =
@@ -226,7 +226,7 @@ public class BackendAPICall {
                     myLocationAdapter.addData(loc);
                 }
                 myLocationAdapter.getFilter().filter("");
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
 
             }
 
@@ -242,7 +242,7 @@ public class BackendAPICall {
                 loc.setText("Lokacije niso bile uspešno naložene");
                 loc.setPicture(ServiceGenerator.API_BASE_URL + "locationGetAll/files/locations/None/logo_red.png");
                 myLocationAdapter.addData(loc);
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
         });
 
@@ -250,11 +250,11 @@ public class BackendAPICall {
     }
 
     public void getAllPathsToAdapter(final String authToken, final MyPathAdapter myPathAdapter) {
-        final ProgressDialog progressDialog = new ProgressDialog(context,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Pridobivam poti");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(context,
+//                R.style.AppTheme_Dark_Dialog);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Pridobivam poti");
+//        progressDialog.show();
 
         PathInterface service =
                 ServiceGenerator.createUnauthorizedService(PathInterface.class);
@@ -269,7 +269,7 @@ public class BackendAPICall {
                 {
                     myPathAdapter.addData(pth);
                 }
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
 
             @Override
@@ -284,7 +284,7 @@ public class BackendAPICall {
                 path.setId(-1);
                 myPathAdapter.addData(path);
                 System.out.println("Fetching locations did not work");
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
         });
     }
