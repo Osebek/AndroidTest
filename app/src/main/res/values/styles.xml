@@ -12,6 +12,9 @@
     <style name="AppTheme.Launcher">
         <item name="android:windowBackground">@drawable/lunch_screen</item>
     </style>
+    <style name="BackgroundDefault">
+        <item name="android:windowBackground">@drawable/background_screen</item>
+    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

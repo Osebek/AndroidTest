@@ -135,12 +135,14 @@
 
                     <include
                         layout="@layout/data_decoration_line"
+                        android:id="@+id/my_location_divisor"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp" />
 
                     <LinearLayout
+                        android:id="@+id/my_location_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -197,12 +199,14 @@
 
                     <include
                         layout="@layout/data_decoration_line"
+                        android:id="@+id/my_paths_divisor"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp" />
 
                     <LinearLayout
+                        android:id="@+id/my_paths_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -318,6 +322,13 @@
                             android:src="@drawable/ikona_predstavitev" />
 
                     </LinearLayout>
+
+                    <include
+                        layout="@layout/data_decoration_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

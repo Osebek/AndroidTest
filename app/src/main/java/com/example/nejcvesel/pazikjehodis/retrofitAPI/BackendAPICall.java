@@ -1,5 +1,6 @@
 package com.example.nejcvesel.pazikjehodis.retrofitAPI;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -38,11 +39,12 @@ import retrofit2.Response;
 
 
 public class BackendAPICall {
-    public interface UserCallback{
-        public void callBack(String accessToekn, String refreshToken);
-    }
 
-    UserCallback usrCall;
+    BackendCallback backendCallback;
+    public BackendAPICall(){}
+    public BackendAPICall(Activity activity){
+        this.backendCallback = (BackendCallback) activity;
+    }
     public void getAllPaths(String authToken) {
 
         final MyLocationAdapter myLocationAdapter;
@@ -425,7 +427,6 @@ public class BackendAPICall {
                     editor.commit();
                     profile.setRefreshToken(newToken.getRefreshToken());
                     profile.setBackendAccessToken(newToken.getAccessToken());
-                    usrCall.callBack(newToken.getAccessToken(),newToken.getRefreshToken());
                 }
             }
 
@@ -636,6 +637,11 @@ public class BackendAPICall {
                 cursor.close();
             }
         }
+    }
+
+    public interface BackendCallback{
+        public void getUserCallback(User user);
+        public void getLocationCallback(Location location);
     }
 }
 

@@ -7,8 +7,7 @@
     <LinearLayout
         android:layout_width="340dp"
         android:layout_height="200dp"
-        android:orientation="vertical"
-        android:background="@drawable/marker_info_background">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,40 +50,35 @@
                         android:paddingRight="64dp" />
                 </LinearLayout>
 
-                <ImageView
+                    <ImageView
                     android:id="@+id/icon_infowindow"
                     android:layout_width="35dp"
                     android:layout_gravity="center"
                     android:layout_height="35dp"
                     android:src="@drawable/ikona_lokacije" />
             </LinearLayout>
-            <!--<ViewSwitcher-->
-            <!--android:id="@+id/view_switcher"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-            <!--<ProgressBar-->
-            <!--android:id="@+id/progressBar1"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:indeterminate="true"-->
-            <!--android:layout_gravity="center"-->
-            <!--style="@android:style/Widget.ProgressBar.Small.Inverse"/>-->
-            <ImageView
-                android:id="@+id/imageHolder"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ikona_lokacije" />
-            <!--</ViewSwitcher>-->
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/imageHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp" />
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/progressBar1"
+                    android:indeterminateDrawable="@drawable/progress_animation"/>
+            </RelativeLayout>
         </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@drawable/marker_arrow" />
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="10dp"-->
+        <!--android:background="@drawable/marker_arrow" />-->
 
 </LinearLayout>

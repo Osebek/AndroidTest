@@ -4,16 +4,15 @@ package com.example.nejcvesel.pazikjehodis;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +25,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.nejcvesel.pazikjehodis.Utility.UtilityFunctions;
@@ -53,15 +52,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-
-import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-
-import bolts.Task;
 
 /**
  * Created by brani on 12/18/2016.
@@ -71,26 +66,27 @@ import bolts.Task;
 public class MainActivity extends AppCompatActivity implements
         LocationFragment.OnListFragmentInteractionListener,
         LocationDetailFragment.OnFragmentInteractionListener, PathLocationsFragment.OnListFragmentInteractionListener,
-        LocationInPathDetailFragment.OnFragmentInteractionListener,GoogleApiClient.OnConnectionFailedListener,
-         PathAddFormFragment.OnFragmentInteractionListener, PathAddFragment.OnListFragmentInteractionListener{
+        LocationInPathDetailFragment.OnFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener,
+        PathAddFormFragment.OnFragmentInteractionListener, PathAddFragment.OnListFragmentInteractionListener {
     public static String authToken;
     public Marker currentMarker = null;
     public Uri url = null;
     public CallbackManager callbackManager;
     public AccessTokenTracker accessTokenTracker;
     public ProfileTracker profileTracker;
-    private Boolean isFabOpen = false;
-    private FloatingActionButton fab,fab1,fab2;
-    private Animation fab_open,fab_close,rotate_forward,rotate_backward;
+    private FloatingActionButton fab, fab1, fab2;
     public ArrayList<String> pathLocations = new ArrayList<String>();
     public Profile profile;
-    public HashMap<String,String> locationsToAddToPath = new HashMap<String,String>();
+    public HashMap<String, String> locationsToAddToPath = new HashMap<String, String>();
     public GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
-    BackendAPICall api  = new BackendAPICall();
+    BackendAPICall api = new BackendAPICall();
     public SharedPreferences sharedPref;
     public UserProfile userProfile = null;
+    FabHandler fabClick;
+    public boolean markerAddEnable = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -103,26 +99,26 @@ public class MainActivity extends AppCompatActivity implements
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         userProfile = new UserProfile();
 
-        Map<?,?> bla = sharedPref.getAll();
-        for(Object key: bla.keySet()){
+        Map<?, ?> bla = sharedPref.getAll();
+        for (Object key : bla.keySet()) {
             String tmpKey = key.toString();
-            if(tmpKey.contains("_token")){
+            if (tmpKey.contains("_token")) {
                 Object currToken = bla.get(key);
                 userProfile.setBackendAccessToken(currToken.toString());
             }
-            if(tmpKey.contains("_refresh")){
+            if (tmpKey.contains("_refresh")) {
                 Object currToken = bla.get(key);
                 userProfile.setRefreshToken(currToken.toString());
             }
         }
 
-        SharedPreferences.Editor edit = sharedPref.edit();
+//        SharedPreferences.Editor edit = sharedPref.edit();
         //edit.clear().commit();
         //edit.clear();
         //edit.commit();
 
-       // BackendAPICall callProfile = new BackendAPICall();
-         //callProfile.getUserProfile(userProfile.getBackendAccessToken());
+        // BackendAPICall callProfile = new BackendAPICall();
+        //callProfile.getUserProfile(userProfile.getBackendAccessToken());
 //
 //        BackendAPICall.UserCallback userCallBack = (BackendAPICall.UserCallback) this;
 //        userCallBack
@@ -138,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements
 //                      Profile profile = Profile.getCurrentProfile();
                         authToken = loginResult.getAccessToken().getToken();
                         AccessToken.setCurrentAccessToken(loginResult.getAccessToken());
-                        api.refreshToken(authToken,sharedPref,userProfile);
+                        api.refreshToken(authToken, sharedPref, userProfile);
                         userProfile.setUserToken(authToken);
                         userProfile.setLoginType("Facebook");
                     }
@@ -155,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements
                 });
 
         //TODO: login registration for fb and google!
-       accessTokenTracker = new AccessTokenTracker() {
+        accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(
                     AccessToken oldAccessToken,
@@ -164,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements
 //                View header=navigationView.getHeaderView(0);
 //                TextView name = (TextView)header.findViewById(R.id.textView);
                 TextView userName = (TextView) findViewById(R.id.navHeaderText);
-                if (currentAccessToken == null){
+                if (currentAccessToken == null) {
                     userName.setText("Anonimen uporabnik");
                 }
             }
@@ -175,8 +171,7 @@ public class MainActivity extends AppCompatActivity implements
             protected void onCurrentProfileChanged(
                     Profile oldProfile,
                     Profile currentProfile) {
-                if (currentProfile != null)
-                {
+                if (currentProfile != null) {
 //                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 //                    View header=navigationView.getHeaderView(0);
 //                    TextView name = (TextView)header.findViewById(R.id.textView);
@@ -186,41 +181,46 @@ public class MainActivity extends AppCompatActivity implements
                     userProfile.setLastName(currentProfile.getLastName());
                 }
 
-                }
+            }
         };
 
         //TODO: fab buttons - set right images as well right colors for fab buttons
         //TODO: fab buttons - on/off in different fragments
         this.profile = Profile.getCurrentProfile();
 
-        fab = (FloatingActionButton)findViewById(R.id.fab);
-        fab1 = (FloatingActionButton)findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton)findViewById(R.id.fab2);
-        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
-        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_forward);
-        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_backward);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animateFAB();
-            }
-        });
 
-        fab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("fab1");
-            }
-        });
+        fabClick = new FabHandler(this);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+//        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+//        fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
+//        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_forward);
+//        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_backward);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                animateFAB();
+//            }
+//        });
+//
+//        fab1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                System.out.println("fab1");
+//            }
+//        });
+//
+//        fab2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//               System.out.println("fab2");
+//            }
+//        });
 
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               System.out.println("fab2");
-            }
-        });
-
+        fab.setOnClickListener(fabClick);
+        fab1.setOnClickListener(fabClick);
+        fab2.setOnClickListener(fabClick);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         android.support.v7.app.ActionBarDrawerToggle toggle = new android.support.v7.app.ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -231,10 +231,10 @@ public class MainActivity extends AppCompatActivity implements
         navigationView.setNavigationItemSelectedListener(this);
         View header=navigationView.getHeaderView(0);
         TextView name = (TextView)header.findViewById(R.id.textView);*/
-        TextView profileName = (TextView)findViewById(R.id.navHeaderText);
-        if(userProfile.backendAccessToken != ""){
+        TextView profileName = (TextView) findViewById(R.id.navHeaderText);
+        if (userProfile.backendAccessToken != "") {
             profileName.setText(userProfile.getFirstName() + " " + userProfile.getLastName());
-        }else{
+        } else {
             profileName.setText("Anonimen uporabnik");
         }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -250,62 +250,54 @@ public class MainActivity extends AppCompatActivity implements
         LinkedHashSet<String> defaultVal = new LinkedHashSet<String>();
         //edit.clear();
         //edit.commit();
-        AccessToken at =  AccessToken.getCurrentAccessToken();
-        try{
+        AccessToken at = AccessToken.getCurrentAccessToken();
+        try {
             authToken = at.getToken().toString();
-        }catch (Exception e){
+        } catch (Exception e) {
             authToken = null;
         }
 //        authToken = at.getToken().toString();
         System.out.println(authToken);
 
 
-
-        String token = sharedPref.getString(authToken + "_token","noToken");
+        String token = sharedPref.getString(authToken + "_token", "noToken");
         String refresh_token = sharedPref.getString(authToken + "_refresh", "noRefreshToken");
 
-        if (token.equals("noToken"))
-        {
-        }
-        else
-        {
+        if (token.equals("noToken")) {
+        } else {
             System.out.println(token);
             System.out.println(refresh_token);
         }
 
 
-
-
-
         FragmentManager fm = getFragmentManager();
 
-        fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(),"MapFragment").addToBackStack("MapFragment").commit();
+        fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
     }
 
-    public void animateFAB(){
-
-        if(isFabOpen){
-
-            fab.startAnimation(rotate_backward);
-            fab1.startAnimation(fab_close);
-            fab2.startAnimation(fab_close);
-            fab1.setClickable(false);
-            fab2.setClickable(false);
-            isFabOpen = false;
-            Log.d("Raj", "close");
-
-        } else {
-
-            fab.startAnimation(rotate_forward);
-            fab1.startAnimation(fab_open);
-            fab2.startAnimation(fab_open);
-            fab1.setClickable(true);
-            fab2.setClickable(true);
-            isFabOpen = true;
-            Log.d("Raj","open");
-
-        }
-    }
+//    public void animateFAB() {
+//
+//        if (isFabOpen) {
+//            fab.startAnimation(rotate_backward);
+//            fab1.startAnimation(fab_close);
+//            fab2.startAnimation(fab_close);
+//            fab1.setClickable(false);
+//            fab2.setClickable(false);
+//            isFabOpen = false;
+//            Log.d("Raj", "close");
+//
+//        } else {
+//
+//            fab.startAnimation(rotate_forward);
+//            fab1.startAnimation(fab_open);
+//            fab2.startAnimation(fab_open);
+//            fab1.setClickable(true);
+//            fab2.setClickable(true);
+//            isFabOpen = true;
+//            Log.d("Raj", "open");
+//
+//        }
+//    }
 
     @Override
     public void onBackPressed() {
@@ -323,10 +315,10 @@ public class MainActivity extends AppCompatActivity implements
 
         //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-          //  if (drawer.isDrawerOpen(GravityCompat.START)) {
-          //  drawer.closeDrawer(GravityCompat.START);
-       // } else {
-         //   super.onBackPressed();
+        //  if (drawer.isDrawerOpen(GravityCompat.START)) {
+        //  drawer.closeDrawer(GravityCompat.START);
+        // } else {
+        //   super.onBackPressed();
         //}
     }
 
@@ -352,25 +344,25 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    public void OpenGallery(){
+    public void OpenGallery() {
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickPhoto, 1);
     }
 
-    public void OpenFormFragment(){
-        if(currentMarker != null) {
+    public void OpenFormFragment() {
+        if (currentMarker != null) {
             FragmentManager fm = getFragmentManager();
-            fm.beginTransaction().replace(R.id.content_frame, new LocationFormFragment(),"LocationFormFragment").addToBackStack("LocationFormFragment").commit();
+            fm.beginTransaction().replace(R.id.content_frame, new LocationFormFragment(), "LocationFormFragment").addToBackStack("LocationFormFragment").commit();
         }
     }
 
-    public void CancelForm (View view){
+    public void CancelForm(View view) {
         onBackPressed();
     }
 
-    public void SaveForm (View view){
-        AccessToken at =  AccessToken.getCurrentAccessToken();
+    public void SaveForm(View view) {
+        AccessToken at = AccessToken.getCurrentAccessToken();
         authToken = at.getToken().toString();
         LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
         TextView name = (TextView) form.getView().findViewById(R.id.inputName);
@@ -380,8 +372,7 @@ public class MainActivity extends AppCompatActivity implements
         TextView imageUrl = (TextView) form.getView().findViewById(R.id.imageURL);
         Uri url = Uri.parse(imageUrl.getText().toString());
 
-        if (description.getText().length() < 120)
-        {
+        if (description.getText().length() < 120) {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Napaka");
             alertDialog.setMessage("Opis mora vsebovati vsaj 120 znakov");
@@ -396,8 +387,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         if (name.getText().equals("") || address.getText().equals("") || title.getText().equals("") ||
-        description.getText().equals("") || imageUrl.getText().equals(""))
-        {
+                description.getText().equals("") || imageUrl.getText().equals("")) {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Napaka");
             alertDialog.setMessage("Vnesti morate vsa polja in naložiti sliko");
@@ -409,10 +399,7 @@ public class MainActivity extends AppCompatActivity implements
                     });
             alertDialog.show();
 
-        }
-
-
-        else {
+        } else {
 
             if (currentMarker != null) {
                 LatLng latlng = currentMarker.getPosition();
@@ -436,14 +423,13 @@ public class MainActivity extends AppCompatActivity implements
         }
 
 
-
     }
 
-    public void AttachPic (View view){
-        AccessToken at =  AccessToken.getCurrentAccessToken();
+    public void AttachPic(View view) {
+        AccessToken at = AccessToken.getCurrentAccessToken();
         authToken = at.getToken().toString();
         System.out.println(authToken);
-       //BackendAPICall kliciAPI = new BackendAPICall();
+        //BackendAPICall kliciAPI = new BackendAPICall();
         //kliciAPI.getAllPaths(authToken);
         //kliciAPI.addPath(authToken);
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
@@ -451,7 +437,7 @@ public class MainActivity extends AppCompatActivity implements
         startActivityForResult(pickPhoto, 1);
     }
 
-    public void OpenMapsFragment(){
+    public void OpenMapsFragment() {
         FragmentManager fm = getFragmentManager();
         boolean fragmentPopped = fm.popBackStackImmediate("MapsFragment", 0);
         if (!fragmentPopped) {
@@ -459,7 +445,6 @@ public class MainActivity extends AppCompatActivity implements
         }
 //        fm.beginTransaction().replace(R.id.content_frame, new MapsFragment()).commit();
     }
-
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
@@ -470,19 +455,19 @@ public class MainActivity extends AppCompatActivity implements
             handleSignInResult(result);
         }
 
-        switch(requestCode) {
+        switch (requestCode) {
             case 0:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
                     System.out.println("Fotka fotka");
                 }
 
                 break;
             case 1:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
                     url = selectedImage;
-                    String realPath = UtilityFunctions.getRealPathFromURI(getBaseContext(),url);
+                    String realPath = UtilityFunctions.getRealPathFromURI(getBaseContext(), url);
                     String[] splitUrl = realPath.split("/");
                     LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
                     TextView picText = (TextView) form.getView().findViewById(R.id.imageURL);
@@ -490,9 +475,7 @@ public class MainActivity extends AppCompatActivity implements
                     Button addImageButton = (Button) form.getView().findViewById(R.id.form_picture);
                     addImageButton.setHint("Spremeni sliko");
                     TextView currPicture = (TextView) form.getView().findViewById(R.id.currentPic);
-                    currPicture.setText("Trenutna slika: " + splitUrl[splitUrl.length-1]);
-
-
+                    currPicture.setText("Trenutna slika: " + splitUrl[splitUrl.length - 1]);
 
 
 //                    System.out.println(selectedImage.toString());
@@ -508,9 +491,8 @@ public class MainActivity extends AppCompatActivity implements
                 break;
 
         }
-        callbackManager.onActivityResult(requestCode,resultCode,imageReturnedIntent);
+        callbackManager.onActivityResult(requestCode, resultCode, imageReturnedIntent);
     }
-
 
 
     private void handleSignInResult(GoogleSignInResult result) {
@@ -520,14 +502,12 @@ public class MainActivity extends AppCompatActivity implements
             GoogleSignInAccount acct = result.getSignInAccount();
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             System.out.println(acct.getDisplayName());
-           // updateUI(true);
+            // updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
-           // updateUI(false);
+            // updateUI(false);
         }
     }
-
-
 
 
     @Override
@@ -541,28 +521,27 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-
     //Map interaction method
-    public boolean isMarker (){
+    public boolean isMarker() {
         return currentMarker != null;
     }
-    public void RemoveMarker(){
+
+    public void RemoveMarker() {
         currentMarker.remove();
     }
-    public void AddMarker(Marker marker){
+
+    public void AddMarker(Marker marker) {
         currentMarker = marker;
     }
 
-    public void showLocationOnMap(View v, String pathLocations)
-    {
+    public void showLocationOnMap(View v, String pathLocations) {
         this.pathLocations.clear();
-        pathLocations  = pathLocations.replaceAll("\\[","");
-        pathLocations  = pathLocations.replaceAll("\\]","");
-        pathLocations = pathLocations.replaceAll(" ","");
+        pathLocations = pathLocations.replaceAll("\\[", "");
+        pathLocations = pathLocations.replaceAll("\\]", "");
+        pathLocations = pathLocations.replaceAll(" ", "");
         String[] pathLocationArray = pathLocations.split(",");
 
-        for (int i = 0; i < pathLocationArray.length; i++)
-        {
+        for (int i = 0; i < pathLocationArray.length; i++) {
             this.pathLocations.add(pathLocationArray[i]);
         }
 
@@ -572,32 +551,29 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void uploadPath(Path path)
-    {
-        AccessToken at =  AccessToken.getCurrentAccessToken();
+    public void uploadPath(Path path) {
+        AccessToken at = AccessToken.getCurrentAccessToken();
         authToken = at.getToken().toString();
         BackendAPICall api = new BackendAPICall();
 
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String token = sharedPref.getString(authToken + "_token","noToken");
+        String token = sharedPref.getString(authToken + "_token", "noToken");
 
-        if (token.equals("noToken"))
-        {
-            api.convertTokenAndAddPath(path,authToken,sharedPref);
-        }
-        else {
-            api.addPath(path,authToken,sharedPref);
+        if (token.equals("noToken")) {
+            api.convertTokenAndAddPath(path, authToken, sharedPref);
+        } else {
+            api.addPath(path, authToken, sharedPref);
             //api.refreshToken(authToken,sharedPref);
         }
 
     }
-    public static String[] stringToStringArray(String pathLocations)
-    {
 
-            pathLocations  = pathLocations.replaceAll("\\[","");
-            pathLocations  = pathLocations.replaceAll("\\]","");
-            pathLocations = pathLocations.replaceAll(" ","");
-            String[] pathLocationArray = pathLocations.split(",");
+    public static String[] stringToStringArray(String pathLocations) {
+
+        pathLocations = pathLocations.replaceAll("\\[", "");
+        pathLocations = pathLocations.replaceAll("\\]", "");
+        pathLocations = pathLocations.replaceAll(" ", "");
+        String[] pathLocationArray = pathLocations.split(",");
         return pathLocationArray;
 
     }
@@ -609,72 +585,109 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /*Navigation drawer on clicked item handler*/
-    public void navigationViewLocationClick(View view){
+    public void navigationViewLocationClick(View view) {
+        CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new LocationFragment(), "LocationFragment").addToBackStack("LocationFragment").commit();
         closeDrawer();
     }
 
-    public void navigationViewMapClick(View view){
+    public void navigationViewMapClick(View view) {
+        CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
         closeDrawer();
     }
 
-    public void navigationViewMyLocationClick(View view){
+    public void navigationViewMyLocationClick(View view) {
+        CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new MyLocationsFragment(), "MyLocationsFragment").addToBackStack("MyLocationsFragment").commit();
         closeDrawer();
     }
 
-    public void navigationViewPathClick(View view){
+    public void navigationViewPathClick(View view) {
+        CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new PathListFragment(), "PathListFragment").addToBackStack("PathListFragment").commit();
         closeDrawer();
     }
 
-    public void navigationViewMyPathClick(View view){
+    public void navigationViewMyPathClick(View view) {
+        CloseMarkerInfoWindow();
 //        FragmentManager fm = getFragmentManager();
 //        fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
         closeDrawer();
     }
 
-    public void navigationViewSearchClick(View view){
+    public void navigationViewSearchClick(View view) {
+        CloseMarkerInfoWindow();
 //        FragmentManager fm = getFragmentManager();
 //        fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
         closeDrawer();
     }
 
-    public void navigationViewAddClick(View view){
+    public void navigationViewAddClick(View view) {
+        CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new AddFragment(), "AddFragment").addToBackStack("AddFragment").commit();
         closeDrawer();
     }
 
-    public void navigationViewWhatsNewClick(View view){
-        Intent intent = new Intent(getApplicationContext(),WalkthroughActivity.class);
+    public void navigationViewWhatsNewClick(View view) {
+        CloseMarkerInfoWindow();
+        Intent intent = new Intent(getApplicationContext(), WalkthroughActivity.class);
         startActivity(intent);
         closeDrawer();
     }
 
-    public void navigationViewLogingClick(View view){
+    public void navigationViewLogingClick(View view) {
+        CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new LogInFragment(), "LogInFragment").addToBackStack("LogInFragment").commit();
         closeDrawer();
     }
 
-    public void navigationViewHomeClick(View view){
+    public void navigationViewHomeClick(View view) {
+        CloseMarkerInfoWindow();
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         startActivity(intent);
     }
 
-    public void closeDrawer(){
+    public void closeDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
     }
 
-//    public static initLoginType(UserProfile.loginType loginType){
-//        this.profile.setLoginType(loginType);
-//    }
+    public void setScreenLayout(boolean isAnonym) {
+        View l1 = findViewById(R.id.my_location_layout);
+        View l2 = findViewById(R.id.my_paths_layout);
+        View d1 = findViewById(R.id.my_location_divisor);
+        View d2 = findViewById(R.id.my_paths_divisor);
+        if (isAnonym) {
+            l1.setVisibility(View.GONE);
+            l2.setVisibility(View.GONE);
+            d1.setVisibility(View.GONE);
+            d2.setVisibility(View.GONE);
+        } else {
+            l1.setVisibility(View.VISIBLE);
+            l2.setVisibility(View.VISIBLE);
+            d1.setVisibility(View.VISIBLE);
+            d2.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void RefreshUser() {
+
+    }
+
+    public void CloseMarkerInfoWindow() {
+        final View infoWindow = findViewById(R.id.infoCardMarker);
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+        infoWindow.setX(0);
+        infoWindow.setY(-200);
+        infoWindow.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
 }

@@ -91,8 +91,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/edit_icon"
                 android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:src="@drawable/edit_icon"/>
+                android:layout_marginBottom="5dp"/>
 
             <TextView fontPath="fonts/Ubuntu-light.ttf"
                 android:id="@+id/locIdentifier"

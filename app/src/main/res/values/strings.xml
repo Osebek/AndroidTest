@@ -52,5 +52,7 @@
     <string name="menu_how_to">Predstavitev</string>
     <string name="menu_loging">Predstavitev</string>
 
+    <!--location info window marker  error load -->
+    <string name="error_load_info">Info za lokacijo ne obstaja</string>
 
 </resources>
