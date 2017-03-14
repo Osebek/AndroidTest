@@ -33,7 +33,6 @@ import java.util.Collection;
  * interface.
  */
 //TODO: search bar to look nice
-//TODO: check if at least one path is selected
 public class PathAddFragment extends Fragment {
     Parcelable state;
     RecyclerView recView;
@@ -193,7 +192,7 @@ public class PathAddFragment extends Fragment {
 
             if (positionIndex == -1) {
                 locAdapter = new MyPathAddAdapter(getActivity());
-                BackendAPICall apiCall = new BackendAPICall();
+                BackendAPICall apiCall = new BackendAPICall(getActivity());
                 apiCall.getAllAddPathLocationsToAdapter(((MainActivity) getActivity()).authToken, locAdapter);
 
             }

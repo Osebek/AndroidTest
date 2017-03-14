@@ -90,6 +90,10 @@
     android:background="@color/white"
         android:elevation="2dp"
        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.7">
     <TextView fontPath="fonts/Ubuntu-light.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -100,10 +104,12 @@
         android:paddingLeft="20dp"
         android:layout_gravity="left|center_vertical"
         android:gravity="left"
-
-
         />
-
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2.7">
     <TextView fontPath="fonts/Ubuntu-light.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -112,12 +118,14 @@
         android:textSize="20dp"
         android:id="@+id/contents"
         android:layout_gravity="center"
-        android:paddingLeft="125dp"
-        android:paddingRight="125dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
 
         />
-
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
     <TextView fontPath="fonts/Ubuntu-light.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -125,10 +133,9 @@
         android:id="@+id/goRight"
         android:textColor="@color/vesnaRED"
         android:textSize="20dp"
-        android:paddingRight="10dp"
         android:layout_gravity="right|center_vertical"
-
         />
+    </LinearLayout>
 </LinearLayout>
 
 

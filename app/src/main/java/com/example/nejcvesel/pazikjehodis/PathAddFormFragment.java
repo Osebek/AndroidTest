@@ -27,7 +27,6 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 
-//TODO: validation for input controls
 public class PathAddFormFragment extends Fragment {
     private static final String ARG_LOCATION_LIST = "locationList";
 
@@ -94,11 +93,26 @@ public class PathAddFormFragment extends Fragment {
 
                 if (!path.getDescription().equals("") &&
                     !path.getName().equals("") &&
-                    !path.getCity().equals("")) {
+                    !path.getCity().equals("") &&
+                     path.getDescription().length() >  120 ) {
                     main.uploadPath(path);
                 }
                 else
                 {
+                    if (path.getDescription().length() < 120)
+                    {
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                        alertDialog.setTitle("Napaka");
+                        alertDialog.setMessage("Opis mora vsebovati vsaj 120 znakov");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "V redu",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+
+                    }
                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                     alertDialog.setTitle("Napaka");
                     alertDialog.setMessage("Vnesti morate vsa polja");

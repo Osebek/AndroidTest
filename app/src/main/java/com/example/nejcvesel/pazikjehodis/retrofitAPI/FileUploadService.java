@@ -6,6 +6,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 
 
@@ -25,4 +26,17 @@ public interface FileUploadService {
             @Part("text") RequestBody text,
             @Part MultipartBody.Part file
     );
+    @Multipart
+    @PUT("uploadLocation/{id}/")
+    Call<ResponseBody> updateLocation(
+            String id,
+            @Part("latitude") RequestBody latitude,
+            @Part("longtitude") RequestBody longtitude,
+            @Part("name") RequestBody name,
+            @Part("address") RequestBody address,
+            @Part("title") RequestBody title,
+            @Part("text") RequestBody text,
+            @Part MultipartBody.Part file
+    );
+
 }

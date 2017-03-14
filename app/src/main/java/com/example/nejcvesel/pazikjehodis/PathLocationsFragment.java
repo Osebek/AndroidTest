@@ -156,7 +156,7 @@ public class PathLocationsFragment extends Fragment {
                 path.setPathLocations(lokacije);
                 specialAdapter.addData(path);
                 System.out.println("Item count:" );
-                BackendAPICall apiCall = new BackendAPICall();
+                BackendAPICall apiCall = new BackendAPICall(getActivity());
 
                 for (int i = 0; i < locIDs.length ; i++)
                 {

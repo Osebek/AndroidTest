@@ -66,7 +66,7 @@ public class PathListFragment extends Fragment{
             }
 
             final MyPathAdapter adapter = new MyPathAdapter(getActivity());
-            BackendAPICall apiCall = new BackendAPICall();
+            BackendAPICall apiCall = new BackendAPICall(getActivity());
             apiCall.getAllPathsToAdapter(((MainActivity)getActivity()).authToken,adapter);
             recyclerView.setAdapter(adapter);
 

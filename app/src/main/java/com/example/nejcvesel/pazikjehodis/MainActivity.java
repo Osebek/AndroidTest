@@ -61,7 +61,6 @@ import java.util.Map;
 /**
  * Created by brani on 12/18/2016.
  */
-//   TODO: add loader durign api calls
 
 public class MainActivity extends AppCompatActivity implements
         LocationFragment.OnListFragmentInteractionListener,
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements
     public GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
-    BackendAPICall api = new BackendAPICall();
+    BackendAPICall api  = new BackendAPICall();
     public SharedPreferences sharedPref;
     public UserProfile userProfile = null;
     FabHandler fabClick;
@@ -193,31 +192,6 @@ public class MainActivity extends AppCompatActivity implements
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-//        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-//        fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
-//        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_forward);
-//        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_backward);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                animateFAB();
-//            }
-//        });
-//
-//        fab1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                System.out.println("fab1");
-//            }
-//        });
-//
-//        fab2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//               System.out.println("fab2");
-//            }
-//        });
-
         fab.setOnClickListener(fabClick);
         fab1.setOnClickListener(fabClick);
         fab2.setOnClickListener(fabClick);
@@ -274,30 +248,6 @@ public class MainActivity extends AppCompatActivity implements
 
         fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
     }
-
-//    public void animateFAB() {
-//
-//        if (isFabOpen) {
-//            fab.startAnimation(rotate_backward);
-//            fab1.startAnimation(fab_close);
-//            fab2.startAnimation(fab_close);
-//            fab1.setClickable(false);
-//            fab2.setClickable(false);
-//            isFabOpen = false;
-//            Log.d("Raj", "close");
-//
-//        } else {
-//
-//            fab.startAnimation(rotate_forward);
-//            fab1.startAnimation(fab_open);
-//            fab2.startAnimation(fab_open);
-//            fab1.setClickable(true);
-//            fab2.setClickable(true);
-//            isFabOpen = true;
-//            Log.d("Raj", "open");
-//
-//        }
-//    }
 
     @Override
     public void onBackPressed() {
@@ -554,7 +504,7 @@ public class MainActivity extends AppCompatActivity implements
     public void uploadPath(Path path) {
         AccessToken at = AccessToken.getCurrentAccessToken();
         authToken = at.getToken().toString();
-        BackendAPICall api = new BackendAPICall();
+        BackendAPICall api = new BackendAPICall(this);
 
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(authToken + "_token", "noToken");

@@ -3,6 +3,7 @@ package com.example.nejcvesel.pazikjehodis;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -136,57 +137,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 //            }
 //        });
 
-//        LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        mMap.setInfoWindowAdapter(new PopupAdapter(getActivity(), inflater, markerLocationMap));
-
-//        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-//            @Override
-//            public View getInfoWindow(Marker marker) {
-//
-//                // Get location from marker
-//                Location loc = markerLocationMap.get(marker);
-//                // Get layout tooltpi
-//                LayoutInflater inflater = (LayoutInflater)getActivity().getSystemService
-//                        (Context.LAYOUT_INFLATER_SERVICE);
-//                View view = inflater.inflate(R.layout.location_details_marker,null);
-//                // Set values to the view
-//                TextView header = (TextView) view.findViewById(R.id.header_infowindow);
-//                header.setText(loc.getText());
-//                TextView content = (TextView) view.findViewById(R.id.content_infowindow);
-//                content.setText(loc.getAddress());
-//                ImageView image = (ImageView) view.findViewById(R.id.imageHolder);
-//                final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
-//                progressBar.setVisibility(View.VISIBLE);
-//                //declare callback
-//                Log.v("WindowInfo: ", "Retriving view to marker");
-//
-//                // Server call for pic
-//                System.out.println(BackendAPICall.repairURL(loc.getPicture()));
-//                Picasso.with(view.getContext()).load(ServiceGenerator.API_BASE_URL + BackendAPICall.repairURL(loc.getPicture()))
-//                        .transform(new RoundedTransformation(15, 0))
-//                        .fit()
-//                        .centerCrop()
-//                        .into(image, new com.squareup.picasso.Callback(){
-//                            @Override
-//                            public void onSuccess() {
-//                                Log.v("WindowInfo: ", "Set Loader invisible");
-//                                progressBar.setVisibility(View.GONE);
-//                            }
-//
-//                            @Override
-//                            public void onError() {
-//
-//                            }
-//                        });
-//            return view;
-//            }
-
-//            @Override
-//            public View getInfoContents(Marker marker) {
-//                return null;
-//            }
-
-//        });
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(),R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Pridobivam lokacije");
+        progressDialog.show();
 
         MainActivity main = (MainActivity) getActivity();
         View markerInfoWindow = getActivity().findViewById(R.id.infoCardMarker);
@@ -219,17 +173,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     @Override
                     public void onResponse(Call<Location> call, Response<Location> response) {
                         Location loc = response.body();
-                        LatLng lok = new LatLng(Double.valueOf(loc.getLatitude()), Double.valueOf(loc.getLongtitude()));
-                        Marker marker = mMap.addMarker(new MarkerOptions()
-                                .position(lok)
-                                .title(loc.getTitle()));
-                        markerLocationMap.put(marker, loc);
+                            LatLng lok = new LatLng(Double.valueOf(loc.getLatitude()), Double.valueOf(loc.getLongtitude()));
+                            Marker marker = mMap.addMarker(new MarkerOptions()
+                                    .position(lok)
+                                    .title(loc.getTitle()));
+                            markerLocationMap.put(marker, loc);
+                        progressDialog.dismiss();
 
                     }
 
                     @Override
                     public void onFailure(Call<Location> call, Throwable t) {
                         System.out.println("Fetching locations did not work");
+                        progressDialog.dismiss();
+
                     }
                 });
 
@@ -251,16 +208,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                         markerLocationMap.put(marker, loc);
 
                     }
+                    progressDialog.dismiss();
+
 
                 }
 
                 @Override
                 public void onFailure(Call<List<Location>> call, Throwable t) {
                     System.out.println("Fetching locations did not work");
+                    progressDialog.dismiss();
+
                 }
             });
 
         }
+
 
 
     }
