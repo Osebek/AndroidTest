@@ -1,30 +1,24 @@
-package com.example.nejcvesel.pazikjehodis;
+package com.example.nejcvesel.pazikjehodis.Fragments;
 
 
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.support.design.widget.AppBarLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.nejcvesel.pazikjehodis.MainActivity;
+import com.example.nejcvesel.pazikjehodis.Handlers.MarkerClickHandler;
+import com.example.nejcvesel.pazikjehodis.Handlers.OnSwipeTouchListener;
+import com.example.nejcvesel.pazikjehodis.R;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
-import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.LocationInterface;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
-import com.example.nejcvesel.pazikjehodis.retrofitAPI.ServiceGenerator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -33,14 +27,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by brani on 12/19/2016.

@@ -1,6 +1,5 @@
 package com.example.nejcvesel.pazikjehodis.retrofitAPI;
 
-import android.app.ProgressDialog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,11 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.example.nejcvesel.pazikjehodis.MainActivity;
-import com.example.nejcvesel.pazikjehodis.MainMenuActivity;
-import com.example.nejcvesel.pazikjehodis.MyPathLocationsAdapter;
-import com.example.nejcvesel.pazikjehodis.R;
-import com.example.nejcvesel.pazikjehodis.UserProfile;
+import com.example.nejcvesel.pazikjehodis.Adapters.MyLocationAdapter;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.AuthorizationInterface;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;

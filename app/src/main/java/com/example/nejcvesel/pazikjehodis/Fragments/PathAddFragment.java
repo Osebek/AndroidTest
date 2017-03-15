@@ -1,4 +1,4 @@
-package com.example.nejcvesel.pazikjehodis;
+package com.example.nejcvesel.pazikjehodis.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -19,12 +19,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.nejcvesel.pazikjehodis.MainActivity;
+import com.example.nejcvesel.pazikjehodis.R;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
-import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyPathAddAdapter;
+import com.example.nejcvesel.pazikjehodis.Adapters.MyPathAddAdapter;
 
 import java.util.Collection;
 import java.util.List;

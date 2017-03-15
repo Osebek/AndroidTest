@@ -1,4 +1,4 @@
-package com.example.nejcvesel.pazikjehodis.retrofitAPI;
+package com.example.nejcvesel.pazikjehodis.Adapters;
 
 import android.widget.Filter;
 

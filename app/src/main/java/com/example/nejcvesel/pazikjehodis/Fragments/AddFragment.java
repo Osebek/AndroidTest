@@ -1,4 +1,4 @@
-package com.example.nejcvesel.pazikjehodis;
+package com.example.nejcvesel.pazikjehodis.Fragments;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationFormFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.PathAddFragment;
+import com.example.nejcvesel.pazikjehodis.R;
 
 
 public class AddFragment extends Fragment {

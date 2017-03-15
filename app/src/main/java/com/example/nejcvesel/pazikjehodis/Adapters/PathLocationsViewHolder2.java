@@ -1,8 +1,10 @@
-package com.example.nejcvesel.pazikjehodis;
+package com.example.nejcvesel.pazikjehodis.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.nejcvesel.pazikjehodis.R;
 
 /**
  * Created by nejcvesel on 15/02/17.

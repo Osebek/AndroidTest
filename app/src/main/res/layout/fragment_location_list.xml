@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.example.nejcvesel.pazikjehodis.LocationFragment"
+    tools:context="com.example.nejcvesel.pazikjehodis.Fragments.LocationFragment"
     tools:listitem="@layout/fragment_location" />

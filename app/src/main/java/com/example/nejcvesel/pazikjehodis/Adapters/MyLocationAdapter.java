@@ -1,34 +1,4 @@
-package com.example.nejcvesel.pazikjehodis.retrofitAPI;
-
-/**
- * Created by nejcvesel on 07/03/17.
- */
-
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
-import android.graphics.Point;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.example.nejcvesel.pazikjehodis.LocationDetailFragment;
-import com.example.nejcvesel.pazikjehodis.LocationFormFragment;
-import com.example.nejcvesel.pazikjehodis.MainActivity;
-import com.example.nejcvesel.pazikjehodis.R;
-import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
-
+package com.example.nejcvesel.pazikjehodis.Adapters;
 
 /**
  * Created by nejcvesel on 19/12/16.
@@ -49,21 +19,23 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.nejcvesel.pazikjehodis.LocationDetailFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationDetailFragment;
 import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.R;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.ServiceGenerator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocationsAdapter.ViewHolder> {
+public class MyLocationAdapter extends RecyclerView.Adapter<MyLocationAdapter.ViewHolder> {
     List<Location> mItems;
     Context context;
 
 
-    public MyUserLocationsAdapter(Context context) {
+    public MyLocationAdapter(Context context) {
         super();
         this.context = context;
         mItems = new ArrayList<Location>();
@@ -82,7 +54,7 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.recycler_view_user_loc, viewGroup, false);
+                .inflate(R.layout.recycler_view, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(v);
 
         System.out.println("OnCreateViewHolder " + i);
@@ -92,7 +64,6 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Location loc = mItems.get(i);
-        System.out.println(loc.getId());
         viewHolder.text.setText(loc.getText());
         viewHolder.longtitude.setText("latitude: " + loc.getLatitude());
         viewHolder.latitude.setText("longtitude: " + loc.getLongtitude());
@@ -113,10 +84,11 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
 
         Picasso.with(context).load(ServiceGenerator.API_BASE_URL + BackendAPICall.repairURL(loc.getPicture()))
                 .resize(width-40,(int)(height/2.5f))
+                .placeholder(R.drawable.logo_red)
                 .centerCrop()
                 .into(viewHolder.picture);
 
-    }
+        }
 
     @Override
     public int getItemCount() {
@@ -134,7 +106,6 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
         public TextView pictureURL;
         public TextView locAddress;
         public TextView owner;
-        public ImageView editIcon;
 
 
 
@@ -151,9 +122,6 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
             pictureURL = (TextView) itemView.findViewById(R.id.picture_url);
             locAddress = (TextView) itemView.findViewById(R.id.locAddress);
             owner = (TextView) itemView.findViewById(R.id.loc_owner);
-            editIcon = (ImageView) itemView.findViewById(R.id.edit_icon);
-
-
 
 
             ImageView icon = (ImageView) itemView.findViewById(R.id.location_icon);
@@ -167,63 +135,33 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
                 }
             });
 
-            editIcon.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    System.out.println(locationID.getText());
+
                     Location loc = new Location();
                     loc.setTitle(title.getText().toString());
                     loc.setText(text.getText().toString());
                     loc.setName(name.getText().toString());
                     loc.setPicture(pictureURL.getText().toString());
-                    loc.setId(Integer.valueOf(locationID.getId()));
+                    loc.setId(Integer.valueOf(locationID.getText().toString()));
                     loc.setAddress(locAddress.getText().toString());
                     loc.setOwner(owner.getText().toString());
 
-                    Fragment fragment = LocationFormFragment.newInstance(loc);
+                    Fragment fragment = LocationDetailFragment.newInstance(loc);
                     FragmentManager fragmentManager = ((FragmentActivity)context).getFragmentManager();
                     FragmentTransaction fragmentTransaction =
                             fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.content_frame,fragment,"LocationFormFragment");
-                    fragmentTransaction.addToBackStack("LocationFormFragment");
+                    fragmentTransaction.replace(R.id.content_frame,fragment,"LocationDetail");
+                    fragmentTransaction.addToBackStack("LocationDetail");
                     fragmentTransaction.commit();
-
-
-                }
-            });
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Location loc = new Location();
-                    loc.setTitle(title.getText().toString());
-                    loc.setText(text.getText().toString());
-                    loc.setName(name.getText().toString());
-                    loc.setPicture(pictureURL.getText().toString());
-                    loc.setId(Integer.valueOf(locationID.getId()));
-                    loc.setAddress(locAddress.getText().toString());
-                    loc.setOwner(owner.getText().toString());
-                    goToLocationDetail(loc,0);
-
-
-
 
                 }
             });
 
         }
 
-
-    }
-
-    void goToLocationDetail(Location loc, int mode)
-    {
-        Fragment fragment = LocationDetailFragment.newInstance(loc);
-        FragmentManager fragmentManager = ((FragmentActivity)context).getFragmentManager();
-        FragmentTransaction fragmentTransaction =
-                fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame,fragment,"LocationDetail");
-        fragmentTransaction.addToBackStack("LocationDetail");
-        fragmentTransaction.commit();
 
     }
 }

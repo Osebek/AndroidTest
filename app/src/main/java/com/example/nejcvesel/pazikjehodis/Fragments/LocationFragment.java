@@ -1,4 +1,4 @@
-package com.example.nejcvesel.pazikjehodis;
+package com.example.nejcvesel.pazikjehodis.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,13 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.nejcvesel.pazikjehodis.R;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
-import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyLocationAdapter;
-import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyUserLocationsAdapter;
+import com.example.nejcvesel.pazikjehodis.Adapters.MyLocationAdapter;
 
 import java.util.List;
 
@@ -28,22 +28,21 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class MyLocationsFragment extends Fragment implements BackendAPICall.BackendCallback{
+public class LocationFragment extends Fragment implements BackendAPICall.BackendCallback {
     Parcelable state;
     RecyclerView recView;
     LinearLayoutManager llm;
-    MyUserLocationsAdapter locAdapter;
+    MyLocationAdapter locAdapter;
     int positionIndex = -1;
     int topView;
-    private BackendAPICall apiCall;
-
+    BackendAPICall apiCall;
 
     private static final String ARG_COLUMN_COUNT = "column-count";
 
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
-    public MyLocationsFragment() {
+    public LocationFragment() {
 
 
     }
@@ -51,8 +50,8 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
 
 
     @SuppressWarnings("unused")
-    public static MyLocationsFragment newInstance(int columnCount) {
-        MyLocationsFragment fragment = new MyLocationsFragment();
+    public static LocationFragment newInstance(int columnCount) {
+        LocationFragment fragment = new LocationFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -80,18 +79,20 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
 //    }
 
 
-    @Override
-    public void onPause()
-    {
-        positionIndex= llm.findFirstVisibleItemPosition();
-        View startView = recView.getChildAt(0);
-        topView = (startView == null) ? 0 : (startView.getTop() - recView.getPaddingTop());
-        super.onPause();
-    }
+   @Override
+   public void onPause()
+   {
+       positionIndex= llm.findFirstVisibleItemPosition();
+       View startView = recView.getChildAt(0);
+       topView = (startView == null) ? 0 : (startView.getTop() - recView.getPaddingTop());
+       System.out.println("PAUSE");
+   super.onPause();
+   }
 
     @Override
     public void onResume()
     {
+        System.out.println("RESUME");
         super.onResume();
 
         if (positionIndex!= -1) {
@@ -100,21 +101,12 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
 
     }
 
-
-
-
-
-
-
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_location_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_location_list, container, false);
         apiCall = new BackendAPICall(this, "");
-        locAdapter = new MyUserLocationsAdapter(getActivity());
+
         // Set the adapter
         if (view instanceof RecyclerView) {
 
@@ -131,11 +123,13 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
             }
 
             if (positionIndex == -1) {
-                apiCall.getUserLocations(((MainActivity) getActivity()).userProfile.getBackendAccessToken());
+                locAdapter = new MyLocationAdapter(getActivity());
+                apiCall.getAllLocations("");
+//                apiCall.getAllLocationsToAdapter(((MainActivity) getActivity()).authToken, locAdapter);
+
             }
-            recyclerView.setAdapter(locAdapter);
+                recyclerView.setAdapter(locAdapter);
         }
-        System.out.println(positionIndex);
 
         if (positionIndex!= -1) {
             llm.scrollToPositionWithOffset(positionIndex, topView);
@@ -147,7 +141,7 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
 
 
 
-    @Override
+        @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
@@ -170,8 +164,12 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
     }
 
     @Override
-    public void getAllLocationsCallback(List<Location> loactions, String status) {
-
+    public void getAllLocationsCallback(List<Location> loactions, String message) {
+        if(message.equals("OK")){
+            for (Location loc : loactions){
+                locAdapter.addData(loc);
+            }
+        }
     }
 
     @Override
@@ -191,11 +189,7 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
 
     @Override
     public void getUserLocationCallback(List<Location> location, String message) {
-        if(message.equals("OK")){
-            for(Location loc: location){
-                locAdapter.addData(loc);
-            }
-        }
+
     }
 
     @Override

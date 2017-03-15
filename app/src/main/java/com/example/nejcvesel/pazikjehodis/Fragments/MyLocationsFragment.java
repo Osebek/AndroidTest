@@ -1,12 +1,8 @@
-package com.example.nejcvesel.pazikjehodis;
+package com.example.nejcvesel.pazikjehodis.Fragments;
 
-/**
- * Created by nejcvesel on 15/02/17.
- */
-
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,14 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.nejcvesel.pazikjehodis.MainActivity;
+import com.example.nejcvesel.pazikjehodis.R;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
-import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyLocationAdapter;
+import com.example.nejcvesel.pazikjehodis.Adapters.MyUserLocationsAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,53 +29,56 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class PathLocationsFragment extends Fragment implements BackendAPICall.BackendCallback {
+public class MyLocationsFragment extends Fragment implements BackendAPICall.BackendCallback{
     Parcelable state;
     RecyclerView recView;
     LinearLayoutManager llm;
-    MyLocationAdapter locAdapter;
+    MyUserLocationsAdapter locAdapter;
     int positionIndex = -1;
     int topView;
-    MyPathLocationsAdapter specialAdapter;
+    private BackendAPICall apiCall;
 
 
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private static final String ARG_LOCATIONS = "locations";
-    private static final String ARG_OWNER = "owner";
-    private static final String ARG_CITY = "city";
-    private static final String ARG_DESCRIPTION = "description";
-    private static final String ARG_NAME ="name";
 
     private int mColumnCount = 1;
-    private String[] locIDs;
-    private String owner;
-    private String title;
-    private String city;
-    private String description;
-    private String name;
     private OnListFragmentInteractionListener mListener;
-    private BackendAPICall apiCall;
 
-    public PathLocationsFragment() {
+    public MyLocationsFragment() {
 
 
     }
 
 
-    public static PathLocationsFragment newInstance(int columnCount,String[] pathIDs,
-                                                    String owner, String city, String name, String description) {
-        PathLocationsFragment fragment = new PathLocationsFragment();
+
+    @SuppressWarnings("unused")
+    public static MyLocationsFragment newInstance(int columnCount) {
+        MyLocationsFragment fragment = new MyLocationsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        args.putStringArray(ARG_LOCATIONS,pathIDs);
-        args.putString(ARG_OWNER, owner);
-        args.putString(ARG_CITY,city);
-        args.putString(ARG_NAME,name);
-        args.putString(ARG_DESCRIPTION,description);
-
         fragment.setArguments(args);
         return fragment;
     }
+
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (getArguments() != null) {
+//            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+//        }
+//    }
+//    @Override
+//    public void onSaveInstanceState(Bundle state) {
+//        super.onSaveInstanceState(state);
+//
+//        state.putParcelable(LIST_STATE_KEY, layoutManager.onSaveInstanceState());
+//    }
+//
+//    protected void onRestoreInstanceState(Bundle state) {
+//        super.onRestoreInstanceState(state);
+//
+//        Parcelable listState = state.getParcelable(LIST_STATE_KEY);
+//    }
 
 
     @Override
@@ -87,14 +87,12 @@ public class PathLocationsFragment extends Fragment implements BackendAPICall.Ba
         positionIndex= llm.findFirstVisibleItemPosition();
         View startView = recView.getChildAt(0);
         topView = (startView == null) ? 0 : (startView.getTop() - recView.getPaddingTop());
-        System.out.println("PAUSE");
         super.onPause();
     }
 
     @Override
     public void onResume()
     {
-        System.out.println("RESUME");
         super.onResume();
 
         if (positionIndex!= -1) {
@@ -103,31 +101,21 @@ public class PathLocationsFragment extends Fragment implements BackendAPICall.Ba
 
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            locIDs = getArguments().getStringArray(ARG_LOCATIONS);
-            owner = getArguments().getString(ARG_OWNER);
-            city = getArguments().getString(ARG_CITY);
-            description = getArguments().getString(ARG_DESCRIPTION);
-            name = getArguments().getString(ARG_NAME);
-        }
-    }
+
+
+
+
+
+
 
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view1 = inflater.inflate(R.layout.fragment_path_locations, container, false);
-        View view = view1.findViewById(R.id.recyclerViewList);
+        View view = inflater.inflate(R.layout.fragment_my_location_list, container, false);
         apiCall = new BackendAPICall(this, "");
-        specialAdapter = new MyPathLocationsAdapter(getActivity());
-
-
-
+        locAdapter = new MyUserLocationsAdapter(getActivity());
         // Set the adapter
         if (view instanceof RecyclerView) {
 
@@ -144,41 +132,17 @@ public class PathLocationsFragment extends Fragment implements BackendAPICall.Ba
             }
 
             if (positionIndex == -1) {
-//                locAdapter = new MyLocationAdapter(getActivity());
-
-
-                Path path = new Path();
-                path.setName(name);
-                path.setCity(city);
-                path.setDescription(description);
-                path.setOwner(owner);
-                ArrayList<Integer> lokacije = new ArrayList<Integer>();
-                for (int i = 0; i < locIDs.length; i++)
-                {
-                    lokacije.add(Integer.parseInt(locIDs[i]));
-
-                }
-                path.setPathLocations(lokacije);
-                specialAdapter.addData(path);
-                System.out.println("Item count:" );
-//                BackendAPICall apiCall = new BackendAPICall(getActivity());
-
-                for (int i = 0; i < locIDs.length ; i++)
-                {
-                    apiCall.getSpecificLocation(locIDs[i]);
-                //apiCall.getSpecificLocationToAdapter(((MainActivity) getActivity()).authToken,locIDs[i],locAdapter);
-                }
+                apiCall.getUserLocations(((MainActivity) getActivity()).userProfile.getBackendAccessToken());
             }
-            recyclerView.setAdapter(specialAdapter);
-
-
+            recyclerView.setAdapter(locAdapter);
         }
+        System.out.println(positionIndex);
 
         if (positionIndex!= -1) {
             llm.scrollToPositionWithOffset(positionIndex, topView);
         }
 
-        return view1;
+        return view;
     }
 
 
@@ -212,6 +176,11 @@ public class PathLocationsFragment extends Fragment implements BackendAPICall.Ba
     }
 
     @Override
+    public void getSpecificLocationCallback(Location loaction, String message) {
+
+    }
+
+    @Override
     public void getSpecificUserCallback(User user, String message) {
 
     }
@@ -223,7 +192,11 @@ public class PathLocationsFragment extends Fragment implements BackendAPICall.Ba
 
     @Override
     public void getUserLocationCallback(List<Location> location, String message) {
-
+        if(message.equals("OK")){
+            for(Location loc: location){
+                locAdapter.addData(loc);
+            }
+        }
     }
 
     @Override
@@ -246,13 +219,6 @@ public class PathLocationsFragment extends Fragment implements BackendAPICall.Ba
 
     }
 
-    @Override
-    public void getSpecificLocationCallback(Location loaction, String message) {
-        if(message.equals("OK")){
-            specialAdapter.addData(loaction);
-        }
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -267,4 +233,3 @@ public class PathLocationsFragment extends Fragment implements BackendAPICall.Ba
         void onListFragmentInteraction(Location item);
     }
 }
-

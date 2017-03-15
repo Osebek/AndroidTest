@@ -1,4 +1,4 @@
-package com.example.nejcvesel.pazikjehodis.retrofitAPI;
+package com.example.nejcvesel.pazikjehodis.Adapters;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nejcvesel.pazikjehodis.MainActivity;
-import com.example.nejcvesel.pazikjehodis.PathLocationsFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.PathLocationsFragment;
 import com.example.nejcvesel.pazikjehodis.R;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
 

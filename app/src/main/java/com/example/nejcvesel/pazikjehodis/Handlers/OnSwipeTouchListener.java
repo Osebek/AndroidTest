@@ -1,4 +1,4 @@
-package com.example.nejcvesel.pazikjehodis;
+package com.example.nejcvesel.pazikjehodis.Handlers;
 
 import android.animation.Animator;
 import android.content.Context;

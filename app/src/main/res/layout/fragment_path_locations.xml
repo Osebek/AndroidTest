@@ -10,7 +10,7 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.example.nejcvesel.pazikjehodis.PathLocationsFragment"
+    tools:context="com.example.nejcvesel.pazikjehodis.Fragments.PathLocationsFragment"
     tools:listitem="@layout/fragment_location" />
 
 

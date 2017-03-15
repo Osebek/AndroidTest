@@ -1,7 +1,6 @@
 package com.example.nejcvesel.pazikjehodis;
 
 //import android.app.FragmentManager;
-
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
@@ -21,13 +19,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import com.example.nejcvesel.pazikjehodis.Handlers.FabHandler;
+import com.example.nejcvesel.pazikjehodis.Fragments.AddFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationDetailFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationFormFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationInPathDetailFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.LogInFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.MapsFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.MyLocationsFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.PathAddFormFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.PathAddFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.PathListFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.PathLocationsFragment;
+import com.example.nejcvesel.pazikjehodis.Handlers.FabHandler;
 import com.example.nejcvesel.pazikjehodis.Utility.UtilityFunctions;
 import com.example.nejcvesel.pazikjehodis.Walkthrough.WalkthroughActivity;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
@@ -61,6 +70,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import rx.android.schedulers.HandlerScheduler;
+
 /**
  * Created by brani on 12/18/2016.
  */
@@ -86,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements
     BackendAPICall api;
     public SharedPreferences sharedPref;
     public UserProfile userProfile = null;
-    FabHandler fabClick;
+    public FabHandler fabClick;
     public boolean markerAddEnable = false;
 
     @Override

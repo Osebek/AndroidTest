@@ -1,4 +1,4 @@
-package com.example.nejcvesel.pazikjehodis;
+package com.example.nejcvesel.pazikjehodis.Handlers;
 
 
 import android.app.Activity;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.example.nejcvesel.pazikjehodis.MainActivity;
+import com.example.nejcvesel.pazikjehodis.R;
+
 /**
  * Created by brani on 3/6/2017.
  */
@@ -18,7 +21,7 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private Activity activity;
     private boolean isFabOpen, isFabEnable;
-    FabHandler(Activity activity){
+    public FabHandler(Activity activity){
         this.activity = activity;
         this.fab = (FloatingActionButton)activity.findViewById(R.id.fab);
         this.fab1 = (FloatingActionButton)activity.findViewById(R.id.fab1);
