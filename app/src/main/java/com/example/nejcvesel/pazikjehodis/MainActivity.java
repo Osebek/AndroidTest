@@ -76,6 +76,20 @@ import rx.android.schedulers.HandlerScheduler;
  * Created by brani on 12/18/2016.
  */
 
+/*
+TODO: Brane - fab buttons
+TODO: Nejc - Authentication, Google, Facebook, all flow
+TODO: Nejc - My location and My Paths backend and frontend
+TODO: Brane - design everything!
+TODO: Brane - margine on every view (is inccorect)
+TODO: Brane - login screen
+TODO: Nejc - search
+TODO: Brane/Nejc - menu not show up my location and my paths when is login
+TODO: Brane/Nejc - upload fail permissions for every phone (testiraj)
+TODO: Brane - reverse geocode on googlemap for giving your current location
+TODO: Brane/Nejc - loader
+TODO: Brane/Nejc - when loading more then 1 min , give error (TOAST)!
+* */
 public class MainActivity extends AppCompatActivity implements
         LocationFragment.OnListFragmentInteractionListener,
         LocationDetailFragment.OnFragmentInteractionListener, PathLocationsFragment.OnListFragmentInteractionListener,
