@@ -89,6 +89,7 @@ TODO: Brane/Nejc - upload fail permissions for every phone (testiraj)
 TODO: Brane - reverse geocode on googlemap for giving your current location
 TODO: Brane/Nejc - loader
 TODO: Brane/Nejc - when loading more then 1 min , give error (TOAST)!
+TODO: Brane - on click mapinfowindow - open location details
 * */
 public class MainActivity extends AppCompatActivity implements
         LocationFragment.OnListFragmentInteractionListener,
