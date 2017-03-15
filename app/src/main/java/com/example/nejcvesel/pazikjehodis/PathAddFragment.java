@@ -20,10 +20,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyPathAddAdapter;
 
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -33,13 +37,14 @@ import java.util.Collection;
  * interface.
  */
 //TODO: search bar to look nice
-public class PathAddFragment extends Fragment {
+public class PathAddFragment extends Fragment implements BackendAPICall.BackendCallback {
     Parcelable state;
     RecyclerView recView;
     LinearLayoutManager llm;
     MyPathAddAdapter locAdapter;
     int positionIndex = -1;
     int topView;
+    private BackendAPICall apiCall;
 
     private static final String ARG_COLUMN_COUNT = "column-count";
 
@@ -114,7 +119,8 @@ public class PathAddFragment extends Fragment {
         TextView makePath = (TextView) view1.findViewById(R.id.makePath);
         final EditText search = (EditText) view1.findViewById(R.id.search);
 
-
+        apiCall = new BackendAPICall(this, "");
+        locAdapter = new MyPathAddAdapter(getActivity());
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -191,10 +197,7 @@ public class PathAddFragment extends Fragment {
             }
 
             if (positionIndex == -1) {
-                locAdapter = new MyPathAddAdapter(getActivity());
-                BackendAPICall apiCall = new BackendAPICall();
-                apiCall.getAllAddPathLocationsToAdapter(((MainActivity) getActivity()).authToken, locAdapter);
-
+                apiCall.getAllLocations("");
             }
 
             recyclerView.setAdapter(locAdapter);
@@ -226,6 +229,62 @@ public class PathAddFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void getAllPathsCallback(List<Path> paths, String message) {
+
+    }
+
+    @Override
+    public void getAllLocationsCallback(List<Location> loactions, String message) {
+        if(message.equals("OK")){
+            for (Location loc : loactions)
+            {
+                locAdapter.addData(loc);
+            }
+            locAdapter.getFilter().filter("");
+        }
+    }
+
+    @Override
+    public void getSpecificLocationCallback(Location loaction, String message) {
+
+    }
+
+    @Override
+    public void getSpecificUserCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getAllUsersCallback(List<User> user, String message) {
+
+    }
+
+    @Override
+    public void getUserLocationCallback(List<Location> location, String message) {
+
+    }
+
+    @Override
+    public void getUserProfileCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getRefreshTokeneCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getConvertTokenCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getAddMessageCallback(String message, String backendCall) {
+
     }
 
     /**

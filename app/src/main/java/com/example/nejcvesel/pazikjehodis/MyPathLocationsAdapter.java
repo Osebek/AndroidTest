@@ -150,7 +150,7 @@ public class MyPathLocationsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                                                  }
                                              });
 
-                    Context context = vh1.getImg().getContext();
+            Context context = vh1.getImg().getContext();
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
             Point size = new Point();

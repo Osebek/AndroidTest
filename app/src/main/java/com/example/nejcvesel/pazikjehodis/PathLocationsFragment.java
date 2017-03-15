@@ -16,11 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyLocationAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -29,7 +32,7 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class PathLocationsFragment extends Fragment {
+public class PathLocationsFragment extends Fragment implements BackendAPICall.BackendCallback {
     Parcelable state;
     RecyclerView recView;
     LinearLayoutManager llm;
@@ -54,6 +57,7 @@ public class PathLocationsFragment extends Fragment {
     private String description;
     private String name;
     private OnListFragmentInteractionListener mListener;
+    private BackendAPICall apiCall;
 
     public PathLocationsFragment() {
 
@@ -119,7 +123,8 @@ public class PathLocationsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view1 = inflater.inflate(R.layout.fragment_path_locations, container, false);
         View view = view1.findViewById(R.id.recyclerViewList);
-
+        apiCall = new BackendAPICall(this, "");
+        specialAdapter = new MyPathLocationsAdapter(getActivity());
 
 
 
@@ -139,8 +144,8 @@ public class PathLocationsFragment extends Fragment {
             }
 
             if (positionIndex == -1) {
-                //locAdapter = new MyLocationAdapter(getActivity());
-                specialAdapter = new MyPathLocationsAdapter(getActivity());
+//                locAdapter = new MyLocationAdapter(getActivity());
+
 
                 Path path = new Path();
                 path.setName(name);
@@ -156,11 +161,11 @@ public class PathLocationsFragment extends Fragment {
                 path.setPathLocations(lokacije);
                 specialAdapter.addData(path);
                 System.out.println("Item count:" );
-                BackendAPICall apiCall = new BackendAPICall(getActivity());
+//                BackendAPICall apiCall = new BackendAPICall(getActivity());
 
                 for (int i = 0; i < locIDs.length ; i++)
                 {
-                    apiCall.getSpecificLocationToExtendedAdapter(((MainActivity) getActivity()).authToken,locIDs[i],specialAdapter);
+                    apiCall.getSpecificLocation(locIDs[i]);
                 //apiCall.getSpecificLocationToAdapter(((MainActivity) getActivity()).authToken,locIDs[i],locAdapter);
                 }
             }
@@ -194,6 +199,58 @@ public class PathLocationsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void getAllPathsCallback(List<Path> paths, String message) {
+
+    }
+
+    @Override
+    public void getAllLocationsCallback(List<Location> loactions, String status) {
+
+    }
+
+    @Override
+    public void getSpecificUserCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getAllUsersCallback(List<User> user, String message) {
+
+    }
+
+    @Override
+    public void getUserLocationCallback(List<Location> location, String message) {
+
+    }
+
+    @Override
+    public void getUserProfileCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getRefreshTokeneCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getConvertTokenCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getAddMessageCallback(String message, String backendCall) {
+
+    }
+
+    @Override
+    public void getSpecificLocationCallback(Location loaction, String message) {
+        if(message.equals("OK")){
+            specialAdapter.addData(loaction);
+        }
     }
 
     /**

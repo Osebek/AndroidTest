@@ -82,6 +82,7 @@ public class MyLocationAdapter extends RecyclerView.Adapter<MyLocationAdapter.Vi
 
         Picasso.with(context).load(ServiceGenerator.API_BASE_URL + BackendAPICall.repairURL(loc.getPicture()))
                 .resize(width-40,(int)(height/2.5f))
+                .placeholder(R.drawable.logo_red)
                 .centerCrop()
                 .into(viewHolder.picture);
 

@@ -42,16 +42,16 @@ import retrofit2.Response;
 
 
 public class BackendAPICall {
-
     BackendCallback backendCallback;
+    Context context;
     public BackendAPICall(){}
     public BackendAPICall(Activity activity){
-        this.backendCallback = (BackendCallback) activity;
+        backendCallback = (BackendCallback) activity;
     }
-    public void getAllPaths(String authToken) {
-
-        final MyLocationAdapter myLocationAdapter;
-        List<Path> paths = new ArrayList<Path>();
+    public BackendAPICall(BackendCallback fragment, String name){
+        backendCallback = fragment;
+    }
+    public void getAllPaths() {
         PathInterface service =
                 ServiceGenerator.createUnauthorizedService(PathInterface.class);
 
@@ -59,16 +59,21 @@ public class BackendAPICall {
         call.enqueue(new Callback<List<Path>>() {
             @Override
             public void onResponse(Call<List<Path>> call, Response<List<Path>> response) {
-                List<Path> paths = response.body();
-                for (Path pot : paths)
-                {
-                    System.out.println(pot.getId());
+                String mess = "";
+                List<Path> paths;
+                if(response.isSuccessful()){
+                    paths = response.body();
+                    mess = "OK";
+                }else{
+                    paths = new ArrayList<Path>();
+                    mess = "ERROR";
                 }
+                backendCallback.getAllPathsCallback(paths, mess);
             }
 
             @Override
             public void onFailure(Call<List<Path>> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
+                backendCallback.getAllPathsCallback(null, "ERORR_FAIL");
             }
         });
     }
@@ -85,266 +90,76 @@ public class BackendAPICall {
         call.enqueue(new Callback<List<Location>>() {
             @Override
             public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
-                List<Location> locations = response.body();
-                BackendAPICall.printLocations(locations);
-            }
-
-            @Override
-            public void onFailure(Call<List<Location>> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
-            }
-        });
-    }
-
-    public void getAllLocations(String authToken,final List<Location> lokacije) {
-
-        List<Location> locations = new ArrayList<Location>();
-        LocationInterface service =
-                ServiceGenerator.createUnauthorizedService(LocationInterface.class);
-
-        Call<List<Location>> call = service.getAllLocations();
-        call.enqueue(new Callback<List<Location>>() {
-            @Override
-            public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
-                List<Location> locations = response.body();
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Location>> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
-            }
-        });
-    }
-
-    public void getAllLocationsToAdapter(String authToken, final MyLocationAdapter myLocationAdapter) {
-
-//        final ProgressDialog progressDialog = new ProgressDialog(context,
-//                R.style.AppTheme_Dark_Dialog);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setMessage("Pridobivam lokacije");
-//        progressDialog.show();
-
-
-
-        final long startTime = System.currentTimeMillis();
-        List<Location> locations = new ArrayList<Location>();
-        LocationInterface service =
-                ServiceGenerator.createUnauthorizedService(LocationInterface.class);
-
-        Call<List<Location>> call = service.getAllLocations();
-        call.enqueue(new Callback<List<Location>>() {
-            @Override
-            public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
-                List<Location> locations = response.body();
-
-                for (Location loc : locations)
-                {
-                    myLocationAdapter.addData(loc);
+                String mess = "";
+                List<Location> locations;
+                if(response.isSuccessful()) {
+                     locations = response.body();
+                    mess = "OK";
+                }else {
+                    locations = new ArrayList<Location>();
+                    mess = "ERROR";
                 }
-//                progressDialog.dismiss();
-
+                backendCallback.getAllLocationsCallback(locations, mess);
             }
 
             @Override
             public void onFailure(Call<List<Location>> call, Throwable t) {
                 System.out.println("Fetching locations did not work");
-                Location loc = new Location();
-                loc.setLatitude("46.056946");
-                loc.setLongtitude("14.505751");
-                loc.setTitle("Nalaganje lokacij ni uspelo");
-                loc.setId(-1);
-                loc.setName("Preveri internetno povezavo");
-                loc.setText("Lokacije niso bile uspešno naložene");
-                loc.setPicture(ServiceGenerator.API_BASE_URL + "locationGetAll/files/locations/None/logo_red.png");
-                myLocationAdapter.addData(loc);
-//                progressDialog.dismiss();
+                backendCallback.getAllLocationsCallback(null, "ERROR_FAIL");
             }
         });
     }
 
-    public void getUserLocationsToAdapter(String authToken, final MyUserLocationsAdapter myLocationAdapter) {
-//        final ProgressDialog progressDialog = new ProgressDialog(context,
-//                R.style.AppTheme_Dark_Dialog);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setMessage("Pridobivam lokacije");
-//        progressDialog.show();
+
+    public void getUserLocations(String authToken) {
         LocationInterface service =
-                ServiceGenerator.createAuthorizedService(LocationInterface.class,"xVMLOqEL7xoA0Q6hduAEfZduVfADNo");
-        System.out.println("poklicu sem");
+                ServiceGenerator.createAuthorizedService(LocationInterface.class,authToken);
         Call<List<Location>> call = service.getUserLocations();
         call.enqueue(new Callback<List<Location>>() {
             @Override
             public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
-                List<Location> locations = response.body();
-
-                for (Location loc : locations)
-                {
-                    System.out.println(loc.getName());
-                    System.out.println(loc.getId());
-                    myLocationAdapter.addData(loc);
+                List<Location> locations;
+                String mess ="";
+                if(response.isSuccessful()){
+                    locations = response.body();
+                    mess = "OK";
+                }else{
+                    locations = new ArrayList<Location>();
+                    mess = "ERROR";
                 }
-//                progressDialog.dismiss();
+                backendCallback.getUserLocationCallback(locations, mess);
             }
 
             @Override
             public void onFailure(Call<List<Location>> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
-                Location loc = new Location();
-                loc.setLatitude("46.056946");
-                loc.setLongtitude("14.505751");
-                loc.setTitle("Nalaganje lokacij ni uspelo");
-                loc.setId(-1);
-                loc.setName("Preveri internetno povezavo");
-                loc.setText("Lokacije niso bile uspešno naložene");
-                loc.setPicture(ServiceGenerator.API_BASE_URL + "locationGetAll/files/locations/None/logo_red.png");
-                myLocationAdapter.addData(loc);
-//                progressDialog.dismiss();
+                backendCallback.getUserLocationCallback(null, "ERROR_FAIL");
             }
         });
     }
 
-    public void getAllAddPathLocationsToAdapter(String authToken, final MyPathAddAdapter myLocationAdapter) {
-//        final ProgressDialog progressDialog = new ProgressDialog(context,
-//                R.style.AppTheme_Dark_Dialog);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setMessage("Pridobivam lokacije");
-//        progressDialog.show();
-
-        List<Location> locations = new ArrayList<Location>();
+    public void getSpecificLocation(String locationID) {
         LocationInterface service =
                 ServiceGenerator.createUnauthorizedService(LocationInterface.class);
 
-        Call<List<Location>> call = service.getAllLocations();
-        call.enqueue(new Callback<List<Location>>() {
+        Call<Location> call = service.getSpecificLocation(locationID);
+        call.enqueue(new Callback<Location>() {
             @Override
-            public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
-                List<Location> locations = response.body();
-
-                for (Location loc : locations)
-                {
-                    myLocationAdapter.addData(loc);
+            public void onResponse(Call<Location> call, Response<Location> response) {
+                String mess = "";
+                Location location;
+                if(response.isSuccessful()){
+                    location = response.body();
+                    mess = "OK";
+                }else{
+                    location = new Location();
+                    mess = "ERROR";
                 }
-                myLocationAdapter.getFilter().filter("");
-//                progressDialog.dismiss();
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Location>> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
-                Location loc = new Location();
-                loc.setLatitude("46.056946");
-                loc.setLongtitude("14.505751");
-                loc.setTitle("Nalaganje lokacij ni uspelo");
-                loc.setId(-1);
-                loc.setName("Preveri internetno povezavo");
-                loc.setText("Lokacije niso bile uspešno naložene");
-                loc.setPicture(ServiceGenerator.API_BASE_URL + "locationGetAll/files/locations/None/logo_red.png");
-                myLocationAdapter.addData(loc);
-//                progressDialog.dismiss();
-            }
-        });
-
-        //myLocationAdapter.getFilter().filter("");
-    }
-
-    public void getAllPathsToAdapter(final String authToken, final MyPathAdapter myPathAdapter) {
-//        final ProgressDialog progressDialog = new ProgressDialog(context,
-//                R.style.AppTheme_Dark_Dialog);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setMessage("Pridobivam poti");
-//        progressDialog.show();
-
-        PathInterface service =
-                ServiceGenerator.createUnauthorizedService(PathInterface.class);
-
-        Call<List<Path>> call = service.getAllPaths();
-        call.enqueue(new Callback<List<Path>>() {
-            @Override
-            public void onResponse(Call<List<Path>> call, Response<List<Path>> response) {
-                List<Path> paths= response.body();
-
-                for (Path pth : paths)
-                {
-                    myPathAdapter.addData(pth);
-                }
-//                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<List<Path>> call, Throwable t) {
-                Path path = new Path();
-                path.setName("Nalaganje poti ni uspelo");
-                path.setOwner("Prosimo preverite vašo internetno povezavo ali puskisite ponovno");
-                path.setCity("Napaka");
-                path.setDescription("Napaka");
-                ArrayList<Integer> al = new ArrayList<Integer>();
-                path.setPathLocations(al);
-                path.setId(-1);
-                myPathAdapter.addData(path);
-                System.out.println("Fetching locations did not work");
-//                progressDialog.dismiss();
-            }
-        });
-    }
-
-    public void getSpecificLocation(String authToken, String locationID) {
-        LocationInterface service =
-                ServiceGenerator.createUnauthorizedService(LocationInterface.class);
-
-        Call<Location> call = service.getSpecificLocation(locationID);
-        call.enqueue(new Callback<Location>() {
-            @Override
-            public void onResponse(Call<Location> call, Response<Location> response) {
-                Location location = response.body();
-                System.out.println(location.getPicture());
-                System.out.println(location.getText());
+                backendCallback.getSpecificLocationCallback(location, mess);
             }
 
             @Override
             public void onFailure(Call<Location> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
-            }
-        });
-    }
-
-    public void getSpecificLocationToAdapter(String authToken, String locationID, final MyLocationAdapter myLocationAdapter) {
-        LocationInterface service =
-                ServiceGenerator.createUnauthorizedService(LocationInterface.class);
-
-        Call<Location> call = service.getSpecificLocation(locationID);
-        call.enqueue(new Callback<Location>() {
-            @Override
-            public void onResponse(Call<Location> call, Response<Location> response) {
-                Location location = response.body();
-                myLocationAdapter.addData(location);
-            }
-
-            @Override
-            public void onFailure(Call<Location> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
-            }
-        });
-    }
-
-
-
-    public void getSpecificLocationToExtendedAdapter(String authToken, String locationID, final MyPathLocationsAdapter myLocationAdapter) {
-        LocationInterface service =
-                ServiceGenerator.createUnauthorizedService(LocationInterface.class);
-
-        Call<Location> call = service.getSpecificLocation(locationID);
-        call.enqueue(new Callback<Location>() {
-            @Override
-            public void onResponse(Call<Location> call, Response<Location> response) {
-                Location location = response.body();
-                myLocationAdapter.addData(location);
-            }
-
-            @Override
-            public void onFailure(Call<Location> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
+                backendCallback.getSpecificLocationCallback(null, "ERROR_FAIL");
             }
         });
     }
@@ -357,14 +172,21 @@ public class BackendAPICall {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                User user = response.body();
-                System.out.println(user.getId());
-                System.out.println(user.getUsername());
+                User user;
+                String mess = "";
+                if(response.isSuccessful()){
+                    user = response.body();
+                    mess = "OK";
+                }else{
+                    user = null;
+                    mess = "ERROR";
+                }
+                backendCallback.getSpecificUserCallback(user, mess);
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
+                backendCallback.getSpecificUserCallback(null, "ERROR_FAIL");
             }
         });
     }
@@ -377,38 +199,47 @@ public class BackendAPICall {
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                List<User> users = response.body();
-                System.out.println(users.size());
+                List<User> users;
+                String mess ="";
+                if(response.isSuccessful()){
+                    users = response.body();
+                    mess = "OK";
+                }else{
+                    users = null;
+                    mess = "ERROR";
+                }
+                backendCallback.getAllUsersCallback(users, mess);
             }
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
+                backendCallback.getAllUsersCallback(null, "ERROR_FAIL");
             }
         });
     }
 
     public void getUserProfile(String authToken) {
-        authToken = "gB1OIviNZY7W8tIn1Ar8GCoiLH7gnW";
-
         UserInterface service =
                 ServiceGenerator.createAuthorizedService(UserInterface.class, authToken);
-
-        System.out.println("Auth token:" + authToken);
-
         Call<User> call = service.getCurrentUser();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                User user = response.body();
-
-                System.out.println(user.getId());
-                System.out.println(user.getUsername());
+                User user;
+                String mess = "";
+                if(response.isSuccessful()){
+                    user = response.body();
+                    mess = "OK";
+                }else{
+                    user = null;
+                    mess = "ERROR";
+                }
+                backendCallback.getUserProfileCallback(user, mess);
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                System.out.println("Fetching locations did not work");
+                backendCallback.getUserProfileCallback(null, "ERROR_FAIL");
             }
         });
     }
@@ -419,53 +250,34 @@ public class BackendAPICall {
         return "static/" + rez[2];
     }
 
-
-    public static void printLocations(List<Location> locations)
-    {
-        for (Location item : locations) {
-            System.out.println("****************************");
-            System.out.println(item.getId());
-            System.out.println(item.getCreated());
-            System.out.println(item.getOwner());
-            System.out.println(item.getLatitude());
-            System.out.println(item.getLongtitude());
-            System.out.println(item.getPicture());
-            System.out.println(item.getName());
-            System.out.println(item.getTitle());
-            System.out.println(repairURL(item.getPicture()));
-            System.out.println("****************************");
-
-        }
-
-    }
-
-    public void refreshToken(final String authToken, final SharedPreferences pref, final UserProfile profile)
+    public void refreshToken(String authToken, String backendToken)
     {
         AuthorizationInterface service = ServiceGenerator.createUnauthorizedService(AuthorizationInterface.class);
         Call<BackendToken> call = service.refreshToken(
                 "refresh_token",
                 ServiceGenerator.CLIENT_ID,
                 ServiceGenerator.CLIENT_SECRET,
-                pref.getString(authToken + "_refresh","null"));
+                backendToken);
 
 
         call.enqueue(new Callback<BackendToken>() {
             @Override
             public void onResponse(Call<BackendToken> call, Response<BackendToken> response) {
-                BackendToken newToken = response.body();
+                BackendToken newToken;
+                String mess = "";
                 if (response.isSuccessful()) {
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putString(authToken + "_token", newToken.getAccessToken());
-                    editor.putString(authToken + "_refresh", newToken.getRefreshToken());
-                    editor.commit();
-                    profile.setRefreshToken(newToken.getRefreshToken());
-                    profile.setBackendAccessToken(newToken.getAccessToken());
+                    newToken = response.body();
+                    mess = "OK";
+                }else{
+                    newToken = null;
+                    mess = "ERROR";
                 }
+                backendCallback.getRefreshTokeneCallback(newToken, mess);
             }
 
             @Override
             public void onFailure(Call<BackendToken> call, Throwable t) {
-
+                backendCallback.getRefreshTokeneCallback(null, "ERROR_FAIL");
             }
         });
 
@@ -533,6 +345,38 @@ public class BackendAPICall {
 
     }
 
+    public void convertToken(String authToken)
+    {
+        AuthorizationInterface auth = ServiceGenerator.createUnauthorizedService(AuthorizationInterface.class);
+        Call<BackendToken> klic = auth.convertToken(
+                "convert_token",
+                ServiceGenerator.CLIENT_ID,
+                ServiceGenerator.CLIENT_SECRET,
+                "facebook",
+                authToken
+        );
+        klic.enqueue(new Callback<BackendToken>() {
+            @Override
+            public void onResponse(Call<BackendToken> call, Response<BackendToken> response) {
+                BackendToken token;
+                String mess = "";
+                if(response.isSuccessful()){
+                    token = response.body();
+                    mess = "OK";
+                }else{
+                    token = null;
+                    mess = "ERROR";
+                }
+                backendCallback.getConvertTokenCallback(token, mess);
+            }
+
+            @Override
+            public void onFailure(Call<BackendToken> call, Throwable t) {
+                backendCallback.getConvertTokenCallback(null, "ERROR_FAIL");
+            }
+        });
+    }
+
     public void convertTokenAndAddPath(final Path path, final String authToken, final SharedPreferences sharedPrefs)
     {
         AuthorizationInterface auth = ServiceGenerator.createUnauthorizedService(AuthorizationInterface.class);
@@ -586,19 +430,6 @@ public class BackendAPICall {
 
 
     }
-
-    public static void printUsers(List<User> users)
-    {
-        for (User item : users) {
-            System.out.println("****************************");
-            System.out.println(item.getId());
-            System.out.println(item.getUsername());
-            System.out.println("****************************");
-
-        }
-
-    }
-
 
     public void uploadFile(Uri fileUri,Float latitude, Float longtitude, String name, String address, String title, String text,String authToken,Context context)
     {
@@ -729,8 +560,16 @@ public class BackendAPICall {
     }
 
     public interface BackendCallback{
-        public void getUserCallback(User user);
-        public void getLocationCallback(Location location);
+        public void getAllPathsCallback(List<Path> paths, String message);
+        public void getAllLocationsCallback(List<Location> loactions, String status);
+        public void getSpecificLocationCallback(Location loaction, String message);
+        public void getSpecificUserCallback(User user, String message);
+        public void getAllUsersCallback(List<User> user, String message);
+        public void getUserLocationCallback (List<Location> location, String message);
+        public void getUserProfileCallback(User user, String message);
+        public void getRefreshTokeneCallback(BackendToken token, String message);
+        public void getConvertTokenCallback(BackendToken token, String message);
+        public void getAddMessageCallback(String message, String backendCall);
     }
 }
 

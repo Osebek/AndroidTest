@@ -12,9 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyLocationAdapter;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyUserLocationsAdapter;
+
+import java.util.List;
 
 
 /**
@@ -23,13 +28,14 @@ import com.example.nejcvesel.pazikjehodis.retrofitAPI.MyUserLocationsAdapter;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class MyLocationsFragment extends Fragment {
+public class MyLocationsFragment extends Fragment implements BackendAPICall.BackendCallback{
     Parcelable state;
     RecyclerView recView;
     LinearLayoutManager llm;
     MyUserLocationsAdapter locAdapter;
     int positionIndex = -1;
     int topView;
+    private BackendAPICall apiCall;
 
 
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -107,11 +113,8 @@ public class MyLocationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_location_list, container, false);
-
-
-
-
-
+        apiCall = new BackendAPICall(this, "");
+        locAdapter = new MyUserLocationsAdapter(getActivity());
         // Set the adapter
         if (view instanceof RecyclerView) {
 
@@ -128,10 +131,7 @@ public class MyLocationsFragment extends Fragment {
             }
 
             if (positionIndex == -1) {
-                locAdapter = new MyUserLocationsAdapter(getActivity());
-                BackendAPICall apiCall = new BackendAPICall(getActivity());
-                apiCall.getUserLocationsToAdapter(((MainActivity) getActivity()).userProfile.getBackendAccessToken(), locAdapter);
-
+                apiCall.getUserLocations(((MainActivity) getActivity()).userProfile.getBackendAccessToken());
             }
             recyclerView.setAdapter(locAdapter);
         }
@@ -162,6 +162,60 @@ public class MyLocationsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void getAllPathsCallback(List<Path> paths, String message) {
+
+    }
+
+    @Override
+    public void getAllLocationsCallback(List<Location> loactions, String status) {
+
+    }
+
+    @Override
+    public void getSpecificLocationCallback(Location loaction, String message) {
+
+    }
+
+    @Override
+    public void getSpecificUserCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getAllUsersCallback(List<User> user, String message) {
+
+    }
+
+    @Override
+    public void getUserLocationCallback(List<Location> location, String message) {
+        if(message.equals("OK")){
+            for(Location loc: location){
+                locAdapter.addData(loc);
+            }
+        }
+    }
+
+    @Override
+    public void getUserProfileCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getRefreshTokeneCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getConvertTokenCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getAddMessageCallback(String message, String backendCall) {
+
     }
 
     /**

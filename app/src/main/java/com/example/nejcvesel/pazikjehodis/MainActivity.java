@@ -32,8 +32,10 @@ import com.example.nejcvesel.pazikjehodis.Utility.UtilityFunctions;
 import com.example.nejcvesel.pazikjehodis.Walkthrough.WalkthroughActivity;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.FileUpload;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -56,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements
         LocationFragment.OnListFragmentInteractionListener,
         LocationDetailFragment.OnFragmentInteractionListener, PathLocationsFragment.OnListFragmentInteractionListener,
         LocationInPathDetailFragment.OnFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener,
-        PathAddFormFragment.OnFragmentInteractionListener, PathAddFragment.OnListFragmentInteractionListener {
+        PathAddFormFragment.OnFragmentInteractionListener, PathAddFragment.OnListFragmentInteractionListener, BackendAPICall.BackendCallback{
     public static String authToken;
     public Marker currentMarker = null;
     public Uri url = null;
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements
     public GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActivity";
-    BackendAPICall api  = new BackendAPICall();
+    BackendAPICall api;
     public SharedPreferences sharedPref;
     public UserProfile userProfile = null;
     FabHandler fabClick;
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         userProfile = new UserProfile();
+        api = new BackendAPICall(this);
 
         Map<?, ?> bla = sharedPref.getAll();
         for (Object key : bla.keySet()) {
@@ -133,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements
 //                      Profile profile = Profile.getCurrentProfile();
                         authToken = loginResult.getAccessToken().getToken();
                         AccessToken.setCurrentAccessToken(loginResult.getAccessToken());
-                        api.refreshToken(authToken, sharedPref, userProfile);
+                        api.refreshToken(authToken, userProfile.getBackendAccessToken());
                         userProfile.setUserToken(authToken);
                         userProfile.setLoginType("Facebook");
                     }
@@ -504,7 +508,7 @@ public class MainActivity extends AppCompatActivity implements
     public void uploadPath(Path path) {
         AccessToken at = AccessToken.getCurrentAccessToken();
         authToken = at.getToken().toString();
-        BackendAPICall api = new BackendAPICall(this);
+//        BackendAPICall api = new BackendAPICall(this);
 
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         String token = sharedPref.getString(authToken + "_token", "noToken");
@@ -527,7 +531,6 @@ public class MainActivity extends AppCompatActivity implements
         return pathLocationArray;
 
     }
-
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -639,5 +642,58 @@ public class MainActivity extends AppCompatActivity implements
         infoWindow.setY(-200);
         infoWindow.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void getAllPathsCallback(List<Path> paths, String message) {
+
+    }
+
+    @Override
+    public void getAllLocationsCallback(List<Location> loactions, String status) {
+
+    }
+
+    @Override
+    public void getSpecificLocationCallback(Location loaction, String message) {
+
+    }
+
+    @Override
+    public void getSpecificUserCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getAllUsersCallback(List<User> user, String message) {
+
+    }
+
+    @Override
+    public void getUserLocationCallback(List<Location> location, String message) {
+
+    }
+
+    @Override
+    public void getUserProfileCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getRefreshTokeneCallback(BackendToken token, String message) {
+        if(message.equals("OK")){
+            userProfile.setRefreshToken(token.getRefreshToken());
+//            sharedPref.edit().putStringSet(token.)
+        }
+    }
+
+    @Override
+    public void getConvertTokenCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getAddMessageCallback(String message, String backendCall) {
+
     }
 }

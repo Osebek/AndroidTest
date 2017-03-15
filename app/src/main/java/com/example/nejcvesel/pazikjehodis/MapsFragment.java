@@ -19,8 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.LocationInterface;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.ServiceGenerator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,9 +46,10 @@ import retrofit2.Response;
  * Created by brani on 12/19/2016.
  */
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback {
+public class MapsFragment extends Fragment implements OnMapReadyCallback,BackendAPICall.BackendCallback {
     private final static String TAG_FRAGMENT = "MapsFragment";
-
+    private BackendAPICall api;
+    private ProgressDialog progressDialog;
     private GoogleMap mMap;
     HashMap<Marker, Location> markerLocationMap = new HashMap<Marker, Location>();
 
@@ -64,6 +68,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         fm.beginTransaction().replace(R.id.map, mapFragment).commit();
         //MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        api = new BackendAPICall(this, "");
+        progressDialog = new ProgressDialog(getActivity(),R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Pridobivam lokacije");
     }
 
     @Override
@@ -92,57 +100,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         });
 
-
         mMap.setOnMarkerClickListener(new MarkerClickHandler(getActivity(), markerLocationMap));
-//        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener ()
-//        {
-//            @Override
-//            public boolean onMarkerClick(Marker marker) {
-//                View markerInfoWindow = getActivity().findViewById(R.id.infoCardMarker);
-//                if(markerInfoWindow.getVisibility() != View.INVISIBLE){
-//                    markerInfoWindow.animate().translationY(-200).alpha(0.0f);
-////                    markerInfoWindow.setVisibility(View.GONE);
-//                }
-//                Location loc = markerLocationMap.get(marker);
-//                if (loc != null) {
-//                    AppBarLayout appbar = (AppBarLayout) getActivity().findViewById(R.id.appbar);
-//                    TextView header = (TextView) markerInfoWindow.findViewById(R.id.header_infowindow);
-//                    TextView content = (TextView) markerInfoWindow.findViewById(R.id.content_infowindow);
-//                    ImageView icon = (ImageView) markerInfoWindow.findViewById(R.id.imageHolder);
-//
-//                    String image;
-//                    try{
-//                        header.setText(loc.getText());
-//                        content.setText(loc.getAddress());
-//                        image = ServiceGenerator.API_BASE_URL + BackendAPICall.repairURL(loc.getPicture());
-//                    }catch (Exception e){
-//                        Toast.makeText(markerInfoWindow.getContext(), R.string.error_load_info, Toast.LENGTH_LONG).show();
-//                        return true;
-//                    }
-//
-//                    markerInfoWindow.setVisibility(View.VISIBLE);
-//                    markerInfoWindow.setAlpha(0.0f);
-//                    markerInfoWindow.animate().translationY(markerInfoWindow.getHeight() + appbar.getHeight()).alpha(1.0f);
-//                    Picasso.with(markerInfoWindow.getContext()).load(image).noFade()
-//                            .placeholder(R.drawable.progress_animation).into(icon,new MarkerCallback(markerInfoWindow));
-////                        .into(icon, new MarkerCallback(marker));
-//                }
-//                else
-//                {
-////                    ((MainActivity)getActivity()).OpenFormFragment();
-//
-//                }
-//
-//                return true;
-//            }
-//        });
-
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity(),R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Pridobivam lokacije");
-        progressDialog.show();
-
-        MainActivity main = (MainActivity) getActivity();
         View markerInfoWindow = getActivity().findViewById(R.id.infoCardMarker);
         markerInfoWindow.setOnTouchListener(new OnSwipeTouchListener(getActivity().getApplicationContext()) {
             public void onSwipeTop() {
@@ -162,68 +120,82 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        MainActivity main = (MainActivity) getActivity();
+        progressDialog.show();
         if (main.pathLocations.size() > 0) {
             for (int i = 0; i < main.pathLocations.size(); i++) {
-                Location location = new Location();
-                LocationInterface service =
-                        ServiceGenerator.createUnauthorizedService(LocationInterface.class);
-
-                Call<Location> call = service.getSpecificLocation(main.pathLocations.get(i));
-                call.enqueue(new Callback<Location>() {
-                    @Override
-                    public void onResponse(Call<Location> call, Response<Location> response) {
-                        Location loc = response.body();
-                            LatLng lok = new LatLng(Double.valueOf(loc.getLatitude()), Double.valueOf(loc.getLongtitude()));
-                            Marker marker = mMap.addMarker(new MarkerOptions()
-                                    .position(lok)
-                                    .title(loc.getTitle()));
-                            markerLocationMap.put(marker, loc);
-                        progressDialog.dismiss();
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<Location> call, Throwable t) {
-                        System.out.println("Fetching locations did not work");
-                        progressDialog.dismiss();
-
-                    }
-                });
-
+                api.getSpecificLocation(main.pathLocations.get(i));
             }
         } else {
-            LocationInterface service =
-                    ServiceGenerator.createUnauthorizedService(LocationInterface.class);
-
-            Call<List<Location>> call = service.getAllLocations();
-            call.enqueue(new Callback<List<Location>>() {
-                @Override
-                public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
-                    List<Location> locations = response.body();
-                    for (Location loc : locations) {
-                        LatLng lok = new LatLng(Double.valueOf(loc.getLatitude()), Double.valueOf(loc.getLongtitude()));
-                        Marker marker = mMap.addMarker(new MarkerOptions()
-                                .position(lok)
-                                .title(loc.getTitle()));
-                        markerLocationMap.put(marker, loc);
-
-                    }
-                    progressDialog.dismiss();
-
-
-                }
-
-                @Override
-                public void onFailure(Call<List<Location>> call, Throwable t) {
-                    System.out.println("Fetching locations did not work");
-                    progressDialog.dismiss();
-
-                }
-            });
-
+            api.getAllLocations("");
         }
+    }
 
-
+    @Override
+    public void getAllPathsCallback(List<Path> paths, String message) {
 
     }
+
+    @Override
+    public void getAllLocationsCallback(List<Location> loactions, String message) {
+        if(message.equals("OK")) {
+            Log.v("Get All Location", "Active");
+            for (Location loc : loactions) {
+                LatLng lok = new LatLng(Double.valueOf(loc.getLatitude()), Double.valueOf(loc.getLongtitude()));
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(lok)
+                        .title(loc.getTitle()));
+                markerLocationMap.put(marker, loc);
+
+            }
+            progressDialog.hide();
+        }
+    }
+
+    @Override
+    public void getSpecificLocationCallback(Location loaction, String message) {
+        Log.v("Get Specific Location", "Active");
+        LatLng lok = new LatLng(Double.valueOf(loaction.getLatitude()), Double.valueOf(loaction.getLongtitude()));
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(lok)
+                .title(loaction.getTitle()));
+        markerLocationMap.put(marker, loaction);
+        progressDialog.hide();
+    }
+
+    @Override
+    public void getSpecificUserCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getAllUsersCallback(List<User> user, String message) {
+
+    }
+
+    @Override
+    public void getUserLocationCallback(List<Location> location, String message) {
+
+    }
+
+    @Override
+    public void getUserProfileCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getRefreshTokeneCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getConvertTokenCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getAddMessageCallback(String message, String backendCall) {
+
+    }
+
 }

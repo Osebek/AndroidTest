@@ -47,8 +47,6 @@ public class LocationFormFragment extends Fragment {
 
     }
 
-
-
     public static LocationFormFragment newInstance(Location loc) {
         LocationFormFragment fragment = new LocationFormFragment();
         Bundle args = new Bundle();
@@ -90,8 +88,10 @@ public class LocationFormFragment extends Fragment {
         View myInflatedView = inflater.inflate(R.layout.fragment_location_form, container, false);
         TextView ownerName = (TextView) myInflatedView.findViewById(R.id.inputName);
         MainActivity main = (MainActivity) getActivity();
-        ownerName.setText(main.profile.getFirstName() + main.profile.getLastName());
-        Button submit = ((Button)myInflatedView.findViewById(R.id.upload_location));
+//        ownerName.setText(main.profile.getFirstName() + main.profile.getLastName());
+        //TODO: return to upper comented code .... this is just for test!
+        ownerName.setText("");
+        Button  submit  = ((Button)myInflatedView.findViewById(R.id.upload_location));
 
 
         if (mParamEditMode)

@@ -70,7 +70,8 @@ public class PathAddFormFragment extends Fragment {
 
 
         TextView owner = (TextView) view.findViewById(R.id.pathAddOwner);
-        owner.setText(main.profile.getFirstName() + main.profile.getLastName());
+        //TODO: return coments!
+//        owner.setText(main.profile.getFirstName() + main.profile.getLastName());
         Button objavi = (Button) view.findViewById(R.id.upload_path);
 
         final EditText name = (EditText) view.findViewById(R.id.pathAddName);
