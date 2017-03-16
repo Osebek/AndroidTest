@@ -48,9 +48,7 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
 
 
     }
-
-
-
+    
     @SuppressWarnings("unused")
     public static MyLocationsFragment newInstance(int columnCount) {
         MyLocationsFragment fragment = new MyLocationsFragment();
@@ -59,28 +57,6 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
         fragment.setArguments(args);
         return fragment;
     }
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-//        }
-//    }
-//    @Override
-//    public void onSaveInstanceState(Bundle state) {
-//        super.onSaveInstanceState(state);
-//
-//        state.putParcelable(LIST_STATE_KEY, layoutManager.onSaveInstanceState());
-//    }
-//
-//    protected void onRestoreInstanceState(Bundle state) {
-//        super.onRestoreInstanceState(state);
-//
-//        Parcelable listState = state.getParcelable(LIST_STATE_KEY);
-//    }
-
-
     @Override
     public void onPause()
     {
@@ -136,7 +112,6 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
             }
             recyclerView.setAdapter(locAdapter);
         }
-        System.out.println(positionIndex);
 
         if (positionIndex!= -1) {
             llm.scrollToPositionWithOffset(positionIndex, topView);

@@ -58,27 +58,6 @@ public class LocationFragment extends Fragment implements BackendAPICall.Backend
         return fragment;
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-//        }
-//    }
-//    @Override
-//    public void onSaveInstanceState(Bundle state) {
-//        super.onSaveInstanceState(state);
-//
-//        state.putParcelable(LIST_STATE_KEY, layoutManager.onSaveInstanceState());
-//    }
-//
-//    protected void onRestoreInstanceState(Bundle state) {
-//        super.onRestoreInstanceState(state);
-//
-//        Parcelable listState = state.getParcelable(LIST_STATE_KEY);
-//    }
-
-
    @Override
    public void onPause()
    {

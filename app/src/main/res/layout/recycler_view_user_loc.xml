@@ -85,13 +85,27 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/longtitude"
                 />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/edit_icon"
-                android:layout_gravity="center"
-                android:layout_marginBottom="5dp"/>
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/edit_icon"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/delete_loc_icon"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/delete_icon"
+                android:paddingLeft="15dp"
+                />
+            </LinearLayout>
 
             <TextView fontPath="fonts/Ubuntu-light.ttf"
                 android:id="@+id/locIdentifier"

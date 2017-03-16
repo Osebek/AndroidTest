@@ -1,5 +1,7 @@
 package com.example.nejcvesel.pazikjehodis;
 
+import android.content.SharedPreferences;
+
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
 
 import java.net.URL;
@@ -16,6 +18,16 @@ public class UserProfile {
     String backendAccessToken = "";
     String firstName = "";
     String lastName = "";
+    private SharedPreferences sharedPrefs;
+    UserProfile(SharedPreferences sharedPrefs)
+    {
+        this.sharedPrefs = sharedPrefs;
+    }
+
+    UserProfile()
+    {
+
+    }
 
     public String getFirstName() {
         return firstName;

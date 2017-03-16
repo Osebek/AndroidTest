@@ -4,10 +4,12 @@ package com.example.nejcvesel.pazikjehodis.Adapters;
  * Created by nejcvesel on 07/03/17.
  */
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -18,13 +20,18 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nejcvesel.pazikjehodis.Fragments.LocationDetailFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LocationFormFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.MyLocationsFragment;
 import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.R;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.ServiceGenerator;
 import com.squareup.picasso.Picasso;
 
@@ -36,14 +43,16 @@ import java.util.List;
  * Created by nejcvesel on 19/12/16.
  */
 
-public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocationsAdapter.ViewHolder> {
+public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocationsAdapter.ViewHolder> implements BackendAPICall.BackendCallback{
     List<Location> mItems;
     Context context;
+    BackendAPICall api;
 
 
     public MyUserLocationsAdapter(Context context) {
         super();
         this.context = context;
+        api = new BackendAPICall(this,"");
         mItems = new ArrayList<Location>();
     }
 
@@ -62,8 +71,6 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_view_user_loc, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(v);
-
-        System.out.println("OnCreateViewHolder " + i);
         return viewHolder;
     }
 
@@ -72,8 +79,8 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
         Location loc = mItems.get(i);
         System.out.println(loc.getId());
         viewHolder.text.setText(loc.getText());
-        viewHolder.longtitude.setText("latitude: " + loc.getLatitude());
-        viewHolder.latitude.setText("longtitude: " + loc.getLongtitude());
+        viewHolder.longtitude.setText(loc.getLatitude());
+        viewHolder.latitude.setText(loc.getLongtitude());
         viewHolder.locationID.setText(Integer.toString(loc.getId()));
         viewHolder.name.setText(loc.getName());
         viewHolder.title.setText(loc.getTitle());
@@ -101,6 +108,83 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
         return mItems.size();
     }
 
+    @Override
+    public void getAllPathsCallback(List<Path> paths, String message) {
+
+    }
+
+    @Override
+    public void getAllLocationsCallback(List<Location> loactions, String status) {
+
+    }
+
+    @Override
+    public void getSpecificLocationCallback(Location loaction, String message) {
+
+    }
+
+    @Override
+    public void getSpecificUserCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getAllUsersCallback(List<User> user, String message) {
+
+    }
+
+    @Override
+    public void getUserLocationCallback(List<Location> location, String message) {
+
+    }
+
+    @Override
+    public void getUserProfileCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getRefreshTokeneCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getConvertTokenCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getAddMessageCallback(String message, String backendCall) {
+        CharSequence text = "";
+        if (message.equals("OK"))
+        {
+            text = "Brisanje lokacije uspešno";
+            FragmentManager fragmentManager = ((FragmentActivity)context).getFragmentManager();
+            fragmentManager.beginTransaction().replace(
+                    R.id.content_frame,
+                    new MyLocationsFragment(),
+                    "MyLocationsFragment"
+                    ).addToBackStack("MyLocationsFragment").commit();
+
+
+        }
+        else if (message.contains("ERROR") && !message.equals("ERROR_FAIL"))
+        {
+            System.out.println(message);
+            text = "Brisanje lokacije ni uspelo. Napaka na strežniku.";
+        }
+        else
+        {
+            text = "Brisanje lokacije ni uspelo. Ni povezave do strežnika";
+        }
+
+        int duration = Toast.LENGTH_LONG;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+
+
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         public TextView text;
         public TextView longtitude;
@@ -113,6 +197,7 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
         public TextView locAddress;
         public TextView owner;
         public ImageView editIcon;
+        public ImageView deleteIcon;
 
 
 
@@ -130,6 +215,8 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
             locAddress = (TextView) itemView.findViewById(R.id.locAddress);
             owner = (TextView) itemView.findViewById(R.id.loc_owner);
             editIcon = (ImageView) itemView.findViewById(R.id.edit_icon);
+            deleteIcon = (ImageView) itemView.findViewById(R.id.delete_loc_icon);
+
 
 
 
@@ -145,6 +232,8 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
                 }
             });
 
+
+
             editIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -153,9 +242,11 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
                     loc.setText(text.getText().toString());
                     loc.setName(name.getText().toString());
                     loc.setPicture(pictureURL.getText().toString());
-                    loc.setId(Integer.valueOf(locationID.getId()));
+                    loc.setId(Integer.valueOf(locationID.getText().toString()));
                     loc.setAddress(locAddress.getText().toString());
                     loc.setOwner(owner.getText().toString());
+                    loc.setLongtitude(longtitude.getText().toString());
+                    loc.setLatitude(latitude.getText().toString());
 
                     Fragment fragment = LocationFormFragment.newInstance(loc);
                     FragmentManager fragmentManager = ((FragmentActivity)context).getFragmentManager();
@@ -169,6 +260,8 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
                 }
             });
 
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -177,12 +270,40 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
                     loc.setText(text.getText().toString());
                     loc.setName(name.getText().toString());
                     loc.setPicture(pictureURL.getText().toString());
-                    loc.setId(Integer.valueOf(locationID.getId()));
+                    loc.setId(Integer.valueOf(locationID.getText().toString()));
                     loc.setAddress(locAddress.getText().toString());
                     loc.setOwner(owner.getText().toString());
                     goToLocationDetail(loc,0);
 
 
+
+
+                }
+            });
+
+            deleteIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                    alertDialog.setTitle("Brisanje");
+                    alertDialog.setMessage("Ste prepirčani da želite izbrisati lokacijo?");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "DA, zbriši",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String loc_id = locationID.getText().toString();
+                                    api.deleteLocation(((MainActivity)context).userProfile.getBackendAccessToken(),loc_id);
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Prekliči",
+                            new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
 
 
                 }

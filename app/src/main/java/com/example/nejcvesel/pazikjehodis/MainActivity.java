@@ -1,10 +1,8 @@
 package com.example.nejcvesel.pazikjehodis;
 
 //import android.app.FragmentManager;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -19,14 +17,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.nejcvesel.pazikjehodis.Handlers.FabHandler;
 import com.example.nejcvesel.pazikjehodis.Fragments.AddFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LocationDetailFragment;
-import com.example.nejcvesel.pazikjehodis.Fragments.LocationFormFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LocationFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LocationInPathDetailFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LogInFragment;
@@ -36,11 +31,8 @@ import com.example.nejcvesel.pazikjehodis.Fragments.PathAddFormFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.PathAddFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.PathListFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.PathLocationsFragment;
-import com.example.nejcvesel.pazikjehodis.Handlers.FabHandler;
-import com.example.nejcvesel.pazikjehodis.Utility.UtilityFunctions;
 import com.example.nejcvesel.pazikjehodis.Walkthrough.WalkthroughActivity;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
-import com.example.nejcvesel.pazikjehodis.retrofitAPI.FileUpload;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
@@ -61,16 +53,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-
-import rx.android.schedulers.HandlerScheduler;
 
 /**
  * Created by brani on 12/18/2016.
@@ -118,41 +106,58 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        System.out.print("ON ACTIVITY");
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         sharedPref = getPreferences(Context.MODE_PRIVATE);
+        //sharedPref.edit().clear().commit();
         userProfile = new UserProfile();
         api = new BackendAPICall(this);
 
-        Map<?, ?> bla = sharedPref.getAll();
-        for (Object key : bla.keySet()) {
+        Map<?, ?> sharedPrefValues = sharedPref.getAll();
+        for (Object key : sharedPrefValues.keySet()) {
             String tmpKey = key.toString();
             if (tmpKey.contains("_token")) {
-                Object currToken = bla.get(key);
+                String userToken = tmpKey.split("_token")[0];
+                Object currToken = sharedPrefValues.get(key);
+                userProfile.setUserToken(userToken);
                 userProfile.setBackendAccessToken(currToken.toString());
             }
             if (tmpKey.contains("_refresh")) {
-                Object currToken = bla.get(key);
+                Object currToken = sharedPrefValues.get(key);
                 userProfile.setRefreshToken(currToken.toString());
+            }
+
+            if(tmpKey.contains("_firstName"))
+            {
+                Object currFirstName = sharedPrefValues.get(key);
+                userProfile.setFirstName(currFirstName.toString());
+            }
+            if(tmpKey.contains("_lastName"))
+            {
+                Object currLastName = sharedPrefValues.get(key);
+                userProfile.setLastName(currLastName.toString());
             }
         }
 
-//        SharedPreferences.Editor edit = sharedPref.edit();
-        //edit.clear().commit();
-        //edit.clear();
-        //edit.commit();
+        if (!userProfile.getRefreshToken().equals(""))
+        {
+            api.refreshToken(userProfile.getRefreshToken());
+        }
+
+        if (!userProfile.getBackendAccessToken().equals(""))
+        {
+            api.getUserProfile(userProfile.getBackendAccessToken());
+        }
+
+
 
         // BackendAPICall callProfile = new BackendAPICall();
         //callProfile.getUserProfile(userProfile.getBackendAccessToken());
-//
-//        BackendAPICall.UserCallback userCallBack = (BackendAPICall.UserCallback) this;
-//        userCallBack
 
-//
 //        FacebookSdk.sdkInitialize(getApplicationContext());
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -160,12 +165,16 @@ public class MainActivity extends AppCompatActivity implements
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-//                      Profile profile = Profile.getCurrentProfile();
                         authToken = loginResult.getAccessToken().getToken();
                         AccessToken.setCurrentAccessToken(loginResult.getAccessToken());
-                        api.refreshToken(authToken, userProfile.getBackendAccessToken());
                         userProfile.setUserToken(authToken);
                         userProfile.setLoginType("Facebook");
+                        if (userProfile.getBackendAccessToken().equals(""))
+                        {
+                            api.convertToken(authToken);
+                        } else {
+                            api.refreshToken(userProfile.getRefreshToken());
+                        }
                     }
 
                     @Override
@@ -185,9 +194,6 @@ public class MainActivity extends AppCompatActivity implements
             protected void onCurrentAccessTokenChanged(
                     AccessToken oldAccessToken,
                     AccessToken currentAccessToken) {
-//                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//                View header=navigationView.getHeaderView(0);
-//                TextView name = (TextView)header.findViewById(R.id.textView);
                 TextView userName = (TextView) findViewById(R.id.navHeaderText);
                 if (currentAccessToken == null) {
                     userName.setText("Anonimen uporabnik");
@@ -201,13 +207,14 @@ public class MainActivity extends AppCompatActivity implements
                     Profile oldProfile,
                     Profile currentProfile) {
                 if (currentProfile != null) {
-//                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//                    View header=navigationView.getHeaderView(0);
-//                    TextView name = (TextView)header.findViewById(R.id.textView);
                     TextView name = (TextView) findViewById(R.id.navHeaderText);
                     name.setText(currentProfile.getFirstName() + " " + currentProfile.getLastName());
                     userProfile.setFirstName(currentProfile.getFirstName());
                     userProfile.setLastName(currentProfile.getLastName());
+                    SharedPreferences.Editor edit = sharedPref.edit();
+                    edit.putString(authToken + "_firstName", currentProfile.getFirstName());
+                    edit.putString(authToken + "_lastName", currentProfile.getLastName());
+                    edit.commit();
                 }
 
             }
@@ -215,7 +222,8 @@ public class MainActivity extends AppCompatActivity implements
 
         //TODO: fab buttons - set right images as well right colors for fab buttons
         //TODO: fab buttons - on/off in different fragments
-        this.profile = Profile.getCurrentProfile();
+        profile = Profile.getCurrentProfile();
+
 
 
         fabClick = new FabHandler(this);
@@ -231,12 +239,8 @@ public class MainActivity extends AppCompatActivity implements
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        /*NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View header=navigationView.getHeaderView(0);
-        TextView name = (TextView)header.findViewById(R.id.textView);*/
         TextView profileName = (TextView) findViewById(R.id.navHeaderText);
-        if (userProfile.backendAccessToken != "") {
+        if (!userProfile.getFirstName().equals("") && !userProfile.getLastName().equals("")) {
             profileName.setText(userProfile.getFirstName() + " " + userProfile.getLastName());
         } else {
             profileName.setText("Anonimen uporabnik");
@@ -250,32 +254,8 @@ public class MainActivity extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        LinkedHashSet<String> defaultVal = new LinkedHashSet<String>();
-        //edit.clear();
-        //edit.commit();
-        AccessToken at = AccessToken.getCurrentAccessToken();
-        try {
-            authToken = at.getToken().toString();
-        } catch (Exception e) {
-            authToken = null;
-        }
-//        authToken = at.getToken().toString();
-        System.out.println(authToken);
-
-
-        String token = sharedPref.getString(authToken + "_token", "noToken");
-        String refresh_token = sharedPref.getString(authToken + "_refresh", "noRefreshToken");
-
-        if (token.equals("noToken")) {
-        } else {
-            System.out.println(token);
-            System.out.println(refresh_token);
-        }
-
 
         FragmentManager fm = getFragmentManager();
-
         fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
     }
 
@@ -324,157 +304,6 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    public void OpenGallery() {
-        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickPhoto, 1);
-    }
-
-    public void OpenFormFragment() {
-        if (currentMarker != null) {
-            FragmentManager fm = getFragmentManager();
-            fm.beginTransaction().replace(R.id.content_frame, new LocationFormFragment(), "LocationFormFragment").addToBackStack("LocationFormFragment").commit();
-        }
-    }
-
-    public void CancelForm(View view) {
-        onBackPressed();
-    }
-
-    public void SaveForm(View view) {
-        AccessToken at = AccessToken.getCurrentAccessToken();
-        authToken = at.getToken().toString();
-        LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
-        TextView name = (TextView) form.getView().findViewById(R.id.inputName);
-        EditText address = (EditText) form.getView().findViewById(R.id.inputAddress);
-        EditText title = (EditText) form.getView().findViewById(R.id.inputTitle);
-        EditText description = (EditText) form.getView().findViewById(R.id.inputDescription);
-        TextView imageUrl = (TextView) form.getView().findViewById(R.id.imageURL);
-        Uri url = Uri.parse(imageUrl.getText().toString());
-
-        if (description.getText().length() < 120) {
-            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-            alertDialog.setTitle("Napaka");
-            alertDialog.setMessage("Opis mora vsebovati vsaj 120 znakov");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "V redu",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
-
-        }
-
-        if (name.getText().equals("") || address.getText().equals("") || title.getText().equals("") ||
-                description.getText().equals("") || imageUrl.getText().equals("")) {
-            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-            alertDialog.setTitle("Napaka");
-            alertDialog.setMessage("Vnesti morate vsa polja in naložiti sliko");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "V redu",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
-
-        } else {
-
-            if (currentMarker != null) {
-                LatLng latlng = currentMarker.getPosition();
-                FileUpload sendRequest = new FileUpload();
-
-                String token = sharedPref.getString(authToken + "_token", "noToken");
-
-                if (token.equals("noToken")) {
-                    sendRequest.convertTokenAndUploadFile(url, ((float) latlng.latitude), ((float) latlng.longitude), name.getText().toString(),
-                            address.getText().toString(), title.getText().toString(), description.getText().toString(),
-                            authToken, this.getBaseContext(), sharedPref);
-                } else {
-                    sendRequest.uploadFile(url, ((float) latlng.latitude), ((float) latlng.longitude), name.getText().toString(),
-                            address.getText().toString(), title.getText().toString(), description.getText().toString(),
-                            token, this.getBaseContext());
-
-                    //api.refreshToken(authToken,sharedPref);
-                }
-            }
-            OpenMapsFragment();
-        }
-
-
-    }
-
-    public void AttachPic(View view) {
-        AccessToken at = AccessToken.getCurrentAccessToken();
-        authToken = at.getToken().toString();
-        System.out.println(authToken);
-        //BackendAPICall kliciAPI = new BackendAPICall();
-        //kliciAPI.getAllPaths(authToken);
-        //kliciAPI.addPath(authToken);
-        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickPhoto, 1);
-    }
-
-    public void OpenMapsFragment() {
-        FragmentManager fm = getFragmentManager();
-        boolean fragmentPopped = fm.popBackStackImmediate("MapsFragment", 0);
-        if (!fragmentPopped) {
-            fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
-        }
-//        fm.beginTransaction().replace(R.id.content_frame, new MapsFragment()).commit();
-    }
-
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(imageReturnedIntent);
-            handleSignInResult(result);
-        }
-
-        switch (requestCode) {
-            case 0:
-                if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    System.out.println("Fotka fotka");
-                }
-
-                break;
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    url = selectedImage;
-                    String realPath = UtilityFunctions.getRealPathFromURI(getBaseContext(), url);
-                    String[] splitUrl = realPath.split("/");
-                    LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
-                    TextView picText = (TextView) form.getView().findViewById(R.id.imageURL);
-                    picText.setText(selectedImage.toString());
-                    Button addImageButton = (Button) form.getView().findViewById(R.id.form_picture);
-                    addImageButton.setHint("Spremeni sliko");
-                    TextView currPicture = (TextView) form.getView().findViewById(R.id.currentPic);
-                    currPicture.setText("Trenutna slika: " + splitUrl[splitUrl.length - 1]);
-
-
-//                    System.out.println(selectedImage.toString());
-//                    FileUpload sendRequest = new FileUpload();
-//                    System.out.println("Do tuki rpidem");
-//                    if(currentMarker != null){
-//                        LatLng latlng= currentMarker.getPosition();
-//                        sendRequest.uploadFile(selectedImage, ((float) latlng.latitude), ((float) latlng.longitude),
-//                                "To je teksts","something","some Name",
-//                                authToken,this.getApplicationContext());
-//                    }
-                }
-                break;
-
-        }
-        callbackManager.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-    }
-
-
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -499,6 +328,8 @@ public class MainActivity extends AppCompatActivity implements
     public void onListFragmentInteraction(Location item) {
 
     }
+
+
 
 
     //Map interaction method
@@ -702,20 +533,30 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void getUserProfileCallback(User user, String message) {
-
     }
 
     @Override
     public void getRefreshTokeneCallback(BackendToken token, String message) {
         if(message.equals("OK")){
             userProfile.setRefreshToken(token.getRefreshToken());
-//            sharedPref.edit().putStringSet(token.)
+            userProfile.setBackendAccessToken(token.getAccessToken());
+            SharedPreferences.Editor spEdit = sharedPref.edit();
+            spEdit.putString(userProfile.getUserToken() + "_token",token.getAccessToken());
+            spEdit.putString(userProfile.getUserToken() + "_token", token.getAccessToken());
+            spEdit.commit();
         }
     }
 
     @Override
     public void getConvertTokenCallback(BackendToken token, String message) {
-
+        if (message.equals("OK")) {
+            userProfile.setBackendAccessToken(token.getAccessToken());
+            userProfile.setRefreshToken(token.getRefreshToken());
+            SharedPreferences.Editor spEdit = sharedPref.edit();
+            spEdit.putString(userProfile.getUserToken() + "_token", token.getAccessToken());
+            spEdit.putString(userProfile.getUserToken() + "_refresh", token.getRefreshToken());
+            spEdit.commit();
+        }
     }
 
     @Override

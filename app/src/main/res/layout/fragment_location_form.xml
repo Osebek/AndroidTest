@@ -199,7 +199,6 @@
         android:layout_marginRight="150dp"
         android:paddingRight="20dp"
         android:padding="7dp"
-        android:onClick="AttachPic"
         style="?android:attr/borderlessButtonStyle"
         />
     <TextView
@@ -233,8 +232,6 @@
         android:layout_marginLeft="23dp"
         android:layout_marginRight="150dp"
         android:paddingRight="20dp"
-        android:onClick="SaveForm"
-
         />
 
 </LinearLayout>

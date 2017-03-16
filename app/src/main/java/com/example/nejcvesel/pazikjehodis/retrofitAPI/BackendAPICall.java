@@ -11,6 +11,7 @@ import android.util.Log;
 import com.example.nejcvesel.pazikjehodis.Adapters.MyLocationAdapter;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.AuthorizationInterface;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.FormUploadEditInterface;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.LocationInterface;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
@@ -245,7 +246,7 @@ public class BackendAPICall {
         return "static/" + rez[2];
     }
 
-    public void refreshToken(String authToken, String backendToken)
+    public void refreshToken(String backendToken)
     {
         AuthorizationInterface service = ServiceGenerator.createUnauthorizedService(AuthorizationInterface.class);
         Call<BackendToken> call = service.refreshToken(
@@ -428,9 +429,10 @@ public class BackendAPICall {
 
     public void uploadFile(Uri fileUri,Float latitude, Float longtitude, String name, String address, String title, String text,String authToken,Context context)
     {
-        System.out.println(authToken);
-        FileUploadService service =
-                ServiceGenerator.createAuthorizedService(FileUploadService.class, authToken);
+
+
+        FormUploadEditInterface service =
+                ServiceGenerator.createAuthorizedService(FormUploadEditInterface.class, authToken);
         String filePath = getRealPathFromURI(context,fileUri);
         System.out.println(filePath);
 
@@ -466,28 +468,36 @@ public class BackendAPICall {
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), address);
 
+
         Call<ResponseBody> call = service.upload(latitude_body,longtitude_body,name_body,address_body,title_body,text_body,body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call,
                                    Response<ResponseBody> response) {
-                Log.v("Upload", "success");
+                if (response.isSuccessful())
+                {
+                    backendCallback.getAddMessageCallback("OK","uploadFile");
+                }
+                else
+                {
+                    backendCallback.getAddMessageCallback("ERROR","uploadFile");
+                }
+
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
+                backendCallback.getAddMessageCallback("ERROR_FAIL","uploadFile");
             }
         });
 
 
     }
 
-    public void updateLocationWithPicture(Uri fileUri,Float latitude, Float longtitude, String name, String address, String title, String text,String authToken,String id,Context context)
+    public void updateLocationWithPicture(Uri fileUri,Float latitude, Float longtitude, String name, String address, String title, String text,String authToken,Context context, String id)
     {
-        System.out.println(authToken);
-        FileUploadService service =
-                ServiceGenerator.createAuthorizedService(FileUploadService.class, authToken);
+        FormUploadEditInterface service =
+                ServiceGenerator.createAuthorizedService(FormUploadEditInterface.class, authToken);
         String filePath = getRealPathFromURI(context,fileUri);
 
         File file = new File(filePath);
@@ -522,22 +532,123 @@ public class BackendAPICall {
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), address);
 
-        Call<ResponseBody> call = service.updateLocation(id,latitude_body,longtitude_body,name_body,address_body,title_body,text_body,body);
+        Call<ResponseBody> call = service.updateLocationAndChangePicture(id,latitude_body,longtitude_body,name_body,address_body,title_body,text_body,body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call,
                                    Response<ResponseBody> response) {
-                Log.v("Upload", "success");
+                if (response.isSuccessful())
+                {
+                    backendCallback.getAddMessageCallback("OK","updateLocationWithPicture");
+                }
+                else
+                {
+                    try {
+                        backendCallback.getAddMessageCallback("ERROR " + response.errorBody().string(),"updateLocationWithPicture");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
+                backendCallback.getAddMessageCallback("ERROR_FAIL","updateLocationWithPicture");
             }
         });
 
 
     }
+
+    public void deleteLocation(String authToken, String id)
+    {
+        FormUploadEditInterface service =
+                ServiceGenerator.createAuthorizedService(FormUploadEditInterface.class, authToken);
+
+        Call<ResponseBody> call = service.deleteLocation(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful())
+                {
+                    backendCallback.getAddMessageCallback("OK","deleteLocation");
+                }
+                else
+                {
+                    backendCallback.getAddMessageCallback("ERROR", "deleteLocation");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                backendCallback.getAddMessageCallback("ERROR_FAIL", "deleteLocation");
+            }
+        });
+
+
+
+    }
+
+    public void updateLocation(Float latitude, Float longtitude, String name, String address, String title, String text, String authToken, String id)
+    {
+        FormUploadEditInterface service =
+                ServiceGenerator.createAuthorizedService(FormUploadEditInterface.class, authToken);
+
+
+        String latitude_string = latitude.toString();
+        RequestBody latitude_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), latitude_string);
+
+        String longtitudeString = longtitude.toString();
+        RequestBody longtitude_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), longtitudeString);
+
+        RequestBody text_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), text);
+
+        RequestBody title_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), title);
+
+        RequestBody name_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), name);
+
+        RequestBody address_body =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), address);
+
+        Call<ResponseBody> call = service.updateLocation(id,latitude_body,longtitude_body,name_body,address_body,title_body,text_body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call,
+                                   Response<ResponseBody> response) {
+                if (response.isSuccessful())
+                {
+                    backendCallback.getAddMessageCallback("OK","updateLocation");
+                }
+                else
+                {
+                    try {
+                        backendCallback.getAddMessageCallback("ERROR " + response.errorBody().string(),"updateLocation");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                backendCallback.getAddMessageCallback("ERROR_FAIL","updateLocation");
+            }
+        });
+
+
+    }
+
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;

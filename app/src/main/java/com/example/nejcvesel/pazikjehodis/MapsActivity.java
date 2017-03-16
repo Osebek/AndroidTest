@@ -1,39 +1,21 @@
 package com.example.nejcvesel.pazikjehodis;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
-import com.example.nejcvesel.pazikjehodis.retrofitAPI.FileUpload;
-import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.facebook.AccessToken;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.DialogInterface;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -116,8 +98,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = imageReturnedIntent.getData();
                     System.out.println(selectedImage.toString());
-                    FileUpload sendRequest = new FileUpload();
-                    System.out.println("Do tuki rpidem");
 
 
                 }
