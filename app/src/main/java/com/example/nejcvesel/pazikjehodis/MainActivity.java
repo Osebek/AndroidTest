@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.nejcvesel.pazikjehodis.Handlers.FabHandler;
@@ -230,6 +231,8 @@ public class MainActivity extends AppCompatActivity implements
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        Button button_cancel  = (Button) findViewById(R.id.button_cancel);
+        button_cancel.setOnClickListener(fabClick);
         fab.setOnClickListener(fabClick);
         fab1.setOnClickListener(fabClick);
         fab2.setOnClickListener(fabClick);

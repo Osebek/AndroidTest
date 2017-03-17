@@ -4,13 +4,16 @@ package com.example.nejcvesel.pazikjehodis.Handlers;
 import android.app.Activity;
 import android.graphics.Path;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 
 import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.R;
+import com.konifar.fab_transformation.FabTransformation;
 
 /**
  * Created by brani on 3/6/2017.
@@ -18,6 +21,7 @@ import com.example.nejcvesel.pazikjehodis.R;
 
 public class FabHandler implements FloatingActionButton.OnClickListener {
     private FloatingActionButton fab,fab1,fab2;
+    private Button button_cancel;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private Activity activity;
     private boolean isFabOpen, isFabEnable;
@@ -26,6 +30,7 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
         this.fab = (FloatingActionButton)activity.findViewById(R.id.fab);
         this.fab1 = (FloatingActionButton)activity.findViewById(R.id.fab1);
         this.fab2 = (FloatingActionButton)activity.findViewById(R.id.fab2);
+        this.button_cancel = (Button)activity.findViewById(R.id.button_cancel);
         this.fab_open = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.fab_open);
         this.fab_close = AnimationUtils.loadAnimation(activity.getApplicationContext(),R.anim.fab_close);
         this.rotate_forward = AnimationUtils.loadAnimation(activity.getApplicationContext(),R.anim.rotate_forward);
@@ -39,10 +44,12 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
         if(v.getId() == this.fab.getId()){
             Log.v("Pressed", "fab");
             ((MainActivity) this.activity).CloseMarkerInfoWindow();
-            if(!this.isFabOpen)
-                OpenFab();
-            else
-                CloseFab();
+            Toolbar b = (Toolbar)this.activity.findViewById(R.id.toolbar_footer);
+            FabTransformation.with(v).transformTo(b);
+//            if(!this.isFabOpen)
+//                OpenFab();
+//            else
+//                CloseFab();
         }
         if(v.getId() == this.fab1.getId()){
             Log.v("Pressed", "fab1");
@@ -53,6 +60,12 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
         }
         if(v.getId() == this.fab2.getId()){
             Log.v("Pressed", "fab2");
+        }
+
+        if(v.getId() == this.button_cancel.getId()){
+            Toolbar b = (Toolbar)this.activity.findViewById(R.id.toolbar_footer);
+            FabTransformation.with(this.fab)
+                    .transformFrom(b);
         }
     }
 
