@@ -38,7 +38,6 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
     int topView;
     private BackendAPICall apiCall;
 
-
     private static final String ARG_COLUMN_COUNT = "column-count";
 
     private int mColumnCount = 1;
@@ -48,7 +47,7 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
 
 
     }
-    
+
     @SuppressWarnings("unused")
     public static MyLocationsFragment newInstance(int columnCount) {
         MyLocationsFragment fragment = new MyLocationsFragment();
@@ -76,15 +75,6 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
         }
 
     }
-
-
-
-
-
-
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

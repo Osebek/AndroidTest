@@ -64,14 +64,12 @@ public class LocationFragment extends Fragment implements BackendAPICall.Backend
        positionIndex= llm.findFirstVisibleItemPosition();
        View startView = recView.getChildAt(0);
        topView = (startView == null) ? 0 : (startView.getTop() - recView.getPaddingTop());
-       System.out.println("PAUSE");
    super.onPause();
    }
 
     @Override
     public void onResume()
     {
-        System.out.println("RESUME");
         super.onResume();
 
         if (positionIndex!= -1) {
