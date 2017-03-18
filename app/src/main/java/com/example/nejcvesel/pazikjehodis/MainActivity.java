@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.nejcvesel.pazikjehodis.Fragments.EditPathFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.MyPathListFragment;
 import com.example.nejcvesel.pazikjehodis.Handlers.FabHandler;
 import com.example.nejcvesel.pazikjehodis.Fragments.AddFragment;
@@ -86,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements
         LocationFragment.OnListFragmentInteractionListener,
         LocationDetailFragment.OnFragmentInteractionListener, PathLocationsFragment.OnListFragmentInteractionListener,
         LocationInPathDetailFragment.OnFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener,
-        PathAddFormFragment.OnFragmentInteractionListener, PathAddFragment.OnListFragmentInteractionListener, BackendAPICall.BackendCallback{
+        PathAddFormFragment.OnFragmentInteractionListener, PathAddFragment.OnListFragmentInteractionListener, BackendAPICall.BackendCallback, MyLocationsFragment.OnListFragmentInteractionListener,
+        MyPathListFragment.OnListFragmentInteractionListener, EditPathFragment.OnFragmentInteractionListener {
     public static String authToken;
     public Marker currentMarker = null;
     public Uri url = null;
@@ -555,6 +557,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void getUserPathsCallback(List<Path> userPaths, String message) {
+
+    }
+
+    @Override
+    public void onListFragmentInteraction(Path item) {
 
     }
 }
