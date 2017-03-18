@@ -310,62 +310,31 @@ public class BackendAPICall {
 
     }
 
-    public void addPath(final Path path, final String authToken, final SharedPreferences pref)
+    public void addPath(final Path path, final String authToken)
     {
 
         PathInterface service =
-                ServiceGenerator.createAuthorizedService(PathInterface.class, pref.getString(authToken + "_token","null"));
+                ServiceGenerator.createAuthorizedService(PathInterface.class, authToken);
 
         Call<Path> call = service.uploadPath(path);
         call.enqueue(new Callback<Path>() {
             @Override
             public void onResponse(Call<Path> call,
                                    Response<Path> response) {
-                Log.v("Upload", "success");
-                if (response.errorBody() != null)
+                if (response.isSuccessful())
                 {
-                    try {
-                        String error = response.errorBody().string();
-                        System.out.println(error);
-                        if (error.equals("{\"detail\":\"Invalid token header. No credentials provided.\"}"))
-                        {
-
-                            AuthorizationInterface apiService = ServiceGenerator.createUnauthorizedService(AuthorizationInterface.class);
-                            System.out.println("Refresh token: " + pref.getString(authToken + "_refresh",null));
-                            Call<BackendToken> klic = apiService.refreshToken(
-                                    "refresh_token",
-                                    ServiceGenerator.CLIENT_ID,
-                                    ServiceGenerator.CLIENT_SECRET,
-                                    pref.getString(authToken + "_refresh","null"));
-
-                            System.out.println("auth token: " + authToken);
-
-                            klic.enqueue(new Callback<BackendToken>() {
-                                @Override
-                                public void onResponse(Call<BackendToken> nestedCall, Response<BackendToken> nestedResponse) {
-                                    System.out.println("wat");
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<BackendToken> nestedCall, Throwable t) {
-
-                                }
-                            });
-
-
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    backendCallback.getAddMessageCallback("OK","addPath");
                 }
-
+                else
+                {
+                    backendCallback.getAddMessageCallback("ERROR","addPath");
+                }
 
             }
 
             @Override
             public void onFailure(Call<Path> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
+                backendCallback.getAddMessageCallback("ERROR_FAIL","addPath");
             }
         });
 

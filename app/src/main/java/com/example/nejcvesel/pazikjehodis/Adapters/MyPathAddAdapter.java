@@ -190,6 +190,7 @@ public class MyPathAddAdapter extends RecyclerView.Adapter<MyPathAddAdapter.View
                     }
                     else
                     {
+
                         callback.uncheckLocationCallback(Integer.valueOf(locationID.getText().toString()));
                         //main.locationsToAddToPath.remove(locationID.getText().toString());
                     }

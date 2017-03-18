@@ -2,22 +2,31 @@ package com.example.nejcvesel.pazikjehodis.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.R;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -29,10 +38,11 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 
-public class PathAddFormFragment extends Fragment {
+public class PathAddFormFragment extends Fragment implements  BackendAPICall.BackendCallback {
     private static final String ARG_LOCATION_LIST = "locationList";
 
     private String[] locationList;
+    BackendAPICall apiCall;
 
     private OnFragmentInteractionListener mListener;
 
@@ -69,6 +79,7 @@ public class PathAddFormFragment extends Fragment {
         // Inflate the layout for this fragment
          View view =  inflater.inflate(R.layout.fragment_path_add_form, container, false);
         final MainActivity main = (MainActivity) getActivity();
+        apiCall = new BackendAPICall(this,"");
 
 
         TextView owner = (TextView) view.findViewById(R.id.pathAddOwner);
@@ -94,11 +105,13 @@ public class PathAddFormFragment extends Fragment {
                 }
                 path.setPathLocations(lokacije);
 
+                System.out.println("Lokacije ki jih hocm dodat: " + Arrays.toString(lokacije.toArray()));
+
                 if (!path.getDescription().equals("") &&
                     !path.getName().equals("") &&
                     !path.getCity().equals("") &&
                      path.getDescription().length() >  120 ) {
-                    main.uploadPath(path);
+                    apiCall.addPath(path,((MainActivity)getActivity()).userProfile.getBackendAccessToken());
                 }
                 else
                 {
@@ -160,6 +173,84 @@ public class PathAddFormFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void getAllPathsCallback(List<Path> paths, String message) {
+
+    }
+
+    @Override
+    public void getAllLocationsCallback(List<Location> loactions, String status) {
+
+    }
+
+    @Override
+    public void getSpecificLocationCallback(Location loaction, String message) {
+
+    }
+
+    @Override
+    public void getSpecificUserCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getAllUsersCallback(List<User> user, String message) {
+
+    }
+
+    @Override
+    public void getUserLocationCallback(List<Location> location, String message) {
+
+    }
+
+    @Override
+    public void getUserProfileCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getRefreshTokeneCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getConvertTokenCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getAddMessageCallback(String message, String backendCall) {
+        FragmentManager fragmentManager = getFragmentManager();
+        if (message.equals("OK"))
+        {
+            Toast msg = Toast.makeText(getActivity(),"Dodajanje poti uspešno",Toast.LENGTH_LONG);
+            msg.show();
+        }
+        if (message.equals("ERROR"))
+        {
+            Toast msg = Toast.makeText(getActivity(),"Dodajanje ni uspelo. Napaka na strežniku",Toast.LENGTH_LONG);
+            msg.show();
+
+        }
+        if (message.equals("ERROR_FAIL"))
+        {
+            Toast msg = Toast.makeText(getActivity(),"Dodajanje ni uspelo. Ni povezave do strežnika",Toast.LENGTH_LONG);
+            msg.show();
+
+        }
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame,new PathListFragment(),"PathListFragment")
+                .addToBackStack("PathListFragment")
+                .commit();
+
+    }
+
+    @Override
+    public void getUserPathsCallback(List<Path> userPaths, String message) {
+
     }
 
     /**

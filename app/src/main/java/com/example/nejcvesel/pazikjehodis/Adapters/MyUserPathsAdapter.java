@@ -4,10 +4,12 @@ package com.example.nejcvesel.pazikjehodis.Adapters;
  * Created by nejcvesel on 17/03/17.
  */
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nejcvesel.pazikjehodis.Fragments.EditPathFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LocationInPathDetailFragment;
@@ -22,7 +25,11 @@ import com.example.nejcvesel.pazikjehodis.Fragments.MyPathListFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.PathLocationsFragment;
 import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.R;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
+import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +38,10 @@ import java.util.List;
  * Created by nejcvesel on 13/02/17.
  */
 
-public class MyUserPathsAdapter extends RecyclerView.Adapter<MyUserPathsAdapter.ViewHolder> {
+public class MyUserPathsAdapter extends RecyclerView.Adapter<MyUserPathsAdapter.ViewHolder> implements BackendAPICall.BackendCallback{
     List<Path> mItems;
     Context context;
+    BackendAPICall apiCall;
 
 
     public MyUserPathsAdapter(Context context) {
@@ -57,6 +65,8 @@ public class MyUserPathsAdapter extends RecyclerView.Adapter<MyUserPathsAdapter.
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recycler_view_user_paths, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(v);
+        apiCall  = new BackendAPICall(this,"");
+
 
 
 
@@ -84,6 +94,86 @@ public class MyUserPathsAdapter extends RecyclerView.Adapter<MyUserPathsAdapter.
     @Override
     public int getItemCount() {
         return mItems.size();
+    }
+
+    @Override
+    public void getAllPathsCallback(List<Path> paths, String message) {
+
+    }
+
+    @Override
+    public void getAllLocationsCallback(List<Location> loactions, String status) {
+
+    }
+
+    @Override
+    public void getSpecificLocationCallback(Location loaction, String message) {
+
+    }
+
+    @Override
+    public void getSpecificUserCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getAllUsersCallback(List<User> user, String message) {
+
+    }
+
+    @Override
+    public void getUserLocationCallback(List<Location> location, String message) {
+
+    }
+
+    @Override
+    public void getUserProfileCallback(User user, String message) {
+
+    }
+
+    @Override
+    public void getRefreshTokeneCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getConvertTokenCallback(BackendToken token, String message) {
+
+    }
+
+    @Override
+    public void getAddMessageCallback(String message, String backendCall)
+    {
+        FragmentManager fragmentManager = ((FragmentActivity)context).getFragmentManager();
+        if (message.equals("OK"))
+        {
+            Toast msg = Toast.makeText((FragmentActivity)context,"Brisanje poti uspešno",Toast.LENGTH_LONG);
+            msg.show();
+        }
+        if (message.equals("ERROR"))
+        {
+            Toast msg = Toast.makeText((FragmentActivity)context,"Brisanje ni uspelo. Napaka na strežniku",Toast.LENGTH_LONG);
+            msg.show();
+
+        }
+        if (message.equals("ERROR_FAIL"))
+        {
+            Toast msg = Toast.makeText((FragmentActivity)context,"Brisanje ni uspelo. Ni povezave do strežnika",Toast.LENGTH_LONG);
+            msg.show();
+
+        }
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame,new MyPathListFragment(),"MyPathListFragment")
+                .addToBackStack("MyPathListFragment")
+                .commit();
+
+
+    }
+
+    @Override
+    public void getUserPathsCallback(List<Path> userPaths, String message) {
+
     }
 
 
@@ -173,6 +263,28 @@ public class MyUserPathsAdapter extends RecyclerView.Adapter<MyUserPathsAdapter.
             delete_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                    alertDialog.setTitle("Brisanje");
+                    alertDialog.setMessage("Ste prepirčani da želite izbrisati to pot?");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "DA, zbriši",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String path_id = pathID.getText().toString();
+                                    apiCall.deletePath(((MainActivity)context).userProfile.getBackendAccessToken(),path_id);
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Prekliči",
+                            new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+
+
 
                 }
             });

@@ -368,23 +368,6 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void uploadPath(Path path) {
-        AccessToken at = AccessToken.getCurrentAccessToken();
-        authToken = at.getToken().toString();
-//        BackendAPICall api = new BackendAPICall(this);
-
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String token = sharedPref.getString(authToken + "_token", "noToken");
-
-        if (token.equals("noToken")) {
-            api.convertTokenAndAddPath(path, authToken, sharedPref);
-        } else {
-            api.addPath(path, authToken, sharedPref);
-            //api.refreshToken(authToken,sharedPref);
-        }
-
-    }
-
     public static String[] stringToStringArray(String pathLocations) {
 
         pathLocations = pathLocations.replaceAll("\\[", "");

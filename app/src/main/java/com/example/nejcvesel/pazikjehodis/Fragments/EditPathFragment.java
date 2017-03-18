@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nejcvesel.pazikjehodis.Adapters.MyPathAddAdapter;
 import com.example.nejcvesel.pazikjehodis.MainActivity;
@@ -209,9 +210,29 @@ public class EditPathFragment extends Fragment implements BackendAPICall.Backend
 
     @Override
     public void getAddMessageCallback(String message, String backendCall) {
-        System.out.println(message);
-        System.out.println(backendCall);
+        FragmentManager fragmentManager = getFragmentManager();
+        if (message.equals("OK"))
+        {
+            Toast msg = Toast.makeText(getActivity(),"Spreminjanje poti uspešno",Toast.LENGTH_LONG);
+            msg.show();
+        }
+        if (message.equals("ERROR"))
+        {
+            Toast msg = Toast.makeText(getActivity(),"Spreminjanje poti ni uspelo. Napaka na strežniku",Toast.LENGTH_LONG);
+            msg.show();
 
+        }
+        if (message.equals("ERROR_FAIL"))
+        {
+            Toast msg = Toast.makeText(getActivity(),"Spreminjanje ni uspelo. Ni povezave do strežnika",Toast.LENGTH_LONG);
+            msg.show();
+
+        }
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame,new PathListFragment(),"MyPathListFragment")
+                .addToBackStack("MyPathListFragment")
+                .commit();
     }
 
     @Override
