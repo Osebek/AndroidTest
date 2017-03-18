@@ -43,6 +43,9 @@ public class MyPathAddAdapter extends RecyclerView.Adapter<MyPathAddAdapter.View
     List<Location> locationList;
     Context context;
     Filter locationFilter;
+    ArrayList<Integer> checkedLocations;
+    PathAddCallback callback;
+
     protected final List<Location> filteredLocationList;
 
     public void showFiltered()
@@ -53,13 +56,21 @@ public class MyPathAddAdapter extends RecyclerView.Adapter<MyPathAddAdapter.View
         }
     }
 
+    public void attachCallback(PathAddCallback fragment)
+    {
+        this.callback = fragment;
+    }
 
 
-    public MyPathAddAdapter(Context context) {
+
+
+    public MyPathAddAdapter(Context context,ArrayList<Integer> checkedLocations) {
         super();
         this.context = context;
         locationList = new ArrayList<Location>();
         filteredLocationList = new ArrayList<>();
+        this.checkedLocations = checkedLocations;
+
     }
 
     public void addData(Location loc) {
@@ -109,7 +120,8 @@ public class MyPathAddAdapter extends RecyclerView.Adapter<MyPathAddAdapter.View
 
         MainActivity main = (MainActivity) context;
 
-        if (main.locationsToAddToPath.containsValue(Integer.toString(loc.getId())))
+        //if (main.locationsToAddToPath.containsValue(Integer.toString(loc.getId())))
+        if (checkedLocations.contains(loc.getId()))
         {
             viewHolder.checkbox.setChecked(true);
         }
@@ -173,14 +185,15 @@ public class MyPathAddAdapter extends RecyclerView.Adapter<MyPathAddAdapter.View
                 public void onClick(View v) {
                     if (checkbox.isChecked())
                     {
-                        main.locationsToAddToPath.put(locationID.getText().toString(),locationID.getText().toString());
+                        callback.checkLocationCallback(Integer.valueOf(locationID.getText().toString()));
+                        //main.locationsToAddToPath.put(locationID.getText().toString(),locationID.getText().toString());
                     }
                     else
                     {
-                        main.locationsToAddToPath.remove(locationID.getText().toString());
+                        callback.uncheckLocationCallback(Integer.valueOf(locationID.getText().toString()));
+                        //main.locationsToAddToPath.remove(locationID.getText().toString());
                     }
 
-                    System.out.println(Arrays.toString(main.locationsToAddToPath.values().toArray()));
                 }
             });
 
@@ -211,5 +224,12 @@ public class MyPathAddAdapter extends RecyclerView.Adapter<MyPathAddAdapter.View
         }
 
 
+    }
+
+    public interface PathAddCallback
+    {
+        public void checkLocationCallback(int id);
+        public void uncheckLocationCallback(int id);
+        public void allLocationsCallback(int id);
     }
 }

@@ -185,6 +185,11 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
 
     }
 
+    @Override
+    public void getUserPathsCallback(List<Path> userPaths, String message) {
+
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         public TextView text;
         public TextView longtitude;

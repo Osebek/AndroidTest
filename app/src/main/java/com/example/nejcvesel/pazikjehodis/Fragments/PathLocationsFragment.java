@@ -249,6 +249,11 @@ public class PathLocationsFragment extends Fragment implements BackendAPICall.Ba
     }
 
     @Override
+    public void getUserPathsCallback(List<Path> userPaths, String message) {
+
+    }
+
+    @Override
     public void getSpecificLocationCallback(Location loaction, String message) {
         if(message.equals("OK")){
             specialAdapter.addData(loaction);

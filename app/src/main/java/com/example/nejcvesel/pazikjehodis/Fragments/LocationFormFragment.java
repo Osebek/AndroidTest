@@ -386,4 +386,9 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
         toast.show();
 
     }
+
+    @Override
+    public void getUserPathsCallback(List<Path> userPaths, String message) {
+
+    }
 }

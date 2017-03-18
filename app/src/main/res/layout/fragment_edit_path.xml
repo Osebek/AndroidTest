@@ -1,0 +1,185 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.nejcvesel.pazikjehodis.Fragments.EditPathFragment"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_margin="3dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:orientation="vertical">
+
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingTop="3dp"
+            android:text="AVTOR_ICA"
+            android:textSize="14dp"
+            android:textColor="@color/lightGrey"
+            android:background="@color/white"
+            />
+
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+            android:id="@+id/pathAddOwner"
+            android:paddingLeft="6dp"
+            android:paddingTop="1dp"
+            android:textSize="14dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:textColor="@color/lightGrey"
+            android:paddingBottom="6dp"
+
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"
+        android:layout_margin="3dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:orientation="vertical">
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingTop="3dp"
+            android:text="KRAJ POTI"
+            android:textSize="14dp"
+            android:textColor="@color/lightGrey"
+            android:background="@color/white"
+            />
+
+        <EditText fontPath="fonts/Ubuntu-light.ttf"
+            android:id="@+id/pathAddCity"
+            android:paddingLeft="6dp"
+            android:paddingTop="1dp"
+            android:textSize="14dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:textColor="@color/darkGrey"
+            android:paddingBottom="6dp"
+
+            />
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:layout_margin="3dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:orientation="vertical">
+
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingTop="3dp"
+            android:text="IME POTI"
+            android:textSize="14dp"
+            android:textColor="@color/lightGrey"
+            android:background="@color/white"
+            />
+
+        <EditText fontPath="fonts/Ubuntu-light.ttf"
+            android:id="@+id/pathAddName"
+            android:paddingLeft="6dp"
+            android:paddingTop="1dp"
+            android:textSize="14dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:textColor="@color/darkGrey"
+            android:paddingBottom="6dp"
+            android:maxLines="1"
+            android:maxLength="60"
+
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:layout_margin="3dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:orientation="vertical"
+        android:paddingBottom="7dp">
+
+        <TextView fontPath="fonts/Ubuntu-light.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingTop="3dp"
+            android:text="PREDSTAVITEV POTI (min. 120 znakov)"
+            android:textSize="14dp"
+            android:textColor="@color/lightGrey"
+            android:background="@color/white"
+            />
+
+
+        <EditText
+            android:id="@+id/pathAddDescription"
+            android:paddingLeft="6dp"
+            android:paddingTop="1dp"
+            android:textSize="13dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:textColor="@color/darkGrey"
+            android:lines="12"
+            android:gravity="top|left"
+
+
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/edit_path_locations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/vesnaRED"
+        android:text="Spremeni lokacije"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="150dp"
+        android:paddingRight="20dp"
+        android:layout_marginBottom="20dp"
+        />
+
+    <Button
+        android:id="@+id/edit_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey"
+        android:text="Spremeni pot"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="150dp"
+        android:paddingRight="20dp"
+        />
+
+
+
+
+
+</LinearLayout>

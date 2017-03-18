@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.Handlers.MarkerClickHandler;
@@ -139,6 +140,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,Backend
             }
             progressDialog.hide();
         }
+        if(message.equals("ERROR"))
+        {
+            progressDialog.hide();
+            CharSequence text = "Nalaganje lokacije ni uspelo. Napaka na strežniku.";
+            Toast opozorilo = Toast.makeText(getActivity(),text,Toast.LENGTH_LONG);
+            opozorilo.show();
+
+
+        }
+        if(message.equals("ERROR_FAIL"))
+        {
+            progressDialog.hide();
+            CharSequence text = "Nalaganje lokacije ni uspelo. Ni povezave s strežnikom";
+            Toast opozorilo = Toast.makeText(getActivity(),text,Toast.LENGTH_LONG);
+            opozorilo.show();
+
+        }
     }
 
     @Override
@@ -184,6 +202,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,Backend
 
     @Override
     public void getAddMessageCallback(String message, String backendCall) {
+
+    }
+
+    @Override
+    public void getUserPathsCallback(List<Path> userPaths, String message) {
 
     }
 

@@ -1,6 +1,7 @@
 package com.example.nejcvesel.pazikjehodis.retrofitAPI;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -93,6 +94,11 @@ public class BackendAPICall {
                     mess = "OK";
                 }else {
                     locations = new ArrayList<Location>();
+                    try {
+                        System.out.println(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     mess = "ERROR";
                 }
                 backendCallback.getAllLocationsCallback(locations, mess);
@@ -131,6 +137,31 @@ public class BackendAPICall {
                 backendCallback.getUserLocationCallback(null, "ERROR_FAIL");
             }
         });
+    }
+
+    public void getUserPaths(String authToken)
+    {
+        PathInterface service = ServiceGenerator.createAuthorizedService(PathInterface.class, authToken);
+        Call<List<Path>> call = service.getUserPaths();
+
+        call.enqueue(new Callback<List<Path>>() {
+            @Override
+            public void onResponse(Call<List<Path>> call, Response<List<Path>> response) {
+                if (response.isSuccessful())
+                {
+                    backendCallback.getUserPathsCallback(response.body(),"OK");
+                }
+                else
+                {
+                    backendCallback.getUserPathsCallback(null,"ERROR");
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Path>> call, Throwable t) {
+                backendCallback.getUserPathsCallback(null,"ERROR_FAIL");
+            }
+        });
+
     }
 
     public void getSpecificLocation(String locationID) {
@@ -649,6 +680,69 @@ public class BackendAPICall {
 
     }
 
+    public void updatePath(Path path,String authToken)
+    {
+        PathInterface service =
+                ServiceGenerator.createAuthorizedService(PathInterface.class, authToken);
+
+        Call<ResponseBody> call = service.updatePath(path.getId().toString(),path);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful())
+                {
+                    backendCallback.getAddMessageCallback("OK","updatePath");
+                }
+                else
+                {
+                    try {
+                        System.out.println(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    backendCallback.getAddMessageCallback("ERROR","updatePath");
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                backendCallback.getAddMessageCallback("ERROR_FAIL","updatePath");
+
+            }
+        });
+    }
+
+    public void deletePath(String authToken, String id)
+    {
+        PathInterface service =
+                ServiceGenerator.createAuthorizedService(PathInterface.class, authToken);
+
+        Call<ResponseBody> call = service.deletePath(id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful())
+                {
+                    backendCallback.getAddMessageCallback("OK","deletePath");
+                }
+                else
+                {
+                    System.out.println(response.errorBody().toString());
+                    backendCallback.getAddMessageCallback("ERROR","deletePath");
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                backendCallback.getAddMessageCallback("ERROR_FAIL","deletePath");
+
+            }
+        });
+
+
+    }
+
 
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
@@ -676,6 +770,7 @@ public class BackendAPICall {
         public void getRefreshTokeneCallback(BackendToken token, String message);
         public void getConvertTokenCallback(BackendToken token, String message);
         public void getAddMessageCallback(String message, String backendCall);
+        public void getUserPathsCallback(List<Path> userPaths, String message);
     }
 }
 

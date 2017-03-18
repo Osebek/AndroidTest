@@ -20,6 +20,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.example.nejcvesel.pazikjehodis.Fragments.MyPathListFragment;
 import com.example.nejcvesel.pazikjehodis.Handlers.FabHandler;
 import com.example.nejcvesel.pazikjehodis.Fragments.AddFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LocationDetailFragment;
@@ -429,8 +431,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigationViewMyPathClick(View view) {
         CloseMarkerInfoWindow();
-//        FragmentManager fm = getFragmentManager();
-//        fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_frame, new MyPathListFragment(), "MyPathListFragment").addToBackStack("MyPathListFragment").commit();
         closeDrawer();
     }
 
@@ -565,6 +567,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void getAddMessageCallback(String message, String backendCall) {
+
+    }
+
+    @Override
+    public void getUserPathsCallback(List<Path> userPaths, String message) {
 
     }
 }

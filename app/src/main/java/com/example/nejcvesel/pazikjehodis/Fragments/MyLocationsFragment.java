@@ -184,6 +184,11 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
 
     }
 
+    @Override
+    public void getUserPathsCallback(List<Path> userPaths, String message) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

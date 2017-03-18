@@ -28,6 +28,8 @@ import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
 import com.example.nejcvesel.pazikjehodis.Adapters.MyPathAddAdapter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,7 +41,7 @@ import java.util.List;
  * interface.
  */
 //TODO: search bar to look nice
-public class PathAddFragment extends Fragment implements BackendAPICall.BackendCallback {
+public class PathAddFragment extends Fragment implements BackendAPICall.BackendCallback, MyPathAddAdapter.PathAddCallback {
     Parcelable state;
     RecyclerView recView;
     LinearLayoutManager llm;
@@ -49,8 +51,13 @@ public class PathAddFragment extends Fragment implements BackendAPICall.BackendC
     private BackendAPICall apiCall;
 
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String EDIT_MODE = "edit-mode";
+    private static final String CHECKED_LOCATIONS = "checked_locations";
+
 
     private int mColumnCount = 1;
+    private boolean mEditMode = false;
+    private ArrayList<Integer> mCheckedLocations;
     private OnListFragmentInteractionListener mListener;
 
     public PathAddFragment() {
@@ -68,26 +75,34 @@ public class PathAddFragment extends Fragment implements BackendAPICall.BackendC
         return fragment;
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-//        }
-//    }
-//    @Override
-//    public void onSaveInstanceState(Bundle state) {
-//        super.onSaveInstanceState(state);
-//
-//        state.putParcelable(LIST_STATE_KEY, layoutManager.onSaveInstanceState());
-//    }
-//
-//    protected void onRestoreInstanceState(Bundle state) {
-//        super.onRestoreInstanceState(state);
-//
-//        Parcelable listState = state.getParcelable(LIST_STATE_KEY);
-//    }
+    public static PathAddFragment newInstance(ArrayList<Integer> checkLocations)
+    {
+        PathAddFragment fragment = new PathAddFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(EDIT_MODE,true);
+        args.putIntegerArrayList(CHECKED_LOCATIONS,checkLocations);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mCheckedLocations = new ArrayList<>();
+        if (getArguments() != null) {
+            if (getArguments().containsKey(ARG_COLUMN_COUNT)) {
+                mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            } else if (getArguments().containsKey(EDIT_MODE) && getArguments().containsKey(CHECKED_LOCATIONS)) {
+                mEditMode = getArguments().getBoolean(EDIT_MODE);
+                mCheckedLocations = getArguments().getIntegerArrayList(CHECKED_LOCATIONS);
+            }
+            else
+            {
+
+            }
+        }
+    }
 
     @Override
     public void onPause()
@@ -95,16 +110,13 @@ public class PathAddFragment extends Fragment implements BackendAPICall.BackendC
         positionIndex= llm.findFirstVisibleItemPosition();
         View startView = recView.getChildAt(0);
         topView = (startView == null) ? 0 : (startView.getTop() - recView.getPaddingTop());
-        System.out.println("PAUSE");
         super.onPause();
     }
 
     @Override
     public void onResume()
     {
-        System.out.println("RESUME");
         super.onResume();
-
         if (positionIndex!= -1) {
             llm.scrollToPositionWithOffset(positionIndex, topView);
         }
@@ -117,12 +129,21 @@ public class PathAddFragment extends Fragment implements BackendAPICall.BackendC
                              Bundle savedInstanceState) {
         View view1 = inflater.inflate(R.layout.fragment_pathadd_list, container, false);
         RecyclerView view = (RecyclerView) view1.findViewById(R.id.recyclerViewList);
-
         TextView makePath = (TextView) view1.findViewById(R.id.makePath);
         final EditText search = (EditText) view1.findViewById(R.id.search);
 
+        if(mEditMode)
+        {
+            makePath.setText("Shrani nove lokacije");
+
+        }
+        else
+        {
+            makePath.setText("Sestavi novo pot");
+        }
+
         apiCall = new BackendAPICall(this, "");
-        locAdapter = new MyPathAddAdapter(getActivity());
+
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -141,40 +162,42 @@ public class PathAddFragment extends Fragment implements BackendAPICall.BackendC
             }
         });
 
-        final FragmentManager fm = getFragmentManager();
-
-
         makePath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity main = (MainActivity) getActivity();
-                Collection<String> paths = main.locationsToAddToPath.values();
-                if (paths.size()  > 1) {
-                    String[] foos = paths.toArray(new String[paths.size()]);
-
-
-                    Fragment fragment = PathAddFormFragment.newInstance(foos);
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction fragmentTransaction =
-                            fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.content_frame, fragment, "PathAddFormFragment");
-                    fragmentTransaction.addToBackStack("PathAddFormFragment");
-                    fragmentTransaction.commit();
-                }
-                else
+                //Collection<String> paths = main.locationsToAddToPath.values();
+                if (mEditMode)
                 {
-                    AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
-                    alert.setTitle("Napaka");
-                    alert.setMessage("Izbrati morate vsaj dve lokaciji");
-                    alert.setButton(android.app.AlertDialog.BUTTON_NEUTRAL, "V redu",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alert.show();
+                    FragmentManager fm = getFragmentManager();
+                    fm.popBackStack();
+
+                }
+                else {
+                    if (mCheckedLocations.size() > 1) {
+                        //String[] foos = mCheckedLocations.toArray(new String[mCheckedLocations.size()]);
+                        String[] foos = Arrays.toString(mCheckedLocations.toArray()).split("[\\[\\]]")[1].split(", ");
+                        System.out.println(Arrays.toString(foos));
+                        Fragment fragment = PathAddFormFragment.newInstance(foos);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction fragmentTransaction =
+                                fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.content_frame, fragment, "PathAddFormFragment");
+                        fragmentTransaction.addToBackStack("PathAddFormFragment");
+                        fragmentTransaction.commit();
+                    } else {
+                        AlertDialog alert = new AlertDialog.Builder(getActivity()).create();
+                        alert.setTitle("Napaka");
+                        alert.setMessage("Izbrati morate vsaj dve lokaciji");
+                        alert.setButton(android.app.AlertDialog.BUTTON_NEUTRAL, "V redu",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alert.show();
 
 
+                    }
                 }
 
 
@@ -190,6 +213,7 @@ public class PathAddFragment extends Fragment implements BackendAPICall.BackendC
             RecyclerView recyclerView = (RecyclerView) view;
             this.recView = recyclerView;
 
+
             if (mColumnCount <= 1) {
                 LinearLayoutManager llm = new LinearLayoutManager(context);
                 this.llm = llm;
@@ -199,6 +223,16 @@ public class PathAddFragment extends Fragment implements BackendAPICall.BackendC
             }
 
             if (positionIndex == -1) {
+                if (mEditMode) {
+                    locAdapter = new MyPathAddAdapter(getActivity(), mCheckedLocations);
+                    locAdapter.attachCallback(this);
+                }
+                else
+                {
+                    locAdapter = new MyPathAddAdapter(getActivity(),new ArrayList<Integer>());
+                    locAdapter.attachCallback(this);
+                }
+
                 apiCall.getAllLocations("");
             }
 
@@ -286,6 +320,32 @@ public class PathAddFragment extends Fragment implements BackendAPICall.BackendC
 
     @Override
     public void getAddMessageCallback(String message, String backendCall) {
+
+    }
+
+    @Override
+    public void getUserPathsCallback(List<Path> userPaths, String message) {
+
+    }
+
+    @Override
+    public void checkLocationCallback(int id) {
+            mCheckedLocations.add(id);
+            System.out.println("Dodal. Trenutno stanje" + Arrays.toString(mCheckedLocations.toArray()));
+
+
+    }
+
+    @Override
+    public void uncheckLocationCallback(int id) {
+            mCheckedLocations.remove((Integer) id);
+            System.out.println("Zbrisal. Trenutno stanje" + Arrays.toString(mCheckedLocations.toArray()));
+
+
+    }
+
+    @Override
+    public void allLocationsCallback(int id) {
 
     }
 
