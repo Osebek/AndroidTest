@@ -54,7 +54,7 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
             EnableAddLocation();
         }
         if(v.getId() == this.fab1.getId()){
-            // implement my current location 
+            // implement my current location
         }
 
         if(v.getId() == this.button_cancel.getId()){
@@ -104,12 +104,16 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
 
     public void DisableFab(){
         CloseFab();
+        View toolbar = (View)this.activity.findViewById(R.id.toolbar_footer);
+        FabTransformation.with(this.fab).transformFrom(toolbar);
         this.fab.setVisibility(View.GONE);
+        this.fab1.setVisibility(View.GONE);
         this.isFabEnable = false;
     }
 
     public void EnableFab(){
         this.fab.setVisibility(View.VISIBLE);
+        this.fab1.setVisibility(View.VISIBLE);
         CloseFab();
         this.isFabEnable = true;
     }
