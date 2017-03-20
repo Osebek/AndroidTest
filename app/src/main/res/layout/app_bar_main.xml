@@ -119,48 +119,43 @@
             </LinearLayout>
 
         </LinearLayout>
-    </RelativeLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="160dp"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/ic_done"
-        android:visibility="invisible"
-        app:backgroundTint="@color/colorFAB2"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp" />
-
-    <io.codetail.widget.RevealFrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true">
-
-        <RelativeLayout
+        <io.codetail.widget.RevealFrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <!-- Transform view -->
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar_footer"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/white"
-                android:visibility="invisible">
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/toolbar_footer"
+            android:elevation="5dp"
+            android:background="@color/white"
+            android:visibility="invisible">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!-- Transform view -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="80dp"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"
+                    android:layout_alignParentStart="true"
+                    >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:layout_weight="0"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center"
                         android:text="Dodaj lokacijo na zemljevid" />
+
+                    <include
+                        layout="@layout/data_decoration_line"
+                        android:id="@+id/my_location_divisor"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="10dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -173,19 +168,38 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:background="@color/red" />
+                            android:text="Prekliči"
+                            android:background="@color/white"/>
+
+                        <include
+                            layout="@layout/data_decoration_line"
+                            android:id="@+id/my_location_divisor"
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"/>
 
                         <Button
                             android:id="@+id/button_save"
+                            android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@color/blue" />
+                            android:text="Shrani"
+                            android:background="@color/white"/>
                     </LinearLayout>
                 </LinearLayout>
-            </android.support.v7.widget.Toolbar>
-        </RelativeLayout>
-    </io.codetail.widget.RevealFrameLayout>
+
+                <!--<android.support.v7.widget.Toolbar-->
+                    <!--android:id="@+id/toolbar_footer"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="80dp"-->
+                    <!--android:layout_alignParentBottom="true"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:visibility="invisible">-->
+
+                <!--</android.support.v7.widget.Toolbar>-->
+            </RelativeLayout>
+        </io.codetail.widget.RevealFrameLayout>
+
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab1"
@@ -194,9 +208,8 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="90dp"
         android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/ic_message"
-        android:visibility="invisible"
-        app:backgroundTint="@color/colorFAB1"
+        android:src="@drawable/ic_my_location_black"
+        app:backgroundTint="@color/white"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
@@ -208,8 +221,8 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_publish_white_48dp"
-        app:backgroundTint="@color/darkGrey"
+        android:src="@drawable/ic_add_white"
+        app:backgroundTint="@color/vesnaRED"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 

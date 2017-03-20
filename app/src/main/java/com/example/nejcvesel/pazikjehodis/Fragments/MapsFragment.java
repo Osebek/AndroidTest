@@ -76,15 +76,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,Backend
             public void onMapClick(LatLng latLng) {
                 MainActivity main = (MainActivity) getActivity();
                 Marker marker = null;
-                if(main.markerAddEnable)
-                if (main.isMarker()) {
-                    main.RemoveMarker();
+                if(main.markerAddEnable) {
+                    if (main.isMarker()) {
+                        main.RemoveMarker();
+                    }
+                    marker = mMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .icon(BitmapDescriptorFactory.defaultMarker(200f))
+                            .title("Hello world"));
+                    main.AddMarker(marker);
                 }
-                marker = mMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.defaultMarker(200f))
-                        .title("Hello world"));
-                main.AddMarker(marker);
             }
 
 

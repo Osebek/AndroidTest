@@ -1,14 +1,18 @@
 package com.example.nejcvesel.pazikjehodis;
 
 //import android.app.FragmentManager;
+
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -57,7 +61,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.Marker;
+
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -107,6 +114,10 @@ public class MainActivity extends AppCompatActivity implements
     public UserProfile userProfile = null;
     public FabHandler fabClick;
     public boolean markerAddEnable = false;
+    private long TimeRefresh = 1;
+    private float DistanceRefresh = 1;
+    public LocationManager mLocationManager;
+    private LocationListener mLocationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +127,25 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+//        mLocationManager = new LocationManager();
+//        mLocationListener = new LocationListener() {
+//            @Override
+//            public void onLocationChanged(android.location.Location location) {
+//
+//            }
+//        };
+//        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TimeRefresh, DistanceRefresh, (android.location.LocationListener) mLocationListener);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         //sharedPref.edit().clear().commit();
         userProfile = new UserProfile();
@@ -234,12 +263,12 @@ public class MainActivity extends AppCompatActivity implements
         fabClick = new FabHandler(this);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+//        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
         Button button_cancel  = (Button) findViewById(R.id.button_cancel);
         button_cancel.setOnClickListener(fabClick);
         fab.setOnClickListener(fabClick);
         fab1.setOnClickListener(fabClick);
-        fab2.setOnClickListener(fabClick);
+//        fab2.setOnClickListener(fabClick);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         android.support.v7.app.ActionBarDrawerToggle toggle = new android.support.v7.app.ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -346,7 +375,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void RemoveMarker() {
-        currentMarker.remove();
+        if(isMarker()) {
+            currentMarker.remove();
+        }
     }
 
     public void AddMarker(Marker marker) {
