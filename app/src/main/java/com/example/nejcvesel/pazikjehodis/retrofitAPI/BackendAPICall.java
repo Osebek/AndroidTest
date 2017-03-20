@@ -327,6 +327,11 @@ public class BackendAPICall {
                 }
                 else
                 {
+                    try {
+                        System.out.println(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     backendCallback.getAddMessageCallback("ERROR","addPath");
                 }
 

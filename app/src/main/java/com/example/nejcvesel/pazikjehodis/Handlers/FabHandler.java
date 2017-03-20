@@ -2,6 +2,7 @@ package com.example.nejcvesel.pazikjehodis.Handlers;
 
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.graphics.Path;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationFormFragment;
 import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.R;
 import com.konifar.fab_transformation.FabTransformation;
@@ -64,8 +66,16 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
         }
 
         if(v.getId() == this.button_save.getId()){
+            System.out.println("CLICKED SAVE BTN");
             if(((MainActivity) this.activity).isMarker()){
+
                 CloseFab();
+                DisableFab();
+                FragmentManager fm = this.activity.getFragmentManager();
+                fm.beginTransaction()
+                        .replace(R.id.content_frame,new LocationFormFragment(),"LocationFormFragment")
+                        .addToBackStack("LocationFormFragment")
+                        .commit();
                 // open form location fragment
             }
         }
@@ -79,7 +89,11 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
 //            this.fab2.startAnimation(fab_close);
 //            this.fab1.setClickable(false);
 //            this.fab2.setClickable(false);
-            FabTransformation.with(this.fab).transformFrom(toolbar);
+
+            final FloatingActionButton f = (FloatingActionButton) this.activity.findViewById(R.id.fab);
+            ((MainActivity)this.activity).RemoveMarker();
+            FabTransformation.with(this.fab)
+                    .transformFrom(toolbar);
             this.isFabOpen = false;
         } else {
 //            this.fab.startAnimation(rotate_forward);
@@ -87,6 +101,8 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
 //            this.fab2.startAnimation(fab_open);
 //            this.fab1.setClickable(true);
 //            this.fab2.setClickable(true);
+
+
             FabTransformation.with(this.fab).transformTo(toolbar);
             this.isFabOpen = true;
         }
@@ -105,7 +121,21 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
     public void DisableFab(){
         CloseFab();
         View toolbar = (View)this.activity.findViewById(R.id.toolbar_footer);
-        FabTransformation.with(this.fab).transformFrom(toolbar);
+        final FloatingActionButton f = (FloatingActionButton) this.activity.findViewById(R.id.fab);
+        ((MainActivity)this.activity).RemoveMarker();
+        FabTransformation.with(this.fab)
+                .setListener(new FabTransformation.OnTransformListener() {
+                    @Override
+                    public void onStartTransform() {
+                        //
+                    }
+
+                    @Override
+                    public void onEndTransform() {
+                        f.setVisibility(View.GONE);
+                    }
+                })
+                .transformFrom(toolbar);
         this.fab.setVisibility(View.GONE);
         this.fab1.setVisibility(View.GONE);
         this.isFabEnable = false;

@@ -278,8 +278,14 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
                     loc.setId(Integer.valueOf(locationID.getText().toString()));
                     loc.setAddress(locAddress.getText().toString());
                     loc.setOwner(owner.getText().toString());
-                    goToLocationDetail(loc,0);
 
+                    Fragment fragment = LocationDetailFragment.newInstance(loc);
+                    FragmentManager fragmentManager = ((FragmentActivity)context).getFragmentManager();
+                    FragmentTransaction fragmentTransaction =
+                            fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.content_frame,fragment,"LocationDetail");
+                    fragmentTransaction.addToBackStack("LocationDetail");
+                    fragmentTransaction.commit();
 
 
 
@@ -319,15 +325,4 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
 
     }
 
-    void goToLocationDetail(Location loc, int mode)
-    {
-        Fragment fragment = LocationDetailFragment.newInstance(loc);
-        FragmentManager fragmentManager = ((FragmentActivity)context).getFragmentManager();
-        FragmentTransaction fragmentTransaction =
-                fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame,fragment,"LocationDetail");
-        fragmentTransaction.addToBackStack("LocationDetail");
-        fragmentTransaction.commit();
-
-    }
 }

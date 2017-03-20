@@ -81,7 +81,6 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_location_list, container, false);
         apiCall = new BackendAPICall(this, "");
-        locAdapter = new MyUserLocationsAdapter(getActivity());
         // Set the adapter
         if (view instanceof RecyclerView) {
 
@@ -98,6 +97,7 @@ public class MyLocationsFragment extends Fragment implements BackendAPICall.Back
             }
 
             if (positionIndex == -1) {
+                locAdapter = new MyUserLocationsAdapter(getActivity());
                 apiCall.getUserLocations(((MainActivity) getActivity()).userProfile.getBackendAccessToken());
             }
             recyclerView.setAdapter(locAdapter);

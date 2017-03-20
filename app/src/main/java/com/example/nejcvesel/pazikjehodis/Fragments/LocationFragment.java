@@ -83,7 +83,6 @@ public class LocationFragment extends Fragment implements BackendAPICall.Backend
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location_list, container, false);
         apiCall = new BackendAPICall(this, "");
-
         // Set the adapter
         if (view instanceof RecyclerView) {
 

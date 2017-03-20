@@ -116,6 +116,7 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
         View myInflatedView = inflater.inflate(R.layout.fragment_location_form, container, false);
         TextView ownerName = (TextView) myInflatedView.findViewById(R.id.inputName);
         MainActivity main = (MainActivity) getActivity();
+        main.fabClick.DisableFab();
         apiCall = new BackendAPICall(this, "");
         userProfile = ((MainActivity) getActivity()).userProfile;
         ownerName.setText(userProfile.getFirstName() + " " + userProfile.getLastName());

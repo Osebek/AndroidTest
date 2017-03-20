@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.nejcvesel.pazikjehodis.Adapters.MyLocationAdapter;
 import com.example.nejcvesel.pazikjehodis.Adapters.MyPathAdapter;
 import com.example.nejcvesel.pazikjehodis.Adapters.MyUserPathsAdapter;
 import com.example.nejcvesel.pazikjehodis.MainActivity;
@@ -41,6 +42,14 @@ public class MyPathListFragment extends Fragment implements BackendAPICall.Backe
     private LocationFragment.OnListFragmentInteractionListener mListener;
     private BackendAPICall apiCall;
     private MyUserPathsAdapter adapter;
+    int positionIndex = -1;
+    LinearLayoutManager llm;
+    int topView;
+    RecyclerView recView;
+
+
+
+
 
     public MyPathListFragment() {
 
@@ -66,29 +75,62 @@ public class MyPathListFragment extends Fragment implements BackendAPICall.Backe
     }
 
     @Override
+    public void onPause()
+    {
+        positionIndex= llm.findFirstVisibleItemPosition();
+        View startView = recView.getChildAt(0);
+        topView = (startView == null) ? 0 : (startView.getTop() - recView.getPaddingTop());
+        super.onPause();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        if (positionIndex!= -1) {
+            llm.scrollToPositionWithOffset(positionIndex, topView);
+        }
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_path_list, container, false);
 
         RecyclerView recyclerView;
         apiCall = new BackendAPICall(this, "");
-        adapter = new MyUserPathsAdapter(getActivity());
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             recyclerView = (RecyclerView) view;
+            this.recView = recyclerView;
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                LinearLayoutManager llm = new LinearLayoutManager(context);
+                this.llm = llm;
+
+                recyclerView.setLayoutManager(llm);
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
 //            final MyPathAdapter adapter = new MyPathAdapter(getActivity());
 //            BackendAPICall apiCall = new BackendAPICall();
-            apiCall.getUserPaths(((MainActivity)getActivity()).userProfile.getBackendAccessToken());
+            if (positionIndex == -1) {
+                adapter = new MyUserPathsAdapter(getActivity());
+                apiCall.getUserPaths(((MainActivity)getActivity()).userProfile.getBackendAccessToken());
+            }
+
             recyclerView.setAdapter(adapter);
 
         }
+
+        if (positionIndex!= -1) {
+            llm.scrollToPositionWithOffset(positionIndex, topView);
+        }
+
+
 
         return view;
 
