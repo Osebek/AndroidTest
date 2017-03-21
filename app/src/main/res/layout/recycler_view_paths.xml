@@ -3,173 +3,152 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginLeft="0dp"
-    android:layout_marginRight="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:layout_marginTop="8dp">
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:contentPadding="@dimen/activity_horizontal_margin"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        card_view:cardCornerRadius="7dp"
-        card_view:cardElevation="1dp"
-        card_view:cardMaxElevation="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        card_view:contentPaddingTop="0dp"
-        card_view:contentPaddingBottom="5dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:background="@color/white"
-        >
+        card_view:cardCornerRadius="3dp"
+        card_view:cardElevation="3dp"
+        card_view:contentPadding="@dimen/cardViewMargin">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:layout_marginRight="55dp">
-
-
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginRight="50dp">
-                <TextView fontPath="fonts/Ubuntu-light.ttf"
+                android:orientation="horizontal">
+
+                <TextView
+                    fontPath="fonts/Ubuntu-light.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="POT:"
                     android:textColor="#cccccc"
-                    android:textSize="10sp" />
-                <TextView fontPath="fonts/Ubuntu-medium.ttf"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+                <TextView
                     android:id="@+id/path_name"
-                    android:layout_width="wrap_content"
+                    fontPath="fonts/Ubuntu-medium.ttf"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="2dp"
-                    android:textSize="20sp"
-                    android:textColor="@color/vesnaRED"
-                    />
-
-
+                    android:textColor="@color/red_default"
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginRight="50dp">
+                android:orientation="horizontal">
 
-                <TextView fontPath="fonts/Ubuntu-light.ttf"
+                <TextView
+                    fontPath="fonts/Ubuntu-light.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="KRAJ:"
                     android:textColor="#cccccc"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
-                <TextView fontPath="fonts/Ubuntu-italic.ttf"
+                <TextView
                     android:id="@+id/path_city"
+                    fontPath="fonts/Ubuntu-italic.ttf"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:textSize="15sp"
                     android:textColor="@color/darkGrey"
-                    android:layout_below="@id/path_name"
-                    />
+                    android:textSize="15sp" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginRight="50dp">
+                android:orientation="horizontal">
 
-                <TextView fontPath="fonts/Ubuntu-light.ttf"
+                <TextView
+                    fontPath="fonts/Ubuntu-light.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="AVTOR_ICA:"
                     android:textColor="#cccccc"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
-                <TextView fontPath="fonts/Ubuntu-light.ttf"
+                <TextView
                     android:id="@+id/path_owner"
-                    android:layout_width="wrap_content"
+                    fontPath="fonts/Ubuntu-light.ttf"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:layout_below="@id/path_city"
-                    android:textSize="15sp"
                     android:textColor="@color/darkGrey"
-                    />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
-            <TextView fontPath="fonts/Ubuntu-light.ttf"
+            <TextView
                 android:id="@+id/path_description"
-                android:layout_weight="0"
+                fontPath="fonts/Ubuntu-light.ttf"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:visibility="invisible"/>
-            <TextView fontPath="fonts/Ubuntu-light.ttf"
-                android:id="@+id/path_locations"
                 android:layout_weight="0"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="invisible"/>
+                android:visibility="gone" />
 
-            <TextView fontPath="fonts/Ubuntu-light.ttf"
-                android:id="@+id/path_id"
-                android:layout_weight="0"
+            <TextView
+                android:id="@+id/path_locations"
+                fontPath="fonts/Ubuntu-light.ttf"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:visibility="invisible"/>
+                android:layout_weight="0"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/path_id"
+                fontPath="fonts/Ubuntu-light.ttf"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0"
+                android:visibility="gone" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_gravity="right"
+            android:orientation="vertical"
             android:paddingLeft="20dp"
             android:paddingTop="5dp"
-          >
+            android:visibility="gone">
+
             <ImageView
-                android:background="@drawable/ikona_prikazi_na_zemljevidu_small"
+                android:id="@+id/path_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/path_icon"
-                android:paddingTop="5dp"
+                android:background="@drawable/ikona_prikazi_na_zemljevidu_small"
                 android:paddingLeft="10dp"
+                android:paddingTop="5dp" />
 
-                />
-
-            <TextView fontPath="fonts/Ubuntu-light.ttf"
+            <TextView
                 android:id="@+id/path_num_of_locations"
+                fontPath="fonts/Ubuntu-light.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="0dp"
-                android:textSize="20sp"
-                android:paddingTop="15dp"
                 android:paddingLeft="6dp"
-                android:textColor="@color/vesnaRED"
-                />
+                android:paddingTop="15dp"
+                android:textColor="@color/red_default"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
-
-
-
-
     </android.support.v7.widget.CardView>
-
-
 
 </LinearLayout>

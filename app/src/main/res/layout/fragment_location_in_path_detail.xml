@@ -2,141 +2,129 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-<ScrollView
-    android:id="@+id/content"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:background="@color/white"
-    android:layout_weight="5">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.example.nejcvesel.pazikjehodis.Fragments.LocationDetailFragment"
+        android:layout_height="0dp"
+        android:layout_weight="5"
         android:background="@color/white">
 
-
-        <LinearLayout
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_margin="5dp"
-            android:padding="10dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            tools:context="com.example.nejcvesel.pazikjehodis.Fragments.LocationDetailFragment">
 
-
-
-            <TextView fontPath="fonts/Ubuntu-medium.ttf"
-                android:id="@+id/locationDetailTitle"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="@color/darkGrey"
-                />
-            <TextView  fontPath="fonts/Ubuntu-light.ttf"
-                android:id="@+id/locationDetailName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/darkGrey"
-                android:textSize="12sp"
-                />
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-            <ImageView
-                android:id="@+id/locationDetailPicture"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                />
-            <TextView fontPath="fonts/Ubuntu-light.ttf"
-                android:id="@+id/locationDetailText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:layout_below="@id/locationDetailTitle"
-                android:layout_marginBottom="30dp"/>
+                <TextView
+                    android:id="@+id/locationDetailTitle"
+                    fontPath="fonts/Ubuntu-medium.ttf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/darkGrey"
+                    android:textSize="20sp" />
 
+                <TextView
+                    android:id="@+id/locationDetailName"
+                    fontPath="fonts/Ubuntu-light.ttf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/darkGrey"
+                    android:textSize="12sp" />
 
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/locationDetailPicture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="right"
-            android:paddingLeft="20dp"
-            android:paddingRight="15dp"
-            android:paddingTop="21dp"
-            >
-            <ImageView
-                android:background="@drawable/ikona_prikazi_na_zemljevidu_small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/location_icon"
-
-                />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/locationDetailText"
+                    fontPath="fonts/Ubuntu-light.ttf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/locationDetailTitle"
+                    android:layout_marginBottom="30dp"
+                    android:paddingTop="5dp" />
 
 
-    </FrameLayout>
+            </LinearLayout>
 
-</ScrollView>
+        </FrameLayout>
+
+    </ScrollView>
 
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:orientation="horizontal"
-    android:layout_weight="0.4"
-    android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:background="@color/white"
         android:elevation="2dp"
-       >
+        android:orientation="horizontal">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2.7">
-    <TextView fontPath="fonts/Ubuntu-light.ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="◀"
-        android:id="@+id/goLeft"
-        android:textColor="@color/vesnaRED"
-        android:textSize="20dp"
-        android:paddingLeft="20dp"
-        android:layout_gravity="left|center_vertical"
-        android:gravity="left"
-        />
-        </LinearLayout>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="2.7">
-    <TextView fontPath="fonts/Ubuntu-light.ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2/5"
-        android:textColor="@color/vesnaRED"
-        android:textSize="20dp"
-        android:id="@+id/contents"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
 
-        />
+            <TextView
+                android:id="@+id/goLeft"
+                fontPath="fonts/Ubuntu-light.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:gravity="left"
+                android:paddingLeft="20dp"
+                android:text="◀"
+                android:textColor="@color/red_default"
+                android:textSize="20dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.7">
+
+            <TextView
+                android:id="@+id/contents"
+                fontPath="fonts/Ubuntu-light.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:text="2/5"
+                android:textColor="@color/red_default"
+                android:textSize="20dp"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/goRight"
+                fontPath="fonts/Ubuntu-light.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="▶"
+                android:textColor="@color/red_default"
+                android:textSize="20dp" />
+        </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-    <TextView fontPath="fonts/Ubuntu-light.ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="▶"
-        android:id="@+id/goRight"
-        android:textColor="@color/vesnaRED"
-        android:textSize="20dp"
-        android:layout_gravity="right|center_vertical"
-        />
-    </LinearLayout>
-</LinearLayout>
 
 
 </LinearLayout>

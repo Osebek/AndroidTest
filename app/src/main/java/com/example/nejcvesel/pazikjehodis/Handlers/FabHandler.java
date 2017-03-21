@@ -25,55 +25,56 @@ import java.util.ArrayList;
  */
 
 public class FabHandler implements FloatingActionButton.OnClickListener {
-    private FloatingActionButton fab,fab1,fab2;
+    private FloatingActionButton fab, fab1, fab2;
     private Button button_cancel, button_save;
-    private Animation fab_open,fab_close,rotate_forward,rotate_backward;
+    private Animation fab_open, fab_close, rotate_forward, rotate_backward;
     private Activity activity;
     private boolean isFabOpen, isFabEnable;
     private ArrayList<Point> positions = new ArrayList<>(); // First item of array is position on fab and secound is on fab1
-    public FabHandler(Activity activity){
+
+    public FabHandler(Activity activity) {
         this.activity = activity;
-        this.fab = (FloatingActionButton)activity.findViewById(R.id.fab);
-        this.fab1 = (FloatingActionButton)activity.findViewById(R.id.fab1);
+        this.fab = (FloatingActionButton) activity.findViewById(R.id.fab);
+        this.fab1 = (FloatingActionButton) activity.findViewById(R.id.fab1);
 //        this.fab2 = (FloatingActionButton)activity.findViewById(R.id.fab2);
-        this.button_cancel = (Button)activity.findViewById(R.id.button_cancel);
-        this.button_save = (Button)activity.findViewById(R.id.button_save);
+        this.button_cancel = (Button) activity.findViewById(R.id.button_cancel);
+        this.button_save = (Button) activity.findViewById(R.id.button_save);
         this.fab_open = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.fab_open);
-        this.fab_close = AnimationUtils.loadAnimation(activity.getApplicationContext(),R.anim.fab_close);
-        this.rotate_forward = AnimationUtils.loadAnimation(activity.getApplicationContext(),R.anim.rotate_forward);
-        this.rotate_backward = AnimationUtils.loadAnimation(activity.getApplicationContext(),R.anim.rotate_backward);
+        this.fab_close = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.fab_close);
+        this.rotate_forward = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.rotate_forward);
+        this.rotate_backward = AnimationUtils.loadAnimation(activity.getApplicationContext(), R.anim.rotate_backward);
         this.isFabEnable = true;
         this.isFabOpen = false;
-        this.positions.add(new Point(this.fab.getX(),this.fab.getY()));
-        this.positions.add(new Point(this.fab1.getX(),this.fab1.getY()));
+        this.positions.add(new Point(this.fab.getX(), this.fab.getY()));
+        this.positions.add(new Point(this.fab1.getX(), this.fab1.getY()));
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == this.fab.getId()){
+        if (v.getId() == this.fab.getId()) {
             ((MainActivity) this.activity).CloseMarkerInfoWindow();
             OpenFab();
             EnableAddLocation();
         }
-        if(v.getId() == this.fab1.getId()){
+        if (v.getId() == this.fab1.getId()) {
             // implement my current location
         }
 
-        if(v.getId() == this.button_cancel.getId()){
+        if (v.getId() == this.button_cancel.getId()) {
             CloseFab();
             DisableAddLocation();
             ((MainActivity) this.activity).RemoveMarker();
         }
 
-        if(v.getId() == this.button_save.getId()){
+        if (v.getId() == this.button_save.getId()) {
             System.out.println("CLICKED SAVE BTN");
-            if(((MainActivity) this.activity).isMarker()){
+            if (((MainActivity) this.activity).isMarker()) {
 
                 CloseFab();
                 DisableFab();
                 FragmentManager fm = this.activity.getFragmentManager();
                 fm.beginTransaction()
-                        .replace(R.id.content_frame,new LocationFormFragment(),"LocationFormFragment")
+                        .replace(R.id.content_frame, new LocationFormFragment(), "LocationFormFragment")
                         .addToBackStack("LocationFormFragment")
                         .commit();
                 // open form location fragment
@@ -81,20 +82,29 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
         }
     }
 
-    private void AnimationOpenClose(boolean open){
-        View toolbar = (View)this.activity.findViewById(R.id.toolbar_footer);
-        if(!open){
+    private void AnimationOpenClose(boolean open) {
+        View toolbar = (View) this.activity.findViewById(R.id.toolbar_footer);
+
+        final FloatingActionButton f1 = (FloatingActionButton) this.activity.findViewById(R.id.fab1);
+        final FloatingActionButton f = (FloatingActionButton) this.activity.findViewById(R.id.fab);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        f1.setLayoutParams(params);
+
+        if (!open) {
 //            this.fab.startAnimation(rotate_backward);
 //            this.fab1.startAnimation(fab_close);
 //            this.fab2.startAnimation(fab_close);
 //            this.fab1.setClickable(false);
 //            this.fab2.setClickable(false);
 
-            final FloatingActionButton f = (FloatingActionButton) this.activity.findViewById(R.id.fab);
-            ((MainActivity)this.activity).RemoveMarker();
-            FabTransformation.with(this.fab)
-                    .transformFrom(toolbar);
+            ((MainActivity) this.activity).RemoveMarker();
+            FabTransformation.with(this.fab).transformFrom(toolbar);
             this.isFabOpen = false;
+
+            params.bottomMargin = 0;
+            params.setLayoutDirection(LinearLayout.HORIZONTAL);
+
         } else {
 //            this.fab.startAnimation(rotate_forward);
 //            this.fab1.startAnimation(fab_open);
@@ -102,27 +112,29 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
 //            this.fab1.setClickable(true);
 //            this.fab2.setClickable(true);
 
+            params.bottomMargin = 130;
+            params.setLayoutDirection(LinearLayout.VERTICAL);
 
             FabTransformation.with(this.fab).transformTo(toolbar);
             this.isFabOpen = true;
         }
     }
 
-    public void OpenFab(){
-        if(!isFabOpen)
+    public void OpenFab() {
+        if (!isFabOpen)
             AnimationOpenClose(true);
     }
 
-    public void CloseFab(){
-        if(isFabOpen)
+    public void CloseFab() {
+        if (isFabOpen)
             AnimationOpenClose(false);
     }
 
-    public void DisableFab(){
+    public void DisableFab() {
         CloseFab();
-        View toolbar = (View)this.activity.findViewById(R.id.toolbar_footer);
+        View toolbar = (View) this.activity.findViewById(R.id.toolbar_footer);
         final FloatingActionButton f = (FloatingActionButton) this.activity.findViewById(R.id.fab);
-        ((MainActivity)this.activity).RemoveMarker();
+        ((MainActivity) this.activity).RemoveMarker();
         FabTransformation.with(this.fab)
                 .setListener(new FabTransformation.OnTransformListener() {
                     @Override
@@ -141,25 +153,26 @@ public class FabHandler implements FloatingActionButton.OnClickListener {
         this.isFabEnable = false;
     }
 
-    public void EnableFab(){
+    public void EnableFab() {
         this.fab.setVisibility(View.VISIBLE);
         this.fab1.setVisibility(View.VISIBLE);
         CloseFab();
         this.isFabEnable = true;
     }
 
-    private void EnableAddLocation(){
+    private void EnableAddLocation() {
         ((MainActivity) this.activity).markerAddEnable = true;
     }
 
-    private void DisableAddLocation(){
+    private void DisableAddLocation() {
         ((MainActivity) this.activity).markerAddEnable = false;
     }
 }
 
-class Point{
-    double x,y;
-    public Point(double x,double y){
+class Point {
+    double x, y;
+
+    public Point(double x, double y) {
         this.x = x;
         this.y = y;
     }

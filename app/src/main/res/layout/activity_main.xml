@@ -12,60 +12,67 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!--<android.support.design.widget.NavigationView-->
-    <!--android:id="@+id/nav_view"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_gravity="start"-->
-    <!--android:fitsSystemWindows="true"-->
-    <!--app:headerLayout="@layout/nav_header_main"-->
-    <!--app:menu="@menu/activity_main_drawer" />-->
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
+        style="@style/AppDrawerStyle"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true">
-
-        <!--<include-->
-        <!--layout="@layout/drawer_list_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" />-->
+        android:fitsSystemWindows="false">
 
         <LinearLayout
-            style="@style/AppDrawerStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
             android:orientation="vertical">
 
-            <!--UserInterface-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/red_default"
                 android:orientation="vertical"
-                android:background="@color/vesnaRED">
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp">
 
-                <ImageView
-                    android:id="@+id/navHeaderImg"
-                    android:layout_width="200dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginStart="10dp"
-                    android:src="@drawable/logo_zgoraj_red"
-                    android:onClick="navigationViewHomeClick"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="navigationViewHomeClick"
+                        android:src="@drawable/logo"
+                        android:layout_marginEnd="10dp"
+                        android:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/logo_text"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/navHeaderText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Test"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
                     android:textAllCaps="true"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
                     android:textColor="@color/white"
-                    android:textSize="10sp"/>
+                    android:textSize="12sp"
+                    tools:text="Username" />
+
             </LinearLayout>
 
             <ScrollView
@@ -77,14 +84,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!--Category Section-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
                         android:onClick="navigationViewMapClick"
-                        android:padding="10dp">
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_map_white_24dp"
+                            android:tint="@color/grey_light" />
 
                         <TextView
                             android:id="@+id/navCont_map"
@@ -95,27 +107,26 @@
                             android:text="@string/menu_map"
                             android:textColor="@color/darkGrey" />
 
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ikona_zemljevid" />
-
                     </LinearLayout>
 
                     <include
                         layout="@layout/data_decoration_line"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"/>
+                        android:layout_height="1dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
                         android:onClick="navigationViewLocationClick"
-                        android:padding="10dp">
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_place_white_24dp"
+                            android:tint="@color/grey_light" />
 
                         <TextView
                             android:id="@+id/navCont_loc"
@@ -126,29 +137,28 @@
                             android:text="@string/menu_loc"
                             android:textColor="@color/darkGrey" />
 
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ikona_lokacije" />
-
                     </LinearLayout>
 
                     <include
                         layout="@layout/data_decoration_line"
-                        android:id="@+id/my_location_divisor"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp" />
+                        android:layout_height="1dp" />
 
                     <LinearLayout
                         android:id="@+id/my_location_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
                         android:onClick="navigationViewMyLocationClick"
-                        android:padding="10dp">
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_place_white_24dp"
+                            android:tint="@color/grey_light" />
 
                         <TextView
                             android:id="@+id/navCont_my_loc"
@@ -159,27 +169,21 @@
                             android:text="@string/menu_my_loc"
                             android:textColor="@color/darkGrey" />
 
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ikona_moje_lokacije" />
-
                     </LinearLayout>
-
-                    <include
-                        layout="@layout/data_decoration_line"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
                         android:onClick="navigationViewPathClick"
-                        android:padding="10dp">
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_timeline_white_24dp"
+                            android:tint="@color/grey_light" />
 
                         <TextView
                             android:id="@+id/navCont_path"
@@ -190,29 +194,22 @@
                             android:text="@string/menu_path"
                             android:textColor="@color/darkGrey" />
 
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ikona_pot" />
-
                     </LinearLayout>
 
                     <include
                         layout="@layout/data_decoration_line"
-                        android:id="@+id/my_paths_divisor"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp" />
+                        android:layout_height="1dp" />
 
                     <LinearLayout
                         android:id="@+id/my_paths_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
                         android:onClick="navigationViewMyPathClick"
-                        android:padding="10dp">
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/navCont_my_path"
@@ -230,20 +227,14 @@
 
                     </LinearLayout>
 
-                    <include
-                        layout="@layout/data_decoration_line"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
                         android:onClick="navigationViewSearchClick"
-                        android:padding="10dp">
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/navCont_search"
@@ -261,20 +252,14 @@
 
                     </LinearLayout>
 
-                    <include
-                        layout="@layout/data_decoration_line"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
                         android:onClick="navigationViewAddClick"
-                        android:padding="10dp">
+                        android:orientation="horizontal"
+                        android:padding="10dp"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/navCont_addNew"
@@ -292,82 +277,83 @@
 
                     </LinearLayout>
 
-                    <include
-                        layout="@layout/data_decoration_line"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp" />
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:onClick="navigationViewWhatsNewClick"
-                        android:padding="10dp">
+                        android:layout_gravity="bottom"
+                        android:gravity="bottom"
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/navCont_howTo"
-                            android:layout_width="0dp"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1"
-                            android:text="@string/menu_how_to"
-                            android:textColor="@color/darkGrey" />
+                            android:gravity="center_vertical"
+                            android:onClick="navigationViewWhatsNewClick"
+                            android:orientation="horizontal"
+                            android:padding="16dp">
 
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ikona_predstavitev" />
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_grade_white_24dp"
+                                android:tint="@color/grey_light" />
+
+                            <TextView
+                                android:id="@+id/navCont_howTo"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:text="@string/menu_how_to"
+                                android:textColor="@color/darkGrey" />
+
+                        </LinearLayout>
+
+                        <include
+                            layout="@layout/data_decoration_line"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:onClick="navigationViewLogingClick"
+                            android:orientation="horizontal"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_reply_white_24dp"
+                                android:tint="@color/grey_light" />
+
+                            <TextView
+                                android:id="@+id/navCont_loging"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:text="@string/menu_loging"
+                                android:textColor="@color/darkGrey" />
+
+                        </LinearLayout>
+
+                        <include
+                            layout="@layout/data_decoration_line"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp" />
 
                     </LinearLayout>
-
-                    <include
-                        layout="@layout/data_decoration_line"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:onClick="navigationViewLogingClick"
-                        android:padding="10dp">
-
-                        <TextView
-                            android:id="@+id/navCont_loging"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1"
-                            android:text="@string/menu_loging"
-                            android:textColor="@color/darkGrey" />
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ikona_predstavitev" />
-
-                    </LinearLayout>
-
-                    <include
-                        layout="@layout/data_decoration_line"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp" />
 
                 </LinearLayout>
+
             </ScrollView>
+
         </LinearLayout>
 
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
 
-<!--TODO: adjuste working layout to all phones-->
-    <!--TODO: drawer set differently for logged in user-->
+    <!--TODO: adjuste working layout to all phones--><!--TODO: drawer set differently for logged in user-->

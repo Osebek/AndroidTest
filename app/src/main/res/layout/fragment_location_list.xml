@@ -6,8 +6,9 @@
     android:name="com.example.nejcvesel.pazikjehodis.LocationFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:background="@color/grey_lighter"
+    android:clipToPadding="false"
+    android:paddingTop="8dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.example.nejcvesel.pazikjehodis.Fragments.LocationFragment"
-    tools:listitem="@layout/fragment_location" />
+    tools:listitem="@layout/recycler_view" />

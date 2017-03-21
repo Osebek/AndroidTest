@@ -37,7 +37,7 @@
         android:id="@+id/makePath"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/vesnaRED"
+        android:textColor="@color/red_default"
         android:gravity="center_horizontal"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"

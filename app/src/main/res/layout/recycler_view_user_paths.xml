@@ -55,7 +55,7 @@
                     android:paddingLeft="10dp"
                     android:paddingTop="2dp"
                     android:textSize="20sp"
-                    android:textColor="@color/vesnaRED"
+                    android:textColor="@color/red_default"
                     />
 
 
@@ -190,7 +190,7 @@
                 android:textSize="20sp"
                 android:paddingTop="15dp"
                 android:paddingLeft="6dp"
-                android:textColor="@color/vesnaRED"
+                android:textColor="@color/red_default"
                 />
 
         </LinearLayout>

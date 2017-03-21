@@ -8,7 +8,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="cardViewMargin">8dp</dimen>
+    <dimen name="cardViewMargin">16dp</dimen>
 
     <!-- Default popup icon on info-window marker dimension -->
     <dimen name="icon_width">340dp</dimen>

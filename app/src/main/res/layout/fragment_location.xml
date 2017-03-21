@@ -4,19 +4,20 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-
-
-    <TextView fontPath="fonts/Ubuntu-light.ttf"
+    <TextView
         android:id="@+id/id"
+        fontPath="fonts/Ubuntu-light.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem" />
 
-    <TextView fontPath="fonts/Ubuntu-light.ttf"
+    <TextView
         android:id="@+id/content"
+        fontPath="fonts/Ubuntu-light.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem" />
+
 </LinearLayout>

@@ -155,7 +155,7 @@
         android:id="@+id/edit_path_locations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/vesnaRED"
+        android:background="@color/red_default"
         android:text="Spremeni lokacije"
         android:textAlignment="center"
         android:textColor="@color/white"

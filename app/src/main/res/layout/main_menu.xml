@@ -1,50 +1,76 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainMenuFrame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.nejcvesel.pazikjehodis.MainMenuActivity"
-    android:id="@+id/mainMenuFrame">
+    android:layout_gravity="center"
+    android:background="@color/red_default"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="40dp"
+    tools:context="com.example.nejcvesel.pazikjehodis.MainMenuActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:onClick="navigationViewHomeClick"
+            android:src="@drawable/logo"
+            android:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/logo_text"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/mainMenuMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="120dp"
-        android:paddingTop="30dp"
-        android:paddingBottom="30dp"
-        android:background="@color/blue"
-        android:textColor="@color/white"
-        android:text="@string/mainMenuMap"
+        android:layout_marginBottom="20dp"
+        android:background="@color/white"
+        android:gravity="center"
         android:onClick="startMap"
-        />
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:text="@string/mainMenuMap"
+        android:textColor="@color/red_default" />
+
     <Button
         android:id="@+id/mainMenuExplore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="320dp"
-        android:paddingTop="30dp"
-        android:paddingBottom="30dp"
-        android:background="@color/red"
-        android:textColor="@color/white"
+        android:layout_marginBottom="20dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:onClick="startExplore"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
         android:text="@string/mainMenuExplore"
-        android:onClick="startExplore"/>
+        android:textColor="@color/red_default" />
 
     <Button
         android:id="@+id/mainMenuWalkthrough"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="220dp"
-        android:paddingTop="30dp"
-        android:paddingBottom="30dp"
-        android:background="@color/green"
+        android:background="@color/white"
+        android:gravity="center"
         android:onClick="startWalkthrough"
-        android:text="@string/mainMenuWalkthrough"/>
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:text="@string/mainMenuWalkthrough"
+        android:textColor="@color/red_default" />
 
-
-</FrameLayout>
+</LinearLayout>

@@ -513,18 +513,12 @@ public class MainActivity extends AppCompatActivity implements
     public void setScreenLayout(boolean isAnonym) {
         View l1 = findViewById(R.id.my_location_layout);
         View l2 = findViewById(R.id.my_paths_layout);
-        View d1 = findViewById(R.id.my_location_divisor);
-        View d2 = findViewById(R.id.my_paths_divisor);
         if (isAnonym) {
             l1.setVisibility(View.GONE);
             l2.setVisibility(View.GONE);
-            d1.setVisibility(View.GONE);
-            d2.setVisibility(View.GONE);
         } else {
             l1.setVisibility(View.VISIBLE);
             l2.setVisibility(View.VISIBLE);
-            d1.setVisibility(View.VISIBLE);
-            d2.setVisibility(View.VISIBLE);
         }
     }
 

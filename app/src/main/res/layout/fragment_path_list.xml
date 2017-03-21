@@ -6,8 +6,9 @@
     android:name="com.example.nejcvesel.pazikjehodis.PathListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:background="@color/grey_lighter"
+    android:clipToPadding="false"
+    android:paddingTop="8dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.example.nejcvesel.pazikjehodis.Fragments.PathListFragment"
-    tools:listitem="@layout/fragment_path" />
+    tools:listitem="@layout/recycler_view_paths" />
