@@ -77,19 +77,19 @@ public class PathAddFormFragment extends Fragment implements  BackendAPICall.Bac
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-         View view =  inflater.inflate(R.layout.fragment_path_add_form, container, false);
+         View view =  inflater.inflate(R.layout.fragment_add_path, container, false);
         final MainActivity main = (MainActivity) getActivity();
         apiCall = new BackendAPICall(this,"");
 
 
-        TextView owner = (TextView) view.findViewById(R.id.pathAddOwner);
+        TextView owner = (TextView) view.findViewById(R.id.input_path_author);
         //TODO: return coments!
 //        owner.setText(main.profile.getFirstName() + main.profile.getLastName());
-        Button objavi = (Button) view.findViewById(R.id.upload_path);
+        Button objavi = (Button) view.findViewById(R.id.input_path_add_btn);
 
-        final EditText name = (EditText) view.findViewById(R.id.pathAddName);
-        final EditText city = (EditText) view.findViewById(R.id.pathAddCity);
-        final EditText description = (EditText) view.findViewById(R.id.pathAddDescription);
+        final EditText name = (EditText) view.findViewById(R.id.input_path_title);
+        final EditText city = (EditText) view.findViewById(R.id.input_path_city);
+        final EditText description = (EditText) view.findViewById(R.id.input_path_description);
 
         objavi.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -130,6 +130,7 @@ public class BackendAPICall {
                     mess = "ERROR";
                 }
                 backendCallback.getUserLocationCallback(locations, mess);
+
             }
 
             @Override
@@ -137,6 +138,8 @@ public class BackendAPICall {
                 backendCallback.getUserLocationCallback(null, "ERROR_FAIL");
             }
         });
+
+
     }
 
     public void getUserPaths(String authToken)
@@ -505,7 +508,10 @@ public class BackendAPICall {
                 ServiceGenerator.createAuthorizedService(FormUploadEditInterface.class, authToken);
         String filePath = getRealPathFromURI(context,fileUri);
 
+        System.out.println(filePath);
         File file = new File(filePath);
+        System.out.println(file.toString());
+
 
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part body =
@@ -549,6 +555,8 @@ public class BackendAPICall {
                 else
                 {
                     try {
+                        System.out.println("NAPAKA: ");
+                        System.out.println(response.errorBody().toString());
                         backendCallback.getAddMessageCallback("ERROR " + response.errorBody().string(),"updateLocationWithPicture");
                     } catch (IOException e) {
                         e.printStackTrace();

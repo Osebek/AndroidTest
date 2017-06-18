@@ -166,14 +166,14 @@ public class LocationInPathDetailFragment extends Fragment {
 
 
 
-        loc_icon.setOnClickListener(new View.OnClickListener() {
+       /* loc_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity main = (MainActivity) getActivity();
                 String loc = "[" + mParamId + "]";
                 main.showLocationOnMap(v,loc);
             }
-        });
+        });*/
 
         goLeft.setOnClickListener(new View.OnClickListener() {
             @Override

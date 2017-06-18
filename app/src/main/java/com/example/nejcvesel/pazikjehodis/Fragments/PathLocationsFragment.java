@@ -126,7 +126,6 @@ public class PathLocationsFragment extends Fragment implements BackendAPICall.Ba
         View view1 = inflater.inflate(R.layout.fragment_path_locations, container, false);
         View view = view1.findViewById(R.id.recyclerViewList);
         apiCall = new BackendAPICall(this, "");
-        specialAdapter = new MyPathLocationsAdapter(getActivity());
 
 
 
@@ -148,7 +147,7 @@ public class PathLocationsFragment extends Fragment implements BackendAPICall.Ba
             if (positionIndex == -1) {
 //                locAdapter = new MyLocationAdapter(getActivity());
 
-
+                specialAdapter = new MyPathLocationsAdapter(getActivity());
                 Path path = new Path();
                 path.setName(name);
                 path.setCity(city);

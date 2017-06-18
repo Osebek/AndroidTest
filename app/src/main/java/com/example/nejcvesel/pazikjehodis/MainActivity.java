@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.nejcvesel.pazikjehodis.Fragments.EditPathFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationFormFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.MyPathListFragment;
 //import com.example.nejcvesel.pazikjehodis.Handlers.FabHandler;
 import com.example.nejcvesel.pazikjehodis.Fragments.AddFragment;
@@ -193,6 +195,10 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
+
+
+
+
         // BackendAPICall callProfile = new BackendAPICall();
         //callProfile.getUserProfile(userProfile.getBackendAccessToken());
 
@@ -234,7 +240,12 @@ public class MainActivity extends AppCompatActivity implements
                     AccessToken currentAccessToken) {
                 TextView userName = (TextView) findViewById(R.id.navHeaderText);
                 if (currentAccessToken == null) {
+                    sharedPref.edit().clear().commit();
                     userName.setText("Anonimen uporabnik");
+                    setScreenLayout(true);
+                    userProfile.clearAll();
+
+
                 }
             }
         };
@@ -253,6 +264,16 @@ public class MainActivity extends AppCompatActivity implements
                     edit.putString(authToken + "_firstName", currentProfile.getFirstName());
                     edit.putString(authToken + "_lastName", currentProfile.getLastName());
                     edit.commit();
+                    setScreenLayout(false);
+
+                }
+                else
+                {
+                    sharedPref.edit().clear().commit();
+                    TextView userName = (TextView) findViewById(R.id.navHeaderText);
+                    userName.setText("Anonimen uporabnik");
+                    setScreenLayout(true);
+                    userProfile.clearAll();
                 }
 
             }
@@ -288,6 +309,7 @@ public class MainActivity extends AppCompatActivity implements
             profileName.setText(userProfile.getFirstName() + " " + userProfile.getLastName());
         } else {
             profileName.setText("Anonimen uporabnik");
+            setScreenLayout(true);
         }
 
         final FABToolbarLayout layout = (FABToolbarLayout) findViewById(R.id.fabtoolbar);
@@ -439,6 +461,7 @@ public class MainActivity extends AppCompatActivity implements
         CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new LocationFragment(), "LocationFragment").addToBackStack("LocationFragment").commit();
+
         closeDrawer();
     }
 
@@ -526,16 +549,31 @@ public class MainActivity extends AppCompatActivity implements
     public void setScreenLayout(boolean isAnonym) {
         View l1 = findViewById(R.id.my_location_layout);
         View l2 = findViewById(R.id.my_paths_layout);
+        View l3 = findViewById(R.id.nav_add_new);
+        TextView l4 = (TextView) findViewById(R.id.navCont_loging);
         if (isAnonym) {
             l1.setVisibility(View.GONE);
             l2.setVisibility(View.GONE);
+            l3.setVisibility(View.GONE);
+            l4.setText("Prijavi se");
         } else {
             l1.setVisibility(View.VISIBLE);
             l2.setVisibility(View.VISIBLE);
+            l3.setVisibility(View.VISIBLE);
+            l4.setText("Odjavi se");
+
         }
     }
 
     public void RefreshUser() {
+
+    }
+
+
+
+
+    public void setMenuForLoggedOut()
+    {
 
     }
 

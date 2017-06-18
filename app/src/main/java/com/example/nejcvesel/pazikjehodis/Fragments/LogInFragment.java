@@ -1,6 +1,7 @@
 package com.example.nejcvesel.pazikjehodis.Fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -17,6 +19,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import static android.view.View.GONE;
 
 /**
  * Created by brani on 12/19/2016.
@@ -39,6 +43,13 @@ public class LogInFragment extends Fragment implements GoogleApiClient.OnConnect
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        MainActivity main = (MainActivity) getActivity();
+        System.out.println("Blablablabalbab");
+        if (!main.userProfile.getBackendAccessToken().equals("")) {
+            System.out.println("tuki not sm");
+            signIn.setVisibility(GONE);
+        }
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +75,7 @@ public class LogInFragment extends Fragment implements GoogleApiClient.OnConnect
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("GOT RESULT IN FRAGMENT");
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
@@ -75,15 +87,15 @@ public class LogInFragment extends Fragment implements GoogleApiClient.OnConnect
 
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        System.out.println(result.getStatus().toString());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            System.out.println("PRjavu se");
+            System.out.println(acct.getEmail());
+            System.out.println("Prjavu se");
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             //updateUI(true);
         } else {
-            System.out.println("Odjavu se");
-
             // Signed out, show unauthenticated UI.
            // updateUI(false);
         }

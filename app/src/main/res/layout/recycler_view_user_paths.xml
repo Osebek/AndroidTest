@@ -11,19 +11,15 @@
     android:layout_marginTop="8dp">
 
     <android.support.v7.widget.CardView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:contentPadding="@dimen/activity_horizontal_margin"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        card_view:cardCornerRadius="7dp"
-        card_view:cardElevation="1dp"
-        card_view:cardMaxElevation="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        card_view:contentPaddingTop="0dp"
-        card_view:contentPaddingBottom="5dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:background="@color/white"
+        card_view:cardCornerRadius="3dp"
+        card_view:cardElevation="3dp"
+        card_view:contentPadding="@dimen/cardViewMargin"
         >
 
         <LinearLayout
@@ -120,26 +116,13 @@
                 android:layout_below="@id/longtitude"
                 />
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_gravity="center"
                 android:paddingTop="20dp">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/edit_path_icon"
-                    android:layout_marginBottom="5dp"
-                    android:src="@drawable/edit_icon"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/delete_path_icon"
-                    android:layout_marginBottom="5dp"
-                    android:src="@drawable/delete_icon"
-                    android:paddingLeft="15dp"
-                    />
+
             </LinearLayout>
 
             <TextView fontPath="fonts/Ubuntu-light.ttf"
@@ -161,6 +144,25 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/edit_path_icon"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_path"
+                android:background="@color/colorPrimary"
+                android:layout_marginTop="5dp"
+                android:textColor="@android:color/white"/>
+
+
+            <Button
+                android:id="@+id/delete_path_icon"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/delete_path"
+                android:background="@color/colorPrimary"
+                android:layout_marginTop="5dp"
+                android:textColor="@android:color/white"/>
 
         </LinearLayout>
 
@@ -194,6 +196,9 @@
                 />
 
         </LinearLayout>
+
+
+
 
 
 

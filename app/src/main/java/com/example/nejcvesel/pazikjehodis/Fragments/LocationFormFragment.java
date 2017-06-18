@@ -53,6 +53,7 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
     private static final String ARG_NAME = "name";
     private static final String ARG_TITLE = "title";
     private static final String ARG_EDIT_MODE = "edit_mode";
+    private String picURL;
 
     private String mParamText;
     private String mParamTitle;
@@ -113,8 +114,8 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View myInflatedView = inflater.inflate(R.layout.fragment_location_form, container, false);
-        TextView ownerName = (TextView) myInflatedView.findViewById(R.id.inputName);
+        View myInflatedView = inflater.inflate(R.layout.fragment_add_location,container, false);
+        TextView ownerName = (TextView) myInflatedView.findViewById(R.id.input_author);
         MainActivity main = (MainActivity) getActivity();
 //        main.fabClick.DisableFab();
         apiCall = new BackendAPICall(this, "");
@@ -122,21 +123,21 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
         ownerName.setText(userProfile.getFirstName() + " " + userProfile.getLastName());
         //TODO: return to upper comented code .... this is just for test!
         //ownerName.setText("");
-        Button submit = ((Button) myInflatedView.findViewById(R.id.upload_location));
+        Button submit = (Button) myInflatedView.findViewById(R.id.input_btn_upload);
 
-        final TextView address = (TextView) myInflatedView.findViewById(R.id.inputAddress);
-        final TextView name = (TextView) myInflatedView.findViewById(R.id.inputName);
-        final TextView description = (TextView) myInflatedView.findViewById(R.id.inputDescription);
-        final TextView title = (TextView) myInflatedView.findViewById(R.id.inputTitle);
-        final TextView imageURL = (TextView) myInflatedView.findViewById(R.id.imageURL);
+        final TextView address = (TextView) myInflatedView.findViewById(R.id.input_address);
+        final TextView name = (TextView) myInflatedView.findViewById(R.id.input_author);
+        final TextView description = (TextView) myInflatedView.findViewById(R.id.input_story);
+        final TextView title = (TextView) myInflatedView.findViewById(R.id.input_loc_title);
+        final TextView imageURL = (TextView) myInflatedView.findViewById(R.id.input_img_url);
 
-        Button addImage = (Button) myInflatedView.findViewById(R.id.form_picture);
+        Button addImage = (Button) myInflatedView.findViewById(R.id.input_btn_add_pic);
 
 
         if (mParamEditMode) {
-            ((TextView) myInflatedView.findViewById(R.id.inputAddress)).setText(mParamAddress);
-            ((TextView) myInflatedView.findViewById(R.id.inputDescription)).setText(mParamText);
-            ((TextView) myInflatedView.findViewById(R.id.inputTitle)).setText(mParamTitle);
+            ((TextView) myInflatedView.findViewById(R.id.input_address)).setText(mParamAddress);
+            ((TextView) myInflatedView.findViewById(R.id.input_story)).setText(mParamText);
+            ((TextView) myInflatedView.findViewById(R.id.input_loc_title)).setText(mParamTitle);
             submit.setText("Posodobi");
         }
 
@@ -154,7 +155,7 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
                 if (!mParamEditMode) {
                     uploadLocation(name.getText().toString(), address.getText().toString(),
                             title.getText().toString(), description.getText().toString(),
-                            imageURL.getText().toString());
+                            picURL);
                 }
                 else
                 {
@@ -171,7 +172,7 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
                                 address.getText().toString(),
                                 title.getText().toString(),
                                 description.getText().toString(),
-                                imageURL.getText().toString(), mParamId);
+                                picURL, mParamId);
                     }
                 }
             }
@@ -195,6 +196,7 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
             Toast toast = Toast.makeText(getActivity(), text, duration);
             toast.show();
         }
+        else {
 
         if (name.equals("") || address.equals("") || title.equals("") ||
                 description.equals("") || imageURL.equals("")) {
@@ -205,14 +207,15 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
 
         } else {
             Marker currMarker = ((MainActivity) getActivity()).currentMarker;
+            //if (currMarker != null) {
+            //  LatLng latlng = currMarker.getPosition();
 
-            if (currMarker != null) {
-                LatLng latlng = currMarker.getPosition();
 
-                apiCall.uploadFile(url, ((float) latlng.latitude), ((float) latlng.longitude), name,
-                        address, title, description, userProfile.getBackendAccessToken(), getActivity());
-
-            }
+            //apiCall.uploadFile(url, ((float) latlng.latitude), ((float) latlng.longitude), name,
+            //      address, title, description, userProfile.getBackendAccessToken(), getActivity());
+            apiCall.uploadFile(url, ((float) 46.056946), ((float) 14.505751), name,
+                    address, title, description, userProfile.getBackendAccessToken(), getActivity());
+        }
 
 
         }
@@ -270,15 +273,15 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
                     url = selectedImage;
+                    picURL = selectedImage.toString();
                     String realPath = UtilityFunctions.getRealPathFromURI(getActivity().getBaseContext(), url);
                     String[] splitUrl = realPath.split("/");
-                    LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
-                    TextView picText = (TextView) form.getView().findViewById(R.id.imageURL);
+                    //LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
+                    TextView picText = (TextView) this.getView().findViewById(R.id.input_img_url);
                     picText.setText(selectedImage.toString());
-                    Button addImageButton = (Button) form.getView().findViewById(R.id.form_picture);
-                    addImageButton.setHint("Spremeni sliko");
-                    TextView currPicture = (TextView) form.getView().findViewById(R.id.currentPic);
-                    currPicture.setText("Trenutna slika: " + splitUrl[splitUrl.length - 1]);
+                    Button addImageButton = (Button) this.getView().findViewById(R.id.input_btn_add_pic);
+                    addImageButton.setText("Spremeni sliko");
+                    picText.setText("URL slike: " + splitUrl[splitUrl.length - 1]);
 
 
 //                    System.out.println(selectedImage.toString());
@@ -343,6 +346,8 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
     @Override
     public void getAddMessageCallback(String message, String backendCall) {
         CharSequence text = "Napaka";
+        System.out.println(backendCall);
+        System.out.println(message);
 
         if (backendCall.equals("uploadFile"))
         {

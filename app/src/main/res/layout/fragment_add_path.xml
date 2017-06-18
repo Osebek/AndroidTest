@@ -19,12 +19,12 @@
 
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/edit_path_layout_author"
+        android:id="@+id/input_path_layout_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/edit_path_author"
+            android:id="@+id/input_path_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
@@ -42,12 +42,12 @@
         android:paddingTop="20dp">
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/edit_path_layout_city"
+            android:id="@+id/input_path_layout_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/edit_path_city"
+                android:id="@+id/input_path_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -56,12 +56,12 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/edit_path_layout_title"
+            android:id="@+id/input_path_layout_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/edit_path_title"
+                android:id="@+id/input_path_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
@@ -71,12 +71,12 @@
 
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/edit_path_layout_description"
+            android:id="@+id/input_path_layout_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/edit_path_description"
+                android:id="@+id/input_path_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
@@ -86,24 +86,14 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <Button android:id="@+id/edit_path_edit_locations_btn"
+        <Button android:id="@+id/input_path_add_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/edit_path_edit_locations"
-            android:background="@color/colorPrimary"
-            android:layout_marginTop="25dp"
-            android:textColor="@android:color/white"/>
-
-        <Button android:id="@+id/edit_path_save_btn"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/path_edit_save_btn"
+            android:text="@string/path_add_btn"
             android:background="@color/colorPrimary"
             android:layout_marginTop="25dp"
             android:textColor="@android:color/white"/>
 
     </LinearLayout>
-
-
 
 </android.support.design.widget.CoordinatorLayout>

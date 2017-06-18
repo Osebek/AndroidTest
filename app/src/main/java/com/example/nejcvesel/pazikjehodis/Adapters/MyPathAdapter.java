@@ -109,11 +109,9 @@ public class MyPathAdapter extends RecyclerView.Adapter<MyPathAdapter.ViewHolder
                             pathOwner.getText().toString(),pathCity.getText().toString(),pathName.getText().toString(),
                             pathDescription.getText().toString());
                     FragmentManager fragmentManager = ((FragmentActivity)context).getFragmentManager();
-                    FragmentTransaction fragmentTransaction =
-                            fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.content_frame,fragment,"PathLocationsFragment");
-                    fragmentTransaction.addToBackStack("PathLocationsFragment");
-                    fragmentTransaction.commit();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame,fragment,"PathLocationsFragment")
+                    .addToBackStack("PathLocationsFragment")
+                    .commit();
 
 
                 }

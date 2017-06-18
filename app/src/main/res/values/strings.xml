@@ -57,4 +57,36 @@
     <!--location info window marker  error load -->
     <string name="error_load_info">Info za lokacijo ne obstaja</string>
 
+    <!-- location add form -->
+
+    <string name="form_author">AVTOR-ICA</string>
+    <string name="form__title">Naslov zgodbe</string>
+    <string name="form_story">Zgodba (najmanj 120 znakov)</string>
+    <string name="form_btn_add_pic">Dodaj sliko</string>
+    <string name="form_upload">Dodaj lokacijo</string>
+    <string name="form_address">Naslov</string>
+
+    <!-- path add form -->
+    <string name="path_author">AVTOR-ICA</string>
+    <string name="path_city">KRAJ POTI</string>
+    <string name="path_title">IME POTI</string>
+    <string name="path_description">PREDSTAVITEV POTI (min. 120 znakov)</string>
+    <string name="path_add_btn">OBJAVI POT</string>
+
+    <string name="delete_location">Odstrani lokacijo</string>
+    <string name="edit_location">Spremeni lokacijo</string>
+
+    <string name="delete_path">Odstrani pot</string>
+    <string name="edit_path">Spremeni pot</string>
+
+
+    <string name="path_edit_save_btn">Shrani pot</string>
+    <string name="edit_path_edit_locations">Spremeni lokacije</string>
+
+
+
+
+
+
+
 </resources>

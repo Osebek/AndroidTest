@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -201,8 +202,8 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
         public TextView pictureURL;
         public TextView locAddress;
         public TextView owner;
-        public ImageView editIcon;
-        public ImageView deleteIcon;
+        public Button editIcon;
+        public Button deleteIcon;
 
 
 
@@ -219,14 +220,14 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
             pictureURL = (TextView) itemView.findViewById(R.id.picture_url);
             locAddress = (TextView) itemView.findViewById(R.id.locAddress);
             owner = (TextView) itemView.findViewById(R.id.loc_owner);
-            editIcon = (ImageView) itemView.findViewById(R.id.edit_icon);
-            deleteIcon = (ImageView) itemView.findViewById(R.id.delete_loc_icon);
+            editIcon = (Button)  itemView.findViewById(R.id.edit_icon);
+            deleteIcon = (Button) itemView.findViewById(R.id.delete_loc_icon);
 
 
 
 
 
-            ImageView icon = (ImageView) itemView.findViewById(R.id.location_icon);
+          /*  ImageView icon = (ImageView) itemView.findViewById(R.id.location_icon);
             icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -235,7 +236,7 @@ public class MyUserLocationsAdapter extends RecyclerView.Adapter<MyUserLocations
                     main.showLocationOnMap(v,loc);
 
                 }
-            });
+            });*/
 
 
 

@@ -13,14 +13,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "950097536991-emeecso5lk42s1qe67qdhr9becgduka0.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.nejcvesel.pazikjehodis",
-            "certificate_hash": "6514B34186E69774DABDA1239B24F822754403B4"
-          }
-        },
-        {
           "client_id": "950097536991-2bl119qc4nfr0kljbp2p0lds8jl64l9b.apps.googleusercontent.com",
           "client_type": 3
         }

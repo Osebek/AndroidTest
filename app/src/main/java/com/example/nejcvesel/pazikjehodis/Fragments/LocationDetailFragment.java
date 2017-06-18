@@ -101,7 +101,7 @@ public class LocationDetailFragment extends Fragment {
         ImageView picture = (ImageView) myInflatedView.findViewById(R.id.locationDetailPicture);
         ImageView loc_icon = (ImageView) myInflatedView.findViewById(R.id.location_icon);
 
-        loc_icon.setOnClickListener(new View.OnClickListener() {
+   /*     loc_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity main = (MainActivity) getActivity();
@@ -109,7 +109,7 @@ public class LocationDetailFragment extends Fragment {
                 main.showLocationOnMap(v,loc);
 
             }
-        });
+        });*/
 
 
         text.setText(mParamText + "\n\n" + "- " + mParamName);

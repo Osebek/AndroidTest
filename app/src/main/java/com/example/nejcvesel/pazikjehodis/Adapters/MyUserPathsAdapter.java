@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -185,8 +186,8 @@ public class MyUserPathsAdapter extends RecyclerView.Adapter<MyUserPathsAdapter.
         public TextView pathID;
         public TextView pathLocations;
         public TextView numOfPathLocations;
-        public ImageView edit_icon;
-        public ImageView delete_icon;
+        public Button edit_icon;
+        public Button delete_icon;
 
 
         public ViewHolder(final View itemView) {
@@ -198,8 +199,8 @@ public class MyUserPathsAdapter extends RecyclerView.Adapter<MyUserPathsAdapter.
             pathID = (TextView) itemView.findViewById(R.id.path_id);
             pathLocations = (TextView) itemView.findViewById(R.id.path_locations);
             numOfPathLocations = (TextView) itemView.findViewById(R.id.path_num_of_locations);
-            edit_icon = (ImageView) itemView.findViewById(R.id.edit_path_icon);
-            delete_icon = (ImageView) itemView.findViewById(R.id.delete_path_icon);
+            edit_icon = (Button) itemView.findViewById(R.id.edit_path_icon);
+            delete_icon = (Button) itemView.findViewById(R.id.delete_path_icon);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
