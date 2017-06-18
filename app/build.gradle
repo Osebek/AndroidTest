@@ -46,5 +46,6 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.1'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'konifar:fab-transformation:1.0.0'
+    compile 'com.github.fafaldo:fab-toolbar:1.2.0'
     testCompile 'junit:junit:4.12'
 }

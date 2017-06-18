@@ -4,13 +4,21 @@ package com.example.nejcvesel.pazikjehodis.Fragments;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.nejcvesel.pazikjehodis.Handlers.Constants;
+import com.example.nejcvesel.pazikjehodis.Handlers.FetchAddressIntentService;
 import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.Handlers.MarkerClickHandler;
 import com.example.nejcvesel.pazikjehodis.Handlers.OnSwipeTouchListener;
@@ -20,6 +28,9 @@ import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.BackendToken;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Location;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.Path;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.Models.User;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -36,12 +47,14 @@ import java.util.List;
  * Created by brani on 12/19/2016.
  */
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback,BackendAPICall.BackendCallback {
+public class MapsFragment extends Fragment implements OnMapReadyCallback,BackendAPICall.BackendCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private final static String TAG_FRAGMENT = "MapsFragment";
     private BackendAPICall api;
     private ProgressDialog progressDialog;
     private GoogleMap mMap;
     HashMap<Marker, Location> markerLocationMap = new HashMap<Marker, Location>();
+    protected Location mLastLocation;
+    private AddressResultReceiver mResultReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -211,4 +224,62 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,Backend
 
     }
 
+    protected void startIntentService() {
+        Intent intent = new Intent(getActivity(), FetchAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
+        getActivity().startService(intent);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        // Gets the best and most recent location currently available,
+        // which may be null in rare cases when a location is not available.
+//        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+//                mGoogleApiClient);
+//
+//        if (mLastLocation != null) {
+//            // Determine whether a Geocoder is available.
+//            if (!Geocoder.isPresent()) {
+//                Toast.makeText(getContext(), "NOT",
+//                        Toast.LENGTH_LONG).show();
+//                return;
+//            }
+//
+//            if (mAddressRequested) {
+//                startIntentService();
+//            }
+//        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string
+            // or an error message sent from the intent service.
+//            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+//            displayAddressOutput();
+
+            // Show a toast message if an address was found.
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                Toast.makeText(getContext(), "LATLNG", Toast.LENGTH_LONG).show();
+            }
+
+        }
+    }
 }

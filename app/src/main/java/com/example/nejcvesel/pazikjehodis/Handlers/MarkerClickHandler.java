@@ -32,7 +32,7 @@ public class MarkerClickHandler implements GoogleMap.OnMarkerClickListener {
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        ((MainActivity) this.activity).fabClick.CloseFab();
+//        ((MainActivity) this.activity).layout.hide();
         View markerInfoWindow = this.activity.findViewById(R.id.infoCardMarker);
         AppBarLayout appbar = (AppBarLayout) this.activity.findViewById(R.id.appbar);
         TextView header = (TextView) markerInfoWindow.findViewById(R.id.header_infowindow);

@@ -7,9 +7,26 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.nejcvesel.pazikjehodis.MainActivity">
 
-    <RelativeLayout
+    <com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
+        android:id="@+id/fabtoolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:containerId="@+id/fabtoolbar_container"
+        app:fabId="@+id/fabtoolbar_fab"
+        app:fabToolbarId="@+id/fabtoolbar_toolbar"
+        app:fadeInFraction="0.2"
+        app:hideDuration="200"
+        app:horizontalMargin="30dp"
+        app:showDuration="600"
+        app:verticalMargin="30dp">
+
+        <include
+            android:id="@+id/bla"
+            layout="@layout/content_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -24,227 +41,168 @@
                 android:weightSum="0"
                 app:titleTextColor="@color/red_default">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:gravity="center_vertical"
-                    android:paddingEnd="16dp"
-                    android:paddingStart="16dp">
+                <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="end"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:paddingEnd="16dp"-->
+                <!--android:paddingStart="16dp">-->
 
-                    <ImageView
-                        android:id="@+id/toolbar_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/logo"
-                        android:tint="@color/white" />
+                <!--<ImageView-->
+                <!--android:id="@+id/toolbar_title"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginEnd="8dp"-->
+                <!--android:src="@drawable/logo"-->
+                <!--android:tint="@color/white" />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:text="@string/logo_text"
-                        android:textAllCaps="true"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:text="@string/logo_text"-->
+                <!--android:textAllCaps="true"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textStyle="bold" />-->
 
-                </LinearLayout>
+                <!--</LinearLayout>-->
 
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/infoCardMarker"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/appbar">
-
-            <include
-                android:id="@+id/bla"
-                layout="@layout/content_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true" />
+            android:layout_height="200dp"
+            android:layout_marginTop="-200dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            android:weightSum="1">
 
             <LinearLayout
-                android:id="@+id/infoCardMarker"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="-200dp"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:visibility="invisible"
-                android:weightSum="1">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
+                        <TextView
+                            android:id="@+id/header_infowindow"
+                            fontPath="fonts/Ubuntu-medium.ttf"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:paddingLeft="2dp"
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:textColor="@color/darkGrey"
+                            android:textSize="20sp" />
 
-                            <TextView
-                                android:id="@+id/header_infowindow"
-                                fontPath="fonts/Ubuntu-medium.ttf"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:paddingLeft="2dp"
-                                android:paddingRight="@dimen/activity_horizontal_margin"
-                                android:textColor="@color/darkGrey"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:id="@+id/content_infowindow"
-                                fontPath="fonts/Ubuntu-medium.ttf"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:paddingLeft="3dp"
-                                android:paddingRight="64dp"
-                                android:textColor="@color/darkGrey" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:id="@+id/icon_infowindow"
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ikona_lokacije" />
+                        <TextView
+                            android:id="@+id/content_infowindow"
+                            fontPath="fonts/Ubuntu-medium.ttf"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:paddingLeft="3dp"
+                            android:paddingRight="64dp"
+                            android:textColor="@color/darkGrey" />
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/imageHolder"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp" />
-
-                        <ProgressBar
-                            android:id="@+id/progressBar1"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:indeterminateDrawable="@drawable/progress_animation" />
-
-                    </RelativeLayout>
-
+                    <ImageView
+                        android:id="@+id/icon_infowindow"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ikona_lokacije" />
                 </LinearLayout>
-
-            </LinearLayout>
-
-            <io.codetail.widget.RevealFrameLayout
-                android:id="@+id/toolbar_footer"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/white"
-                android:elevation="6dp"
-                android:visibility="invisible">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:elevation="10dp">
+                    android:layout_height="wrap_content">
 
-                    <LinearLayout
+                    <ImageView
+                        android:id="@+id/imageHolder"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_alignParentStart="true"
-                        android:orientation="vertical"
-                        android:paddingTop="16dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="Tapnite na želeno točko zemljevida in ustvarite novo lokacijo"
-                            android:textSize="14dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:id="@+id/button_cancel"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@color/white"
-                                android:padding="10dp"
-                                android:text="Prekliči" />
-
-                            <Button
-                                android:id="@+id/button_save"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@color/white"
-                                android:padding="10dp"
-                                android:text="Shrani" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
+                        android:layout_alignParentTop="true"
+                        android:indeterminateDrawable="@drawable/progress_animation" />
 
                 </RelativeLayout>
 
-            </io.codetail.widget.RevealFrameLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@id/fabtoolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@id/fabtoolbar_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_white"
+                app:borderWidth="0dp"
+                app:fabSize="normal"
+                android:background="@color/red_default"/>
 
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@id/fabtoolbar_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="110dp"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/white">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="@dimen/fab_margin"
-                android:src="@drawable/ic_my_location_black"
-                app:backgroundTint="@color/white"
-                app:elevation="6dp"
-                app:pressedTranslationZ="12dp" />
+            <TextView
+                android:id="@+id/text_view_id"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="testtttt"
+                android:textColor="@color/red_default"/>
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="@dimen/fab_margin"
-                android:src="@drawable/ic_add_white_36dp"
-                app:backgroundTint="@color/red_default"
-                app:elevation="6dp"
-                app:pressedTranslationZ="12dp" />
+            <LinearLayout
+                android:id="@+id/toolbar_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/btnMarkerSave"
+                    android:text="SAVE"
+                    android:background="@color/red_default"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
 
         </LinearLayout>
 
-    </RelativeLayout>
-
+    </com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout>
 </android.support.design.widget.CoordinatorLayout>
