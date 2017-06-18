@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements
     private float DistanceRefresh = 1;
     public LocationManager mLocationManager;
     private LocationListener mLocationListener;
-    private FABToolbarLayout layout;
+    private FABToolbarLayout fabLayout;
 
 
 
@@ -313,12 +313,15 @@ public class MainActivity extends AppCompatActivity implements
             setScreenLayout(true);
         }
 
-        final FABToolbarLayout layout = (FABToolbarLayout) findViewById(R.id.fabtoolbar);
+        fabLayout = (FABToolbarLayout) findViewById(R.id.fabtoolbar);
         View fab = findViewById(R.id.fabtoolbar_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                layout.show();
+                fabLayout.show();
+                markerAddEnable = true;
+                SetMarkerAddress(getString(R.string.chooseLocation));
+
             }
         });
 
