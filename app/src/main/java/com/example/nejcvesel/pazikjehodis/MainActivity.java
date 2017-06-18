@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -358,6 +359,20 @@ public class MainActivity extends AppCompatActivity implements
         //}
     }
 
+    public void FabCancel(View view) {
+        fabLayout.hide();
+        RemoveMarker();
+        markerAddEnable = false;
+    }
+
+    public void FabSave(View view) {
+        FabCancel(view);
+        CloseMarkerInfoWindow();
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.content_frame, new LocationFormFragment(), "LocationFormFragment").addToBackStack("LocationFormFragment").commit();
+        closeDrawer();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -421,6 +436,22 @@ public class MainActivity extends AppCompatActivity implements
 
     public void AddMarker(Marker marker) {
         currentMarker = marker;
+    }
+
+    public void SetMarkerAddress(String text) {
+        TextView t = (TextView) findViewById(R.id.infoContainerAddress);
+        t.setText(text);
+        int a = 5;
+    }
+
+    public void SetLocationInfoContainer(String text) {
+        SetMarkerAddress(text);
+//        View locInfoCont = findViewById(R.id.LocDetailsLayout);
+//        View contentCont = findViewById(R.id.bla);
+//        LinearLayout l = (LinearLayout) findViewById(R.id.fabtoolbar_toolbar);
+//
+//        locInfoCont.setVisibility(View.VISIBLE);
+//        locInfoCont.animate().translationY(300).setDuration(50).alpha(1.0f);
     }
 
     public void showLocationOnMap(View v, String pathLocations) {
@@ -516,8 +547,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void navigationViewWhatsNewClick(View view) {
-        fab.hide();
-        fab1.hide();
+//        fab.hide();
+//        fab1.hide();
 
         CloseMarkerInfoWindow();
         Intent intent = new Intent(getApplicationContext(), WalkthroughActivity.class);

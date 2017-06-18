@@ -16,9 +16,9 @@
         app:fabToolbarId="@+id/fabtoolbar_toolbar"
         app:fadeInFraction="0.2"
         app:hideDuration="200"
-        app:horizontalMargin="30dp"
+        app:horizontalMargin="20dp"
         app:showDuration="600"
-        app:verticalMargin="30dp">
+        app:verticalMargin="40dp">
 
         <include
             android:id="@+id/bla"
@@ -40,33 +40,6 @@
                 android:layout_height="wrap_content"
                 android:weightSum="0"
                 app:titleTextColor="@color/red_default">
-
-                <!--<LinearLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="end"-->
-                <!--android:gravity="center_vertical"-->
-                <!--android:paddingEnd="16dp"-->
-                <!--android:paddingStart="16dp">-->
-
-                <!--<ImageView-->
-                <!--android:id="@+id/toolbar_title"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginEnd="8dp"-->
-                <!--android:src="@drawable/logo"-->
-                <!--android:tint="@color/white" />-->
-
-                <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:gravity="center_vertical"-->
-                <!--android:text="@string/logo_text"-->
-                <!--android:textAllCaps="true"-->
-                <!--android:textColor="@color/white"-->
-                <!--android:textStyle="bold" />-->
-
-                <!--</LinearLayout>-->
 
             </android.support.v7.widget.Toolbar>
 
@@ -156,6 +129,7 @@
 
         </LinearLayout>
 
+
         <RelativeLayout
             android:id="@id/fabtoolbar_container"
             android:layout_width="match_parent"
@@ -166,43 +140,91 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_add_white"
+                app:backgroundTint="@color/red_default"
                 app:borderWidth="0dp"
-                app:fabSize="normal"
-                android:background="@color/red_default"/>
+                app:fabSize="normal" />
 
         </RelativeLayout>
 
-        <LinearLayout
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabtoolbar1_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="105dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_my_location_black"
+            app:backgroundTint="@color/white"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />
+
+        <RelativeLayout
             android:id="@id/fabtoolbar_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            android:orientation="vertical"
-            android:background="@color/white">
-
-            <TextView
-                android:id="@+id/text_view_id"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="testtttt"
-                android:textColor="@color/red_default"/>
+            android:elevation="2dp"
+            android:background="@drawable/location_add_footer"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/toolbar_content"
+                style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/red_default"
                 android:orientation="horizontal">
 
-                <Button
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="70dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/btnMarkerSave"
-                    android:text="SAVE"
-                    android:background="@color/red_default"
-                    android:textColor="@color/white"/>
+                    android:layout_weight="0">
+
+                    <Button
+                        android:id="@+id/btnMarkerCancel"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/ic_close_white_36dp"
+                        android:onClick="FabCancel" />
+
+                </RelativeLayout>
+
+
+                <!--<include-->
+                <!--layout="@layout/data_decoration_line2"-->
+                <!--android:layout_width="1dp"-->
+                <!--android:layout_height="40dp"/>-->
+                <TextView
+                    android:id="@+id/infoContainerAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:text="BLLLLLLLL" />
+
+
+                <RelativeLayout
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0">
+
+                    <Button
+                        android:id="@+id/btnMarkerSave"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/ic_check_white_48dp"
+                        android:onClick="FabSave" />
+
+
+                </RelativeLayout>
+
+
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout>
 </android.support.design.widget.CoordinatorLayout>

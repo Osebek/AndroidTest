@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.location.Address;
 
 import com.example.nejcvesel.pazikjehodis.Handlers.Constants;
 import com.example.nejcvesel.pazikjehodis.Handlers.FetchAddressIntentService;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by brani on 12/19/2016.
@@ -98,6 +100,32 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,Backend
                             .icon(BitmapDescriptorFactory.defaultMarker(200f))
                             .title("Hello world"));
                     main.AddMarker(marker);
+                    Geocoder geocoder;
+                    List<Address> addresses;
+                    geocoder = new Geocoder(main, Locale.getDefault());
+
+                    try {
+                        addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                        String city = addresses.get(0).getLocality();
+                        String state = addresses.get(0).getAdminArea();
+                        String country = addresses.get(0).getCountryName();
+                        String postalCode = addresses.get(0).getPostalCode();
+                        String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+
+                        String add = address;
+                        add += (city != null) ? ", " + city : "";
+                        add += (state != null) ? ", " + state : "";
+                        add += (postalCode != null) ? ", " + postalCode : "";
+                        add += (country != null) ? ", " + country : "";
+                        add += (postalCode != null) ? ", " + postalCode : "";
+
+
+                        main.SetLocationInfoContainer(add);
+                    }
+                    catch (Exception e){
+                        Toast.makeText(getActivity(),e.toString(),Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
