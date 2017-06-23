@@ -318,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CloseMarkerInfoWindow();
                 fabLayout.show();
                 markerAddEnable = true;
                 SetMarkerAddress(getString(R.string.chooseLocation));
@@ -341,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-
+        FabCancel(null);
         int count = getFragmentManager().getBackStackEntryCount();
 
         if (count == 0) {
