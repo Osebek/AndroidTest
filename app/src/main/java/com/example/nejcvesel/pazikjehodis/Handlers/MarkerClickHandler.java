@@ -33,6 +33,10 @@ public class MarkerClickHandler implements GoogleMap.OnMarkerClickListener {
     @Override
     public boolean onMarkerClick(Marker marker) {
 //        ((MainActivity) this.activity).layout.hide();
+        MainActivity main = (MainActivity) this.activity;
+        if(main.markerAddEnable)
+            return true;
+
         View markerInfoWindow = this.activity.findViewById(R.id.infoCardMarker);
         AppBarLayout appbar = (AppBarLayout) this.activity.findViewById(R.id.appbar);
         TextView header = (TextView) markerInfoWindow.findViewById(R.id.header_infowindow);

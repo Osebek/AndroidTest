@@ -47,5 +47,6 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'konifar:fab-transformation:1.0.0'
     compile 'com.github.fafaldo:fab-toolbar:1.2.0'
+    compile 'com.github.dmytrodanylyk.shadow-layout:library:1.0.3'
     testCompile 'junit:junit:4.12'
 }

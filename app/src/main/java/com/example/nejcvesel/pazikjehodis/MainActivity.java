@@ -2,7 +2,9 @@ package com.example.nejcvesel.pazikjehodis;
 
 //import android.app.FragmentManager;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -342,7 +345,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        FabCancel(null);
+        if(fabLayout.isFabDrawableAnimationEnabled()){
+            FabCancel(null);
+            return;
+        }
+
         int count = getFragmentManager().getBackStackEntryCount();
 
         if (count == 0) {
@@ -370,11 +377,51 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void FabSave(View view) {
-        FabCancel(view);
+        HideFab();
         CloseMarkerInfoWindow();
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.content_frame, new LocationFormFragment(), "LocationFormFragment").addToBackStack("LocationFormFragment").commit();
-        closeDrawer();
+
+        if(isMarker()) {
+
+
+            Location loc = new Location();
+            loc.setTitle("");
+            loc.setText("");
+            loc.setName("");
+            loc.setPicture("");
+            loc.setId(-1);
+            loc.setAddress("");
+            loc.setOwner("");
+            loc.setLongtitude(Double.toString(currentMarker.getPosition().longitude));
+            loc.setLatitude(Double.toString(currentMarker.getPosition().latitude));
+
+            Fragment fragment = LocationFormFragment.newInstance(loc);
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction =
+                    fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment, "LocationFormFragment");
+            fragmentTransaction.addToBackStack("LocationFormFragment");
+            fragmentTransaction.commit();
+        }
+
+//        FragmentManager fm = getFragmentManager();
+//        fm.beginTransaction().replace(R.id.content_frame, new LocationFormFragment(), "LocationFormFragment").addToBackStack("LocationFormFragment").commit();
+//        closeDrawer();
+    }
+
+    public void HideFab(){
+        FabCancel(null);
+        View fabOp = findViewById(R.id.fabtoolbar_fab);
+        View fabCl = findViewById(R.id.fabtoolbar1_fab);
+        fabOp.setVisibility(View.GONE);
+        fabCl.setVisibility(View.GONE);
+    }
+
+    public void ShowFab(){
+        FabCancel(null);
+        View fabOp = findViewById(R.id.fabtoolbar_fab);
+        View fabCl = findViewById(R.id.fabtoolbar1_fab);
+        fabOp.setVisibility(View.VISIBLE);
+        fabCl.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -493,6 +540,7 @@ public class MainActivity extends AppCompatActivity implements
     /*Navigation drawer on clicked item handler*/
     public void navigationViewLocationClick(View view) {
 //        fabClick.DisableFab();
+        HideFab();
         CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new LocationFragment(), "LocationFragment").addToBackStack("LocationFragment").commit();
@@ -502,6 +550,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigationViewMapClick(View view) {
 //        fabClick.EnableFab();
+        ShowFab();
         pathLocations.clear();
         CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
@@ -511,6 +560,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigationViewMyLocationClick(View view) {
 //        fabClick.DisableFab();
+        HideFab();
         CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new MyLocationsFragment(), "MyLocationsFragment").addToBackStack("MyLocationsFragment").commit();
@@ -519,6 +569,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigationViewPathClick(View view) {
 //        fabClick.DisableFab();
+        HideFab();
         CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new PathListFragment(), "PathListFragment").addToBackStack("PathListFragment").commit();
@@ -527,6 +578,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigationViewMyPathClick(View view) {
 //        fabClick.DisableFab();
+        HideFab();
         CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new MyPathListFragment(), "MyPathListFragment").addToBackStack("MyPathListFragment").commit();
@@ -535,6 +587,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigationViewSearchClick(View view) {
 //        fabClick.DisableFab();
+        HideFab();
         CloseMarkerInfoWindow();
 //        FragmentManager fm = getFragmentManager();
 //        fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
@@ -543,7 +596,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigationViewAddClick(View view) {
 //        fabClick.DisableFab();
-
+        HideFab();
         CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new AddFragment(), "AddFragment").addToBackStack("AddFragment").commit();
@@ -553,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements
     public void navigationViewWhatsNewClick(View view) {
 //        fab.hide();
 //        fab1.hide();
-
+        HideFab();
         CloseMarkerInfoWindow();
         Intent intent = new Intent(getApplicationContext(), WalkthroughActivity.class);
         startActivity(intent);
@@ -562,6 +615,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigationViewLogingClick(View view) {
 //        fabClick.DisableFab();
+        HideFab();
         CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new LogInFragment(), "LogInFragment").addToBackStack("LogInFragment").commit();
@@ -570,6 +624,7 @@ public class MainActivity extends AppCompatActivity implements
 
     public void navigationViewHomeClick(View view) {
 //        fabClick.DisableFab();
+        HideFab();
         CloseMarkerInfoWindow();
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         startActivity(intent);
