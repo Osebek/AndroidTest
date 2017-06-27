@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:orientation="vertical"
-            android:visibility="invisible">
+            >
 
             <ImageView
                 android:id="@+id/location_icon"

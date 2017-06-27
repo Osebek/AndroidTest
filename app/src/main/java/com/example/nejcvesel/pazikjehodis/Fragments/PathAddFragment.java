@@ -331,6 +331,7 @@ public class PathAddFragment extends Fragment implements BackendAPICall.BackendC
     @Override
     public void checkLocationCallback(int id) {
             mCheckedLocations.add(id);
+
             System.out.println("Dodal. Trenutno stanje" + Arrays.toString(mCheckedLocations.toArray()));
 
 

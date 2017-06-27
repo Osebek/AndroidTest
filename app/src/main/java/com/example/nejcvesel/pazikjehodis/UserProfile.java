@@ -90,13 +90,13 @@ public class UserProfile {
     }
 
     public boolean clearAll(){
-        String loginType = "";
-        String userName = "";
-        String userToken = "";
-        String refreshToken = "";
-        String backendAccessToken = "";
-        String firstName = "";
-        String lastName = "";
+        this.loginType = "";
+        this.userName = "";
+        this.userToken = "";
+        this.refreshToken = "";
+        this.backendAccessToken = "";
+        this.firstName = "";
+        this.lastName = "";
         return true;
     }
 }

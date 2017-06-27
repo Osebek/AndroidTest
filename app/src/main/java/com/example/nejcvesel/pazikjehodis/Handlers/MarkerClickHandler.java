@@ -1,6 +1,10 @@
 package com.example.nejcvesel.pazikjehodis.Handlers;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.design.widget.AppBarLayout;
 import android.util.Log;
@@ -10,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationDetailFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationFormFragment;
 import com.example.nejcvesel.pazikjehodis.MainActivity;
 import com.example.nejcvesel.pazikjehodis.R;
 import com.example.nejcvesel.pazikjehodis.retrofitAPI.BackendAPICall;
@@ -31,17 +37,35 @@ public class MarkerClickHandler implements GoogleMap.OnMarkerClickListener {
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
+    public boolean onMarkerClick(final Marker marker) {
 //        ((MainActivity) this.activity).layout.hide();
         MainActivity main = (MainActivity) this.activity;
         if(main.markerAddEnable)
             return true;
 
-        View markerInfoWindow = this.activity.findViewById(R.id.infoCardMarker);
+        final View markerInfoWindow = this.activity.findViewById(R.id.infoCardMarker);
         AppBarLayout appbar = (AppBarLayout) this.activity.findViewById(R.id.appbar);
         TextView header = (TextView) markerInfoWindow.findViewById(R.id.header_infowindow);
         TextView content = (TextView) markerInfoWindow.findViewById(R.id.content_infowindow);
         ImageView icon = (ImageView) markerInfoWindow.findViewById(R.id.imageHolder);
+
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Location loc = markerLocationMap.get(marker);
+                Fragment fragment = LocationDetailFragment.newInstance(loc);
+                FragmentManager fragmentManager = activity.getFragmentManager();
+                ((MainActivity) activity).HideFab();
+                markerInfoWindow.setVisibility(View.INVISIBLE);
+                FragmentTransaction fragmentTransaction =
+                        fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame, fragment, "LocationDetailFragment");
+                fragmentTransaction.addToBackStack("LocationDetailFragment");
+                fragmentTransaction.commit();
+
+            }
+        });
+
         if(markerInfoWindow.getX() != 0){
             markerInfoWindow.animate().x(0).y(-200).alpha(1.0f).setDuration(0).start();
             markerInfoWindow.setVisibility(View.GONE);
@@ -75,6 +99,7 @@ public class MarkerClickHandler implements GoogleMap.OnMarkerClickListener {
         {
 
         }
+
 
         return true;
     }

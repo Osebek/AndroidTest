@@ -100,6 +100,7 @@ public class MyPathAddAdapter extends RecyclerView.Adapter<MyPathAddAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
+
         Location loc = filteredLocationList.get(i);
         viewHolder.text.setText(loc.getText());
         viewHolder.longtitude.setText("latitude: " + loc.getLatitude());
@@ -121,12 +122,14 @@ public class MyPathAddAdapter extends RecyclerView.Adapter<MyPathAddAdapter.View
         MainActivity main = (MainActivity) context;
 
         //if (main.locationsToAddToPath.containsValue(Integer.toString(loc.getId())))
+        System.out.println(Arrays.toString(checkedLocations.toArray()));
         if (checkedLocations.contains(loc.getId()))
         {
             viewHolder.checkbox.setChecked(true);
         }
         else
         {
+            System.out.println("setUnchecked");
             viewHolder.checkbox.setChecked(false);
         }
 
@@ -186,13 +189,15 @@ public class MyPathAddAdapter extends RecyclerView.Adapter<MyPathAddAdapter.View
                     if (checkbox.isChecked())
                     {
                         callback.checkLocationCallback(Integer.valueOf(locationID.getText().toString()));
+                        checkedLocations.add(Integer.valueOf(locationID.getText().toString()));
                         //main.locationsToAddToPath.put(locationID.getText().toString(),locationID.getText().toString());
                     }
                     else
                     {
-
                         callback.uncheckLocationCallback(Integer.valueOf(locationID.getText().toString()));
                         //main.locationsToAddToPath.remove(locationID.getText().toString());
+                        checkedLocations.remove(Integer.valueOf(locationID.getText().toString()));
+
                     }
 
                 }

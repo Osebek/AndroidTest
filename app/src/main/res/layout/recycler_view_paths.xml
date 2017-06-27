@@ -126,7 +126,7 @@
             android:orientation="vertical"
             android:paddingLeft="20dp"
             android:paddingTop="5dp"
-            android:visibility="gone">
+            >
 
             <ImageView
                 android:id="@+id/path_icon"

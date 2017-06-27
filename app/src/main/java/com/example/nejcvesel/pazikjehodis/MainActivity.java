@@ -11,12 +11,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -25,22 +26,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nejcvesel.pazikjehodis.Fragments.EditPathFragment;
-import com.example.nejcvesel.pazikjehodis.Fragments.LocationFormFragment;
-import com.example.nejcvesel.pazikjehodis.Fragments.MyPathListFragment;
-//import com.example.nejcvesel.pazikjehodis.Handlers.FabHandler;
-import com.example.nejcvesel.pazikjehodis.Fragments.AddFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LocationDetailFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.LocationFormFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LocationFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LocationInPathDetailFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.LogInFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.MapsFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.MyLocationsFragment;
+import com.example.nejcvesel.pazikjehodis.Fragments.MyPathListFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.PathAddFormFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.PathAddFragment;
 import com.example.nejcvesel.pazikjehodis.Fragments.PathListFragment;
@@ -62,21 +60,27 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by brani on 12/18/2016.
@@ -102,8 +106,10 @@ public class MainActivity extends AppCompatActivity implements
         LocationDetailFragment.OnFragmentInteractionListener, PathLocationsFragment.OnListFragmentInteractionListener,
         LocationInPathDetailFragment.OnFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener,
         PathAddFormFragment.OnFragmentInteractionListener, PathAddFragment.OnListFragmentInteractionListener, BackendAPICall.BackendCallback, MyLocationsFragment.OnListFragmentInteractionListener,
-        MyPathListFragment.OnListFragmentInteractionListener, EditPathFragment.OnFragmentInteractionListener {
+        MyPathListFragment.OnListFragmentInteractionListener, EditPathFragment.OnFragmentInteractionListener, LocationListener, GoogleApiClient.ConnectionCallbacks
+        {
     public static String authToken;
+    private static final int PERMISSION_REQUEST_CODE = 1;
     public Marker currentMarker = null;
     public Uri url = null;
     public CallbackManager callbackManager;
@@ -119,17 +125,21 @@ public class MainActivity extends AppCompatActivity implements
     BackendAPICall api;
     public SharedPreferences sharedPref;
     public UserProfile userProfile = null;
-//    public FabHandler fabClick;
+    //    public FabHandler fabClick;
     public boolean markerAddEnable = false;
     private long TimeRefresh = 1;
     private float DistanceRefresh = 1;
     public LocationManager mLocationManager;
     private LocationListener mLocationListener;
     private FABToolbarLayout fabLayout;
+    private FusedLocationProviderApi mFusedLocationClient;
+            private LocationRequest mLocationRequest;
+
+    public GoogleMap mMap;
 
 
 
-    @Override
+            @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         setTheme(R.style.AppTheme);
@@ -137,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mFusedLocationClient = LocationServices.FusedLocationApi;
+
 //        mLocationManager = new LocationManager();
 //        mLocationListener = new LocationListener() {
 //            @Override
@@ -175,32 +187,23 @@ public class MainActivity extends AppCompatActivity implements
                 userProfile.setRefreshToken(currToken.toString());
             }
 
-            if(tmpKey.contains("_firstName"))
-            {
+            if (tmpKey.contains("_firstName")) {
                 Object currFirstName = sharedPrefValues.get(key);
                 userProfile.setFirstName(currFirstName.toString());
             }
-            if(tmpKey.contains("_lastName"))
-            {
+            if (tmpKey.contains("_lastName")) {
                 Object currLastName = sharedPrefValues.get(key);
                 userProfile.setLastName(currLastName.toString());
             }
         }
 
-        if (!userProfile.getRefreshToken().equals(""))
-        {
+        if (!userProfile.getRefreshToken().equals("")) {
             api.refreshToken(userProfile.getRefreshToken());
         }
 
-        if (!userProfile.getBackendAccessToken().equals(""))
-        {
+        if (!userProfile.getBackendAccessToken().equals("")) {
             api.getUserProfile(userProfile.getBackendAccessToken());
         }
-
-
-
-
-
 
 
         // BackendAPICall callProfile = new BackendAPICall();
@@ -217,8 +220,8 @@ public class MainActivity extends AppCompatActivity implements
                         AccessToken.setCurrentAccessToken(loginResult.getAccessToken());
                         userProfile.setUserToken(authToken);
                         userProfile.setLoginType("Facebook");
-                        if (userProfile.getBackendAccessToken().equals(""))
-                        {
+                        if (userProfile.getBackendAccessToken().equals("")) {
+                            System.out.println("convert token call");
                             api.convertToken(authToken);
                         } else {
                             api.refreshToken(userProfile.getRefreshToken());
@@ -260,6 +263,8 @@ public class MainActivity extends AppCompatActivity implements
                     Profile oldProfile,
                     Profile currentProfile) {
                 if (currentProfile != null) {
+                    System.out.println("CUrrent profile changed1");
+
                     TextView name = (TextView) findViewById(R.id.navHeaderText);
                     name.setText(currentProfile.getFirstName() + " " + currentProfile.getLastName());
                     userProfile.setFirstName(currentProfile.getFirstName());
@@ -270,9 +275,8 @@ public class MainActivity extends AppCompatActivity implements
                     edit.commit();
                     setScreenLayout(false);
 
-                }
-                else
-                {
+                } else {
+                    System.out.println("CUrrent profile changed2");
                     sharedPref.edit().clear().commit();
                     TextView userName = (TextView) findViewById(R.id.navHeaderText);
                     userName.setText("Anonimen uporabnik");
@@ -286,7 +290,6 @@ public class MainActivity extends AppCompatActivity implements
         //TODO: fab buttons - set right images as well right colors for fab buttons
         //TODO: fab buttons - on/off in different fragments
         profile = Profile.getCurrentProfile();
-
 
 
 //        fabClick = new FabHandler(this);
@@ -329,13 +332,23 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+                mLocationRequest = LocationRequest.create()
+                        .setPriority(LocationRequest.PRIORITY_LOW_POWER)
+                        .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                        .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
 
-
-
-        FragmentManager fm = getFragmentManager();
+        mGoogleApiClient.connect();
+                FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.content_frame, new MapsFragment(), "MapFragment").addToBackStack("MapFragment").commit();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -345,9 +358,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if(fabLayout.isFabDrawableAnimationEnabled()){
+        if (fabLayout.isFabDrawableAnimationEnabled()) {
             FabCancel(null);
-            return;
         }
 
         int count = getFragmentManager().getBackStackEntryCount();
@@ -376,31 +388,139 @@ public class MainActivity extends AppCompatActivity implements
         markerAddEnable = false;
     }
 
-    public void FabSave(View view) {
-        HideFab();
-        CloseMarkerInfoWindow();
+    public void MyLocation(View view) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkPermission()) {
+                if (mGoogleApiClient.isConnected()) {
+                    android.location.Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                    if (location == null) {
+                        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                    } else {
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                                .icon(BitmapDescriptorFactory.defaultMarker(10f))
+                                .title("Trenutna lokacija"));
+                        AddMarker(marker);
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
+                    }
+                }
 
+            } else {
+                requestPermission(); // Code for permission
+            }
+        } else {
+            if (mGoogleApiClient.isConnected()) {
+                android.location.Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                if (location == null) {
+                    LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                } else {
+                    Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                            .icon(BitmapDescriptorFactory.defaultMarker(200f))
+                            .title("Trenutna lokacija"));
+                    AddMarker(marker);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
+                }
+            }            // Code for Below 23 API Oriented Device
+            // Do next code
+        }
+
+    }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void requestPermission() {
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            Toast.makeText(this, "Location permission to get your location so you can add new story.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        if (mGoogleApiClient.isConnected()) {
+                            android.location.Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                            if (location == null) {
+                                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                            } else {
+                                Marker marker = mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                                        .icon(BitmapDescriptorFactory.defaultMarker(200f)));
+
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
+                                //mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+
+                            }
+                        }
+                    }
+
+                 else {
+                    Log.e("value", "Permission Denied, You cannot use local drive .");
+                }
+                break;
+        }
+    }}
+
+    public void FabSave(View view) {
         if(isMarker()) {
 
+            if (!userProfile.backendAccessToken.equals("")) {
+                Location loc = new Location();
+                loc.setTitle("");
+                loc.setText("");
+                loc.setName("");
+                loc.setPicture("");
+                loc.setId(-1);
+                loc.setAddress(((TextView) findViewById(R.id.infoContainerAddress)).getText().toString());
+                loc.setOwner("");
+                loc.setLongtitude(Double.toString(currentMarker.getPosition().longitude));
+                loc.setLatitude(Double.toString(currentMarker.getPosition().latitude));
 
-            Location loc = new Location();
-            loc.setTitle("");
-            loc.setText("");
-            loc.setName("");
-            loc.setPicture("");
-            loc.setId(-1);
-            loc.setAddress("");
-            loc.setOwner("");
-            loc.setLongtitude(Double.toString(currentMarker.getPosition().longitude));
-            loc.setLatitude(Double.toString(currentMarker.getPosition().latitude));
+                Fragment fragment = LocationFormFragment.newInstance(loc);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction =
+                        fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame, fragment, "LocationFormFragment");
+                fragmentTransaction.addToBackStack("LocationFormFragment");
+                fragmentTransaction.commit();
+                HideFab();
+                CloseMarkerInfoWindow();
 
-            Fragment fragment = LocationFormFragment.newInstance(loc);
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction =
-                    fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment, "LocationFormFragment");
-            fragmentTransaction.addToBackStack("LocationFormFragment");
-            fragmentTransaction.commit();
+            }
+            else
+            {
+                Toast.makeText(this,"Pred dodajanjem lokacije se morate prijaviti",Toast.LENGTH_LONG).show();
+                Fragment fragment = new LogInFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction =
+                        fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.content_frame, fragment, "LogInFragment");
+                fragmentTransaction.addToBackStack("LogInFragment");
+                fragmentTransaction.commit();
+                HideFab();
+                CloseMarkerInfoWindow();
+
+            }
         }
 
 //        FragmentManager fm = getFragmentManager();
@@ -599,7 +719,7 @@ public class MainActivity extends AppCompatActivity implements
         HideFab();
         CloseMarkerInfoWindow();
         FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.content_frame, new AddFragment(), "AddFragment").addToBackStack("AddFragment").commit();
+        fm.beginTransaction().replace(R.id.content_frame, new PathAddFragment(), "PathAddFragment").addToBackStack("PathAddFragment").commit();
         closeDrawer();
     }
 
@@ -746,6 +866,25 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onListFragmentInteraction(Path item) {
+
+    }
+
+    @Override
+    public void onLocationChanged(android.location.Location location) {
+        System.out.println(location.getLongitude());
+        System.out.println("BLAAAA");
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        System.out.println("Se povezzu");
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
 
     }
 }

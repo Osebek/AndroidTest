@@ -3,9 +3,14 @@ package com.example.nejcvesel.pazikjehodis.Fragments;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +58,9 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
     private static final String ARG_NAME = "name";
     private static final String ARG_TITLE = "title";
     private static final String ARG_EDIT_MODE = "edit_mode";
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    Uri selectedImage;
+
     private String picURL;
 
     private String mParamText;
@@ -68,7 +76,7 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
     private BackendAPICall apiCall;
     private UserProfile userProfile;
     private Uri url = null;
-    private CallbackManager callbackManager;
+   // private CallbackManager callbackManager;
 
 
     public LocationFormFragment() {
@@ -88,7 +96,14 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
         args.putString(ARG_LONGTITUDE, loc.getLongtitude());
         args.putString(ARG_NAME, loc.getName());
         args.putString(ARG_TITLE, loc.getTitle());
-        args.putBoolean(ARG_EDIT_MODE, true);
+        System.out.println(loc.getId());
+        if (loc.getId().equals(-1) || loc.getId() == null) {
+            args.putBoolean(ARG_EDIT_MODE, false);
+        }
+        else
+        {
+            args.putBoolean(ARG_EDIT_MODE,true);
+        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -126,6 +141,7 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
         Button submit = (Button) myInflatedView.findViewById(R.id.input_btn_upload);
 
         final TextView address = (TextView) myInflatedView.findViewById(R.id.input_address);
+        address.setText(mParamAddress);
         final TextView name = (TextView) myInflatedView.findViewById(R.id.input_author);
         final TextView description = (TextView) myInflatedView.findViewById(R.id.input_story);
         final TextView title = (TextView) myInflatedView.findViewById(R.id.input_loc_title);
@@ -135,6 +151,7 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
 
 
         if (mParamEditMode) {
+            System.out.println("Edit mode!");
             ((TextView) myInflatedView.findViewById(R.id.input_address)).setText(mParamAddress);
             ((TextView) myInflatedView.findViewById(R.id.input_story)).setText(mParamText);
             ((TextView) myInflatedView.findViewById(R.id.input_loc_title)).setText(mParamTitle);
@@ -264,25 +281,50 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
         switch (requestCode) {
             case 0:
                 if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
+                   selectedImage = imageReturnedIntent.getData();
                     System.out.println("Fotka fotka");
                 }
 
                 break;
             case 1:
                 if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
+                    selectedImage = imageReturnedIntent.getData();
                     url = selectedImage;
                     picURL = selectedImage.toString();
-                    String realPath = UtilityFunctions.getRealPathFromURI(getActivity().getBaseContext(), url);
-                    String[] splitUrl = realPath.split("/");
-                    //LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
-                    TextView picText = (TextView) this.getView().findViewById(R.id.input_img_url);
-                    picText.setText(selectedImage.toString());
-                    Button addImageButton = (Button) this.getView().findViewById(R.id.input_btn_add_pic);
-                    addImageButton.setText("Spremeni sliko");
-                    picText.setText("URL slike: " + splitUrl[splitUrl.length - 1]);
+                    if (Build.VERSION.SDK_INT >= 23)
+                    {
+                        if (checkPermission())
+                        {
+                            System.out.println("premission was granted");
+                            // Code for above or equal 23 API Oriented Device
+                            // Your Permission granted already .Do next code
+                            String realPath = UtilityFunctions.getRealPathFromURI(getActivity().getBaseContext(), url);
+                            String[] splitUrl = realPath.split("/");
+                            //LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
+                            TextView picText = (TextView) this.getView().findViewById(R.id.input_img_url);
+                            picText.setText(selectedImage.toString());
+                            Button addImageButton = (Button) this.getView().findViewById(R.id.input_btn_add_pic);
+                            addImageButton.setText("Spremeni sliko");
+                            picText.setText("URL slike: " + splitUrl[splitUrl.length - 1]);
 
+                        } else {
+                            requestPermission(); // Code for permission
+                        }
+                    }
+                    else
+                    {
+                        String realPath = UtilityFunctions.getRealPathFromURI(getActivity().getBaseContext(), url);
+                        String[] splitUrl = realPath.split("/");
+                        //LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
+                        TextView picText = (TextView) this.getView().findViewById(R.id.input_img_url);
+                        picText.setText(selectedImage.toString());
+                        Button addImageButton = (Button) this.getView().findViewById(R.id.input_btn_add_pic);
+                        addImageButton.setText("Spremeni sliko");
+                        picText.setText("URL slike: " + splitUrl[splitUrl.length - 1]);
+
+                        // Code for Below 23 API Oriented Device
+                        // Do next code
+                    }
 
 //                    System.out.println(selectedImage.toString());
 //                    System.out.println("Do tuki rpidem");
@@ -297,6 +339,46 @@ public class LocationFormFragment extends Fragment implements BackendAPICall.Bac
 
         }
     }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void requestPermission() {
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            Toast.makeText(getActivity(), "Write External Storage permission allows us to do store images. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    String realPath = UtilityFunctions.getRealPathFromURI(getActivity().getBaseContext(), url);
+                    String[] splitUrl = realPath.split("/");
+                    //LocationFormFragment form = (LocationFormFragment) getFragmentManager().findFragmentByTag("LocationFormFragment");
+                    TextView picText = (TextView) this.getView().findViewById(R.id.input_img_url);
+                    picText.setText(selectedImage.toString());
+                    Button addImageButton = (Button) this.getView().findViewById(R.id.input_btn_add_pic);
+                    addImageButton.setText("Spremeni sliko");
+                    picText.setText("URL slike: " + splitUrl[splitUrl.length - 1]);
+
+                } else {
+                    Log.e("value", "Permission Denied, You cannot use local drive .");
+                }
+                break;
+        }
+    }
+
 
     @Override
     public void getAllPathsCallback(List<Path> paths, String message) {

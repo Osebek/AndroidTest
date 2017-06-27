@@ -2,7 +2,7 @@
     <string name="logo_text">Glej, kje hodiš</string>
 
     <string name="app_name">Pazi kje hodis</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Glej, kje hodiš</string>
     <string name="add">Dodaj zgodbo</string>
     <string name="storySLO">Dodaj svojo zgodbo</string>
     <string name="title_activity_login">Sign in</string>
@@ -50,7 +50,7 @@
     <string name="menu_path">Poti</string>
     <string name="menu_my_path">Moje poti</string>
     <string name="menu_search">Iskanje</string>
-    <string name="menu_add_new">Dodaj novo</string>
+    <string name="menu_add_new">Dodaj novo pot</string>
     <string name="menu_how_to">Predstavitev</string>
     <string name="menu_loging">Odjava</string>
 
@@ -83,7 +83,7 @@
     <string name="path_edit_save_btn">Shrani pot</string>
     <string name="edit_path_edit_locations">Spremeni lokacije</string>
 
-    <string name="chooseLocation">Tap on the map to select location!</string>
+    <string name="chooseLocation">Z dotikom na izbrano mesto izberi lokacijo na zemljevidu.</string>
 
 
 

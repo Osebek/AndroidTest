@@ -34,6 +34,7 @@ public class OnSwipeTouchListener implements OnTouchListener {
                 v.setAlpha(a);
                 break;
             case MotionEvent.ACTION_UP:
+
                 if (Math.abs(v.getX()) > (v.getWidth() / 2)) {
                     if (v.getX() > 0) {
                         v.animate().x(v.getWidth() + 30).setDuration(10).start();
@@ -43,6 +44,13 @@ public class OnSwipeTouchListener implements OnTouchListener {
                 } else {
                     v.animate().x(0).setDuration(100).alpha(1.0f).start();
                 }
+                break;
+            case MotionEvent.ACTION_BUTTON_PRESS:
+                System.out.println("bla");
+                break;
+
+            case MotionEvent.ACTION_POINTER_DOWN:
+                System.out.println("blabla");
                 break;
         }
         return gestureDetector.onTouchEvent(event);
@@ -60,6 +68,7 @@ public class OnSwipeTouchListener implements OnTouchListener {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            System.out.println("onFLing");
             boolean result = false;
             try {
                 float diffY = e2.getY() - e1.getY();
@@ -87,7 +96,9 @@ public class OnSwipeTouchListener implements OnTouchListener {
             }
             return result;
         }
+
     }
+
 
     public void onSwipeRight() {
     }

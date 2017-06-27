@@ -58,6 +58,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,Backend
     protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_map, container, false);
@@ -85,6 +87,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,Backend
         LatLng ljubljana = new LatLng(46.056946, 14.505751);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(ljubljana));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+        ((MainActivity) getActivity()).mMap = mMap;
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -134,6 +137,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,Backend
 
         mMap.setOnMarkerClickListener(new MarkerClickHandler(getActivity(), markerLocationMap));
         View markerInfoWindow = getActivity().findViewById(R.id.infoCardMarker);
+
+
         markerInfoWindow.setOnTouchListener(new OnSwipeTouchListener(getActivity().getApplicationContext()) {
             public void onSwipeTop() {
                 Log.v("SWIPE", "YUHUUU BRANE SWIPE TOP");
@@ -149,6 +154,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,Backend
 
             public void onSwipeBottom() {
                 Log.v("SWIPE", "YUHUUU BRANE SWIPE BOTTOM");
+            }
+
+
+        });
+        markerInfoWindow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("Neki neki");
             }
         });
 

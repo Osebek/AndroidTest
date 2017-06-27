@@ -157,6 +157,7 @@
             android:layout_marginEnd="20dp"
             android:src="@drawable/ic_my_location_black"
             app:backgroundTint="@color/white"
+            android:onClick="MyLocation"
             app:borderWidth="0dp"
             app:fabSize="normal" />
 

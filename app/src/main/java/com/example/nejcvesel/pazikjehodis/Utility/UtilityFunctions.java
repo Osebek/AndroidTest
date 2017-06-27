@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 public class UtilityFunctions {
 
     public static String getRealPathFromURI(Context context, Uri contentUri) {
+
         Cursor cursor = null;
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
