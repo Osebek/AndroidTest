@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
@@ -79,6 +81,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -414,12 +417,22 @@ public class MainActivity extends AppCompatActivity implements
                 if (location == null) {
                     LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
                 } else {
-                    Marker marker = mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(location.getLatitude(),location.getLongitude()))
-                            .icon(BitmapDescriptorFactory.defaultMarker(200f))
-                            .title("Trenutna lokacija"));
-                    AddMarker(marker);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
+                    if(markerAddEnable) {
+                        if (isMarker()) {
+                            RemoveMarker();
+                        }
+
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(location.getLatitude(), location.getLongitude()))
+                                .icon(BitmapDescriptorFactory.defaultMarker(200f))
+                                .title("Trenutna lokacija"));
+                        AddMarker(marker);
+                    }
+                    else{
+//                        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    }
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
                 }
             }            // Code for Below 23 API Oriented Device
             // Do next code
